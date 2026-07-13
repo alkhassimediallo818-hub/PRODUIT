@@ -54,7 +54,7 @@ const prixUnitaire = prixGros / quantite;
 const benefice =
 (prixRevente * quantite) - prixGros;
 
-
+alert("Calcul OK, tentative d'enregistrement");
 
 try {
 
