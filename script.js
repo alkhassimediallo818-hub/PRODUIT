@@ -1,7 +1,7 @@
-const produits = [];
+let produits = JSON.parse(localStorage.getItem("produits")) || [];
 
 function sauvegarderProduits(){
-    console.log("Sauvegarde OK");
+    localStorage.setItem("produits", JSON.stringify(produits));
 }
 
 
@@ -18,6 +18,7 @@ Number(document.getElementById("quantite").value);
 const prixRevente =
 Number(document.getElementById("prixRevente").value);
 
+
 if(
 nom === "" ||
 prixGros <= 0 ||
@@ -27,6 +28,7 @@ prixRevente <= 0
 alert("Veuillez remplir correctement tous les champs.");
 return;
 }
+
 
 const prixUnitaire =
 prixGros / quantite;
@@ -47,11 +49,11 @@ benefice
 
 sauvegarderProduits();
 
-
 viderChamps();
 afficherProduits();
 
 }
+
 
 
 function afficherProduits(){
@@ -63,11 +65,14 @@ tableau.innerHTML = "";
 
 let beneficeTotal = 0;
 
+
 produits.forEach((produit,index)=>{
 
 beneficeTotal += produit.benefice;
 
+
 const ligne = document.createElement("tr");
+
 
 ligne.innerHTML = `
 <td>${produit.nom}</td>
@@ -104,6 +109,7 @@ beneficeTotal.toLocaleString() + " FCFA";
 
 
 
+
 function supprimerProduit(index){
 
 if(confirm("Supprimer ce produit ?")){
@@ -120,6 +126,7 @@ afficherProduits();
 
 
 
+
 function viderChamps(){
 
 document.getElementById("nom").value = "";
@@ -128,3 +135,7 @@ document.getElementById("quantite").value = "";
 document.getElementById("prixRevente").value = "";
 
 }
+
+
+// Charger les produits sauvegardés
+afficherProduits();
