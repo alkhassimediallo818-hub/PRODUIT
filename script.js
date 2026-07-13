@@ -1,5 +1,10 @@
 const produits = [];
 
+function sauvegarderProduits(){
+    console.log("Sauvegarde OK");
+}
+
+
 function ajouterProduit(){
 
 const nom = document.getElementById("nom").value.trim();
@@ -29,6 +34,7 @@ prixGros / quantite;
 const benefice =
 (prixRevente * quantite) - prixGros;
 
+
 produits.push({
 nom,
 prixGros,
@@ -38,10 +44,15 @@ prixRevente,
 benefice
 });
 
+
+sauvegarderProduits();
+
+
 viderChamps();
 afficherProduits();
 
 }
+
 
 function afficherProduits(){
 
@@ -81,13 +92,17 @@ tableau.appendChild(ligne);
 
 });
 
+
 document.getElementById("nbProduits").textContent =
 produits.length;
+
 
 document.getElementById("beneficeTotal").textContent =
 beneficeTotal.toLocaleString() + " FCFA";
 
 }
+
+
 
 function supprimerProduit(index){
 
@@ -95,11 +110,15 @@ if(confirm("Supprimer ce produit ?")){
 
 produits.splice(index,1);
 
+sauvegarderProduits();
+
 afficherProduits();
 
 }
 
 }
+
+
 
 function viderChamps(){
 
