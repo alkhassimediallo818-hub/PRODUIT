@@ -1,11 +1,18 @@
-let produits = JSON.parse(localStorage.getItem("produits")) || [];
+import { db } from "./firebase.js";
+import { 
+    collection, 
+    addDoc, 
+    getDocs, 
+    deleteDoc, 
+    doc 
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-function sauvegarderProduits(){
-    localStorage.setItem("produits", JSON.stringify(produits));
-}
+
+let produits = [];
 
 
-function ajouterProduit(){
+// Ajouter un produit dans Firestore
+async function ajouterProduit(){
 
 const nom = document.getElementById("nom").value.trim();
 
@@ -30,32 +37,54 @@ return;
 }
 
 
-const prixUnitaire =
-prixGros / quantite;
+const prixUnitaire = prixGros / quantite;
 
 const benefice =
 (prixRevente * quantite) - prixGros;
 
 
-produits.push({
-nom,
-prixGros,
-quantite,
-prixUnitaire,
-prixRevente,
-benefice
+// Enregistrer dans Firestore
+await addDoc(collection(db, "produits"), {
+    nom,
+    prixGros,
+    quantite,
+    prixUnitaire,
+    prixRevente,
+    benefice
 });
 
 
-sauvegarderProduits();
-
 viderChamps();
+
+chargerProduits();
+
+}
+
+
+
+// Charger les produits depuis Firestore
+async function chargerProduits(){
+
+produits = [];
+
+const snapshot = await getDocs(collection(db,"produits"));
+
+
+snapshot.forEach((document)=>{
+    produits.push({
+        id: document.id,
+        ...document.data()
+    });
+});
+
+
 afficherProduits();
 
 }
 
 
 
+// Afficher les produits
 function afficherProduits(){
 
 const tableau =
@@ -67,6 +96,7 @@ let beneficeTotal = 0;
 
 
 produits.forEach((produit,index)=>{
+
 
 beneficeTotal += produit.benefice;
 
@@ -87,7 +117,7 @@ ${produit.benefice.toLocaleString()} FCFA
 
 <td>
 <button class="supprimer"
-onclick="supprimerProduit(${index})">
+onclick="supprimerProduit('${produit.id}')">
 Supprimer
 </button>
 </td>
@@ -109,21 +139,18 @@ beneficeTotal.toLocaleString() + " FCFA";
 
 
 
-
-function supprimerProduit(index){
+// Supprimer un produit Firestore
+async function supprimerProduit(id){
 
 if(confirm("Supprimer ce produit ?")){
 
-produits.splice(index,1);
+await deleteDoc(doc(db,"produits",id));
 
-sauvegarderProduits();
-
-afficherProduits();
+chargerProduits();
 
 }
 
 }
-
 
 
 
@@ -137,5 +164,10 @@ document.getElementById("prixRevente").value = "";
 }
 
 
-// Charger les produits sauvegardés
-afficherProduits();
+// Rendre les fonctions accessibles aux boutons HTML
+window.ajouterProduit = ajouterProduit;
+window.supprimerProduit = supprimerProduit;
+
+
+// Démarrage
+chargerProduits();
