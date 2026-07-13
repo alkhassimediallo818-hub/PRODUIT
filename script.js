@@ -56,28 +56,49 @@ const benefice =
 
 
 
+try {
+
+
 await addDoc(
 collection(db,"produits"),
 {
-
 nom,
 prixGros,
 quantite,
 prixUnitaire,
 prixRevente,
 benefice
-
 }
 );
 
 
+alert("Produit ajouté avec succès !");
+
 
 viderChamps();
 
-chargerProduits();
+
+await chargerProduits();
+
 
 
 }
+
+catch(error){
+
+
+console.error("Erreur ajout :", error);
+
+alert(
+"Erreur Firestore : " + error.message
+);
+
+
+}
+
+
+}
+
 
 
 
@@ -85,6 +106,9 @@ chargerProduits();
 // Charger produits
 
 async function chargerProduits(){
+
+
+try {
 
 
 produits = [];
@@ -109,11 +133,28 @@ id: element.id,
 });
 
 
-
 afficherProduits();
 
 
+
 }
+
+catch(error){
+
+
+console.error("Erreur chargement :", error);
+
+alert(
+"Erreur chargement : " + error.message
+);
+
+
+}
+
+
+}
+
+
 
 
 
@@ -179,9 +220,7 @@ Supprimer
 `;
 
 
-
 tableau.appendChild(ligne);
-
 
 
 });
@@ -194,7 +233,7 @@ produits.length;
 
 
 document.getElementById("beneficeTotal").textContent =
-beneficeTotal.toLocaleString()+" FCFA";
+beneficeTotal.toLocaleString() + " FCFA";
 
 
 }
@@ -202,9 +241,13 @@ beneficeTotal.toLocaleString()+" FCFA";
 
 
 
-// Supprimer
+
+// Supprimer produit
 
 async function supprimerProduit(id){
+
+
+try {
 
 
 if(confirm("Supprimer ce produit ?")){
@@ -215,13 +258,29 @@ doc(db,"produits",id)
 );
 
 
-chargerProduits();
+await chargerProduits();
 
 
 }
 
 
 }
+
+catch(error){
+
+
+console.error("Erreur suppression :", error);
+
+alert(
+"Erreur suppression : " + error.message
+);
+
+
+}
+
+
+}
+
 
 
 
@@ -229,20 +288,22 @@ chargerProduits();
 function viderChamps(){
 
 
-document.getElementById("nom").value="";
+document.getElementById("nom").value = "";
 
-document.getElementById("prixGros").value="";
+document.getElementById("prixGros").value = "";
 
-document.getElementById("quantite").value="";
+document.getElementById("quantite").value = "";
 
-document.getElementById("prixRevente").value="";
+document.getElementById("prixRevente").value = "";
 
 
 }
 
 
 
-// rendre accessible aux boutons HTML
+
+
+// Boutons HTML
 
 window.ajouterProduit = ajouterProduit;
 
@@ -250,6 +311,6 @@ window.supprimerProduit = supprimerProduit;
 
 
 
-// démarrage
+// Démarrage
 
 chargerProduits();
