@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gestion des Produits</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+
+    <h1>📦 Gestion des Produits</h1>
+
+    <div class="formulaire">
+
+        <input type="text" id="nom" placeholder="Nom du produit">
+
+        <input type="number" id="prixGros" placeholder="Prix en gros">
+
+        <input type="number" id="quantite" placeholder="Quantité">
+
+        <input type="number" id="prixRevente" placeholder="Prix de revente unitaire">
+
+        <button onclick="ajouterProduit()">Ajouter le produit</button>
+
+    </div>
+
+    <div class="stats">
+        <div>
+            <h3>Produits</h3>
+            <span id="nbProduits">0</span>
+        </div>
+
+        <div>
+            <h3>Bénéfice Total</h3>
+            <span id="beneficeTotal">0 FCFA</span>
+        </div>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Produit</th>
+                <th>Prix Gros</th>
+                <th>Quantité</th>
+                <th>Prix Unitaire</th>
+                <th>Prix Revente</th>
+                <th>Bénéfice / Perte</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+
+        <tbody id="tableauProduits">
+        </tbody>
+    </table>
+
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
