@@ -6,40 +6,47 @@ GoogleAuthProvider,
 signInWithPopup
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
+import {
+getFirestore
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
 
 const firebaseConfig = {
   apiKey: "AIzaSyBcJ8ghcBNxJ-VJNksHfUffDuM5ZzwZTXw",
-  authDomain: "qassimedv.firebaseapp.com",
-  projectId: "qassimedv",
-  storageBucket: "qassimedv.firebasestorage.app",
-  messagingSenderId: "908242149044",
-  appId: "1:908242149044:web:ec03eb653461152645c1e1"
-};
+    authDomain: "qassimedv.firebaseapp.com",
+      projectId: "qassimedv",
+        storageBucket: "qassimedv.firebasestorage.app",
+          messagingSenderId: "908242149044",
+            appId: "1:908242149044:web:ec03eb653461152645c1e1"
+            };
 
 
-const app = initializeApp(firebaseConfig);
-
-const auth = getAuth(app);
-
-const provider = new GoogleAuthProvider();
+            const app = initializeApp(firebaseConfig);
 
 
-window.connexionGoogle = async function(){
+            // Firestore
+            export const db = getFirestore(app);
 
-try{
 
-const result =
-await signInWithPopup(auth, provider);
+            // Auth Google
+            const auth = getAuth(app);
 
-alert(
-"Connecté : " +
-result.user.displayName
-);
+            const provider = new GoogleAuthProvider();
 
-}catch(error){
 
-alert(error.message);
+            window.connexionGoogle = async function(){
 
-}
+            try{
 
-}
+            const result = await signInWithPopup(auth, provider);
+
+            alert("Connecté : " + result.user.displayName);
+
+            }catch(error){
+
+            console.error(error);
+            alert(error.message);
+
+            }
+
+            }
