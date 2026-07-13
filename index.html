@@ -3,64 +3,90 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Gestion des Produits</title>
+
 <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
 <div class="container">
 
-    <h1>📦 Gestion des Produits</h1>
+<h1>📦 Gestion des Produits</h1>
 
-    <button onclick="connexionGoogle()">
-        Connexion Google
-    </button>
 
-    <div class="formulaire">
+<button onclick="connexionGoogle()">
+Connexion Google
+</button>
 
-        <input type="text" id="nom" placeholder="Nom du produit">
 
-        <input type="number" id="prixGros" placeholder="Prix en gros">
+<div class="formulaire">
 
-        <input type="number" id="quantite" placeholder="Quantité">
+<input type="text" id="nom" placeholder="Nom du produit">
 
-        <input type="number" id="prixRevente" placeholder="Prix de revente unitaire">
+<input type="number" id="prixGros" placeholder="Prix en gros">
 
-        <button onclick="ajouterProduit()">Ajouter le produit</button>
+<input type="number" id="quantite" placeholder="Quantité">
 
-    </div>
+<input type="number" id="prixRevente" placeholder="Prix de revente unitaire">
 
-    <div class="stats">
-        <div>
-            <h3>Produits</h3>
-            <span id="nbProduits">0</span>
-        </div>
 
-        <div>
-            <h3>Bénéfice Total</h3>
-            <span id="beneficeTotal">0 FCFA</span>
-        </div>
-    </div>
-
-    <table>
-        <thead>
-            <tr>
-                <th>Produit</th>
-                <th>Prix Gros</th>
-                <th>Quantité</th>
-                <th>Prix Unitaire</th>
-                <th>Prix Revente</th>
-                <th>Bénéfice / Perte</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-
-        <tbody id="tableauProduits">
-        </tbody>
-    </table>
+<button onclick="ajouterProduit()">
+Ajouter le produit
+</button>
 
 </div>
 
+
+
+<div class="stats">
+
+<div>
+<h3>Produits</h3>
+<span id="nbProduits">0</span>
+</div>
+
+
+<div>
+<h3>Bénéfice Total</h3>
+<span id="beneficeTotal">0 FCFA</span>
+</div>
+
+</div>
+
+
+
+
+<table>
+
+<thead>
+
+<tr>
+<th>Produit</th>
+<th>Prix Gros</th>
+<th>Quantité</th>
+<th>Prix Unitaire</th>
+<th>Prix Revente</th>
+<th>Bénéfice / Perte</th>
+<th>Action</th>
+</tr>
+
+</thead>
+
+
+<tbody id="tableauProduits">
+
+</tbody>
+
+
+</table>
+
+
+</div>
+
+
 <script type="module" src="script.js"></script>
+
 </body>
 </html>
