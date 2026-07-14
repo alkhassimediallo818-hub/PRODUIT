@@ -8,7 +8,8 @@ import {
     doc,
     query,
     where,
-    serverTimestamp
+    serverTimestamp,
+    updateDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 import {
@@ -20,8 +21,10 @@ let produits = [];
 
 let utilisateurConnecte = false;
 
+let produitModification = null;
 
-// Ajouter un produit
+
+// Ajouter ou modifier un produit
 
 async function ajouterProduit(){
 
@@ -70,6 +73,37 @@ const benefice =
 
 
 
+// Modification
+
+if(produitModification){
+
+await updateDoc(
+doc(db,"produits",produitModification),
+{
+
+nom,
+prixGros,
+quantite,
+prixUnitaire,
+prixRevente,
+benefice
+
+});
+
+
+produitModification = null;
+
+
+alert("Produit modifié avec succès.");
+
+}
+
+
+// Ajout
+
+else{
+
+
 await addDoc(collection(db,"produits"),{
 
 nom,
@@ -86,6 +120,11 @@ dateAjout: serverTimestamp()
 });
 
 
+alert("Produit ajouté avec succès.");
+
+}
+
+
 
 viderChamps();
 
@@ -95,7 +134,9 @@ chargerProduits();
 
 
 
-// Charger uniquement les produits de l'utilisateur connecté
+
+
+// Charger les produits de l'utilisateur
 
 async function chargerProduits(){
 
@@ -151,6 +192,7 @@ afficherProduits();
 
 
 
+
 // Affichage
 
 function afficherProduits(){
@@ -198,11 +240,19 @@ ${produit.benefice} FCFA
 
 <td>
 
+<button onclick="modifierProduit('${produit.id}')">
+
+Modifier
+
+</button>
+
+
 <button onclick="supprimerProduit('${produit.id}')">
 
 Supprimer
 
 </button>
+
 
 </td>
 
@@ -233,8 +283,47 @@ beneficeTotal + " FCFA";
 
 
 
-// Supprimer uniquement ses propres produits
+// Préparer une modification
 
+function modifierProduit(id){
+
+
+const produit = produits.find(
+p => p.id === id
+);
+
+
+if(!produit) return;
+
+
+
+document.getElementById("nom").value =
+produit.nom;
+
+
+document.getElementById("prixGros").value =
+produit.prixGros;
+
+
+document.getElementById("quantite").value =
+produit.quantite;
+
+
+document.getElementById("prixRevente").value =
+produit.prixRevente;
+
+
+
+produitModification = id;
+
+
+}
+
+
+
+
+
+// Supprimer
 
 async function supprimerProduit(id){
 
@@ -284,36 +373,27 @@ document.getElementById("prixRevente").value="";
 
 
 
-// Surveillance connexion
-
+// Auth Firebase
 
 onAuthStateChanged(auth,(user)=>{
 
 
 if(user){
 
-
 utilisateurConnecte = true;
 
-
 chargerProduits();
-
 
 
 }
 
 else{
 
-
 utilisateurConnecte = false;
-
 
 produits = [];
 
-
 afficherProduits();
-
-
 
 }
 
@@ -327,3 +407,5 @@ afficherProduits();
 window.ajouterProduit = ajouterProduit;
 
 window.supprimerProduit = supprimerProduit;
+
+window.modifierProduit = modifierProduit;
