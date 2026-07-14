@@ -7,7 +7,8 @@ import {
     deleteDoc,
     doc,
     query,
-    where
+    where,
+    serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 import {
@@ -80,7 +81,7 @@ benefice,
 
 userId: auth.currentUser.uid,
 
-dateAjout: new Date()
+dateAjout: serverTimestamp()
 
 });
 
