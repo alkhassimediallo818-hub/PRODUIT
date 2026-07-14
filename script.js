@@ -1,51 +1,42 @@
 import { db, auth } from "./firebase.js";
 
 import {
-collection,
-addDoc,
-getDocs,
-deleteDoc,
-doc,
-query,
-where
+    collection,
+    addDoc,
+    getDocs,
+    deleteDoc,
+    doc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+import {
+    onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 
 let produits = [];
 
+let utilisateurConnecte = false;
 
 
-// Ajouter produit
-
+// Ajouter un produit
 async function ajouterProduit(){
 
-const user = auth.currentUser;
-
-
-if(!user){
-
-alert("Veuillez vous connecter avec Google avant d'ajouter un produit.");
-
-return;
-
+if(!utilisateurConnecte){
+    alert("Connectez-vous d'abord avec Google.");
+    return;
 }
-
 
 
 const nom = document.getElementById("nom").value.trim();
 
-const prixGros = Number(
-document.getElementById("prixGros").value
-);
+const prixGros =
+Number(document.getElementById("prixGros").value);
 
-const quantite = Number(
-document.getElementById("quantite").value
-);
+const quantite =
+Number(document.getElementById("quantite").value);
 
-const prixRevente = Number(
-document.getElementById("prixRevente").value
-);
-
+const prixRevente =
+Number(document.getElementById("prixRevente").value);
 
 
 if(
@@ -54,31 +45,18 @@ prixGros <= 0 ||
 quantite <= 0 ||
 prixRevente <= 0
 ){
-
 alert("Veuillez remplir correctement tous les champs.");
-
 return;
-
 }
 
 
-
 const prixUnitaire = prixGros / quantite;
-
 
 const benefice =
 (prixRevente * quantite) - prixGros;
 
 
-
-try {
-
-
-await addDoc(
-collection(db,"produits"),
-{
-
-userId:user.uid,
+await addDoc(collection(db,"produits"),{
 
 nom,
 prixGros,
@@ -87,113 +65,46 @@ prixUnitaire,
 prixRevente,
 benefice
 
-}
-);
-
-
-alert("Produit ajouté avec succès !");
+});
 
 
 viderChamps();
 
-
-await chargerProduits();
-
-
-
-}
-
-catch(error){
-
-console.error("Erreur ajout :", error);
-
-alert(
-"Erreur Firestore : " + error.message
-);
-
-}
-
+chargerProduits();
 
 }
 
 
 
-
-
-// Charger produits
+// Charger les produits
 
 async function chargerProduits(){
 
-
-const user = auth.currentUser;
-
-
-if(!user){
-
-produits = [];
-
-afficherProduits();
-
-return;
-
-}
-
-
-
-try {
+if(!utilisateurConnecte) return;
 
 
 produits = [];
-
-
-const requete = query(
-collection(db,"produits"),
-where("userId","==",user.uid)
-);
-
 
 
 const snapshot =
-await getDocs(requete);
+await getDocs(collection(db,"produits"));
 
 
-
-snapshot.forEach((element)=>{
-
+snapshot.forEach((document)=>{
 
 produits.push({
 
-id: element.id,
-...element.data()
+id: document.id,
+...document.data()
 
 });
-
 
 });
 
 
 afficherProduits();
 
-
-
 }
-
-catch(error){
-
-
-console.error("Erreur chargement :", error);
-
-alert(
-"Erreur chargement : " + error.message
-);
-
-
-}
-
-
-}
-
-
 
 
 
@@ -201,16 +112,14 @@ alert(
 
 function afficherProduits(){
 
-
 const tableau =
 document.getElementById("tableauProduits");
 
 
-tableau.innerHTML = "";
+tableau.innerHTML="";
 
 
-let beneficeTotal = 0;
-
+let beneficeTotal=0;
 
 
 produits.forEach((produit)=>{
@@ -219,40 +128,29 @@ produits.forEach((produit)=>{
 beneficeTotal += produit.benefice;
 
 
-
-const ligne =
-document.createElement("tr");
+const ligne=document.createElement("tr");
 
 
-
-ligne.innerHTML = `
+ligne.innerHTML=`
 
 <td>${produit.nom}</td>
 
-<td>${produit.prixGros.toLocaleString()} FCFA</td>
+<td>${produit.prixGros} FCFA</td>
 
 <td>${produit.quantite}</td>
 
 <td>${produit.prixUnitaire.toFixed(2)} FCFA</td>
 
-<td>${produit.prixRevente.toLocaleString()} FCFA</td>
-
-
-<td class="${produit.benefice >= 0 ? "benefice":"perte"}">
-
-${produit.benefice.toLocaleString()} FCFA
-
-</td>
-
+<td>${produit.prixRevente} FCFA</td>
 
 <td>
+${produit.benefice} FCFA
+</td>
 
+<td>
 <button onclick="supprimerProduit('${produit.id}')">
-
 Supprimer
-
 </button>
-
 </td>
 
 `;
@@ -264,96 +162,72 @@ tableau.appendChild(ligne);
 });
 
 
-
 document.getElementById("nbProduits").textContent =
 produits.length;
 
 
-
 document.getElementById("beneficeTotal").textContent =
-beneficeTotal.toLocaleString() + " FCFA";
-
+beneficeTotal + " FCFA";
 
 }
 
 
 
-
-
-// Supprimer produit
+// Supprimer
 
 async function supprimerProduit(id){
 
+if(!utilisateurConnecte){
 
-try {
+alert("Connectez-vous d'abord.");
 
-
-if(confirm("Supprimer ce produit ?")){
-
-
-await deleteDoc(
-doc(db,"produits",id)
-);
-
-
-await chargerProduits();
-
+return;
 
 }
 
 
-}
+await deleteDoc(doc(db,"produits",id));
 
-catch(error){
-
-
-console.error("Erreur suppression :", error);
-
-alert(
-"Erreur suppression : " + error.message
-);
-
-
-}
-
+chargerProduits();
 
 }
 
 
 
-
+// Vider
 
 function viderChamps(){
 
-
-document.getElementById("nom").value = "";
-
-document.getElementById("prixGros").value = "";
-
-document.getElementById("quantite").value = "";
-
-document.getElementById("prixRevente").value = "";
+document.getElementById("nom").value="";
+document.getElementById("prixGros").value="";
+document.getElementById("quantite").value="";
+document.getElementById("prixRevente").value="";
 
 }
 
 
 
+// Auth Firebase
 
+onAuthStateChanged(auth,(user)=>{
 
-window.ajouterProduit = ajouterProduit;
+if(user){
 
-window.supprimerProduit = supprimerProduit;
-
-
-
-// Recharge après connexion Google
-
-auth.onAuthStateChanged((user)=>{
+utilisateurConnecte=true;
 
 chargerProduits();
+
+}
+
+else{
+
+utilisateurConnecte=false;
+
+}
 
 });
 
 
 
-chargerProduits();
+window.ajouterProduit = ajouterProduit;
+window.supprimerProduit = supprimerProduit;
