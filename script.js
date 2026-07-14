@@ -1,4 +1,9 @@
-import { db } from "./firebase.js";
+import {
+GoogleAuthProvider,
+signInWithPopup
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+import { auth, db } from "./firebase.js";
 
 import {
 collection,
@@ -9,7 +14,40 @@ doc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 
+
 let produits = [];
+
+
+
+// Connexion Google
+
+async function connexionGoogle(){
+
+const provider = new GoogleAuthProvider();
+
+
+try{
+
+const resultat = await signInWithPopup(auth, provider);
+
+alert("Bienvenue " + resultat.user.displayName);
+
+
+}
+
+catch(error){
+
+console.error("Erreur connexion :", error);
+
+alert(
+"Erreur connexion : " + error.message
+);
+
+}
+
+}
+
+
 
 
 
@@ -54,7 +92,7 @@ const prixUnitaire = prixGros / quantite;
 const benefice =
 (prixRevente * quantite) - prixGros;
 
-alert("Calcul OK, tentative d'enregistrement");
+
 
 try {
 
@@ -308,6 +346,8 @@ document.getElementById("prixRevente").value = "";
 window.ajouterProduit = ajouterProduit;
 
 window.supprimerProduit = supprimerProduit;
+
+window.connexionGoogle = connexionGoogle;
 
 
 
