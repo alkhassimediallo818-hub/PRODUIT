@@ -1,59 +1,35 @@
-import {
-GoogleAuthProvider,
-signInWithPopup
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-
-import { auth, db } from "./firebase.js";
+import { db, auth } from "./firebase.js";
 
 import {
 collection,
 addDoc,
 getDocs,
 deleteDoc,
-doc
+doc,
+query,
+where
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
 
 
 let produits = [];
 
 
 
-// Connexion Google
-
-async function connexionGoogle(){
-
-const provider = new GoogleAuthProvider();
-
-
-try{
-
-const resultat = await signInWithPopup(auth, provider);
-
-alert("Bienvenue " + resultat.user.displayName);
-
-
-}
-
-catch(error){
-
-console.error("Erreur connexion :", error);
-
-alert(
-"Erreur connexion : " + error.message
-);
-
-}
-
-}
-
-
-
-
-
 // Ajouter produit
 
 async function ajouterProduit(){
+
+const user = auth.currentUser;
+
+
+if(!user){
+
+alert("Veuillez vous connecter avec Google avant d'ajouter un produit.");
+
+return;
+
+}
+
 
 
 const nom = document.getElementById("nom").value.trim();
@@ -80,6 +56,7 @@ prixRevente <= 0
 ){
 
 alert("Veuillez remplir correctement tous les champs.");
+
 return;
 
 }
@@ -100,12 +77,16 @@ try {
 await addDoc(
 collection(db,"produits"),
 {
+
+userId:user.uid,
+
 nom,
 prixGros,
 quantite,
 prixUnitaire,
 prixRevente,
 benefice
+
 }
 );
 
@@ -124,13 +105,11 @@ await chargerProduits();
 
 catch(error){
 
-
 console.error("Erreur ajout :", error);
 
 alert(
 "Erreur Firestore : " + error.message
 );
-
 
 }
 
@@ -146,14 +125,36 @@ alert(
 async function chargerProduits(){
 
 
+const user = auth.currentUser;
+
+
+if(!user){
+
+produits = [];
+
+afficherProduits();
+
+return;
+
+}
+
+
+
 try {
 
 
 produits = [];
 
 
+const requete = query(
+collection(db,"produits"),
+where("userId","==",user.uid)
+);
+
+
+
 const snapshot =
-await getDocs(collection(db,"produits"));
+await getDocs(requete);
 
 
 
@@ -191,7 +192,6 @@ alert(
 
 
 }
-
 
 
 
@@ -334,23 +334,26 @@ document.getElementById("quantite").value = "";
 
 document.getElementById("prixRevente").value = "";
 
-
 }
 
 
 
 
 
-// Boutons HTML
-
 window.ajouterProduit = ajouterProduit;
 
 window.supprimerProduit = supprimerProduit;
 
-window.connexionGoogle = connexionGoogle;
 
 
+// Recharge après connexion Google
 
-// Démarrage
+auth.onAuthStateChanged((user)=>{
+
+chargerProduits();
+
+});
+
+
 
 chargerProduits();
