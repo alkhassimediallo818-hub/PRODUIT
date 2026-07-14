@@ -9,7 +9,9 @@ import {
     query,
     where,
     serverTimestamp,
-    updateDoc
+    updateDoc,
+    orderBy
+
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 
@@ -48,6 +50,131 @@ date: serverTimestamp()
 );
 
 }
+
+
+
+
+
+// Charger historique utilisateur
+
+async function chargerHistorique(){
+
+
+if(!utilisateurConnecte || !auth.currentUser)
+
+return;
+
+
+
+const historiqueQuery = query(
+
+collection(db,"historique"),
+
+where(
+"userId",
+"==",
+auth.currentUser.uid
+),
+
+orderBy(
+"date",
+"desc"
+)
+
+);
+
+
+
+const snapshot = await getDocs(historiqueQuery);
+
+
+
+let historique = [];
+
+
+
+snapshot.forEach((document)=>{
+
+
+historique.push({
+
+id: document.id,
+
+...document.data()
+
+});
+
+
+});
+
+
+
+afficherHistorique(historique);
+
+
+}
+
+
+
+
+
+// Afficher historique
+
+function afficherHistorique(historique){
+
+
+const tableau = document.getElementById("tableauHistorique");
+
+
+if(!tableau) return;
+
+
+
+tableau.innerHTML = "";
+
+
+
+historique.forEach((action)=>{
+
+
+let date = "Date inconnue";
+
+
+
+if(action.date){
+
+date = action.date.toDate()
+.toLocaleString();
+
+}
+
+
+
+const ligne = document.createElement("tr");
+
+
+
+ligne.innerHTML = `
+
+<td>${action.type}</td>
+
+<td>${action.produit}</td>
+
+<td>${date}</td>
+
+`;
+
+
+
+tableau.appendChild(ligne);
+
+
+});
+
+
+}
+
+
 
 
 
@@ -112,7 +239,6 @@ const benefice =
 
 
 
-
 // Modification
 
 if(produitModification){
@@ -156,11 +282,6 @@ alert("Produit modifié avec succès.");
 
 
 }
-
-
-
-
-
 // Ajout
 
 else{
@@ -215,18 +336,29 @@ viderChamps();
 
 chargerProduits();
 
+chargerHistorique();
+
 
 }
+
+
+
+
+
+
 // Charger uniquement les produits de l'utilisateur connecté
 
 async function chargerProduits(){
+
 
 if(!utilisateurConnecte || !auth.currentUser)
 
 return;
 
 
+
 produits = [];
+
 
 
 const produitsUtilisateur = query(
@@ -271,7 +403,10 @@ afficherProduits();
 
 
 
-// Affichage + statistiques
+
+
+
+// Affichage produits + statistiques
 
 function afficherProduits(){
 
@@ -301,52 +436,6 @@ beneficeTotal += produit.benefice;
 
 
 
-if(produit.dateAjout){
-
-
-const dateProduit = produit.dateAjout.toDate();
-
-
-
-if(
-
-dateProduit.getDate() === maintenant.getDate()
-
-&&
-
-dateProduit.getMonth() === maintenant.getMonth()
-
-&&
-
-dateProduit.getFullYear() === maintenant.getFullYear()
-
-){
-
-beneficeJour += produit.benefice;
-
-}
-
-
-
-if(
-
-dateProduit.getMonth() === maintenant.getMonth()
-
-&&
-
-dateProduit.getFullYear() === maintenant.getFullYear()
-
-){
-
-beneficeMois += produit.benefice;
-
-}
-
-
-}
-
-
-
 const ligne = document.createElement("tr");
 
 
@@ -370,16 +459,12 @@ ligne.innerHTML = `
 <td>
 
 <button onclick="modifierProduit('${produit.id}')">
-
 Modifier
-
 </button>
 
 
 <button onclick="supprimerProduit('${produit.id}')">
-
 Supprimer
-
 </button>
 
 
@@ -419,6 +504,8 @@ beneficeMois + " FCFA";
 
 
 
+
+
 // Préparer modification
 
 function modifierProduit(id){
@@ -427,6 +514,7 @@ function modifierProduit(id){
 const produit = produits.find(
 p => p.id === id
 );
+
 
 
 if(!produit)
@@ -504,8 +592,11 @@ doc(db,"produits",id)
 
 chargerProduits();
 
+chargerHistorique();
+
 
 }
+
 
 
 
@@ -543,6 +634,8 @@ utilisateurConnecte = true;
 
 
 chargerProduits();
+
+chargerHistorique();
 
 
 }
