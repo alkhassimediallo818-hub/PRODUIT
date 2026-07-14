@@ -27,6 +27,30 @@ let produitModification = null;
 
 
 
+// Historique des actions
+
+async function enregistrerHistorique(type, produit){
+
+await addDoc(
+collection(db,"historique"),
+{
+
+userId: auth.currentUser.uid,
+
+type,
+
+produit,
+
+date: serverTimestamp()
+
+}
+
+);
+
+}
+
+
+
 
 // Ajouter ou modifier un produit
 
@@ -63,7 +87,6 @@ Number(document.getElementById("prixRevente").value);
 
 
 
-
 if(
 nom === "" ||
 prixGros <= 0 ||
@@ -86,7 +109,6 @@ prixGros / quantite;
 
 const benefice =
 (prixRevente * quantite) - prixGros;
-
 
 
 
@@ -120,11 +142,17 @@ benefice
 
 
 
+await enregistrerHistorique(
+"modification",
+nom
+);
+
+
+
 produitModification = null;
 
 
 alert("Produit modifié avec succès.");
-
 
 
 }
@@ -169,8 +197,14 @@ dateAjout: serverTimestamp()
 
 
 
-alert("Produit ajouté avec succès.");
+await enregistrerHistorique(
+"ajout",
+nom
+);
 
+
+
+alert("Produit ajouté avec succès.");
 
 
 }
@@ -182,29 +216,17 @@ viderChamps();
 chargerProduits();
 
 
-
 }
-
-
-
-
-
-
-
 // Charger uniquement les produits de l'utilisateur connecté
 
-
 async function chargerProduits(){
-
 
 if(!utilisateurConnecte || !auth.currentUser)
 
 return;
 
 
-
 produits = [];
-
 
 
 const produitsUtilisateur = query(
@@ -212,23 +234,16 @@ const produitsUtilisateur = query(
 collection(db,"produits"),
 
 where(
-
 "userId",
-
 "==",
-
 auth.currentUser.uid
-
 )
 
 );
 
 
 
-const snapshot =
-
-await getDocs(produitsUtilisateur);
-
+const snapshot = await getDocs(produitsUtilisateur);
 
 
 
@@ -251,33 +266,21 @@ id: document.id,
 afficherProduits();
 
 
-
 }
-
-
-
-
-
 
 
 
 
 // Affichage + statistiques
 
-
 function afficherProduits(){
 
 
-
 const tableau =
-
 document.getElementById("tableauProduits");
 
 
-
 tableau.innerHTML = "";
-
-
 
 
 let beneficeTotal = 0;
@@ -287,10 +290,7 @@ let beneficeJour = 0;
 let beneficeMois = 0;
 
 
-
 const maintenant = new Date();
-
-
 
 
 
@@ -304,12 +304,7 @@ beneficeTotal += produit.benefice;
 if(produit.dateAjout){
 
 
-
-const dateProduit =
-
-produit.dateAjout.toDate();
-
-
+const dateProduit = produit.dateAjout.toDate();
 
 
 
@@ -327,12 +322,9 @@ dateProduit.getFullYear() === maintenant.getFullYear()
 
 ){
 
-
 beneficeJour += produit.benefice;
 
-
 }
-
 
 
 
@@ -346,16 +338,12 @@ dateProduit.getFullYear() === maintenant.getFullYear()
 
 ){
 
-
 beneficeMois += produit.benefice;
 
-
 }
 
 
-
 }
-
 
 
 
@@ -363,43 +351,29 @@ const ligne = document.createElement("tr");
 
 
 
-
 ligne.innerHTML = `
-
 
 
 <td>${produit.nom}</td>
 
-
 <td>${produit.prixGros} FCFA</td>
-
 
 <td>${produit.quantite}</td>
 
-
 <td>${produit.prixUnitaire.toFixed(2)} FCFA</td>
-
 
 <td>${produit.prixRevente} FCFA</td>
 
-
-<td>
-
-${produit.benefice} FCFA
-
-</td>
-
+<td>${produit.benefice} FCFA</td>
 
 
 <td>
-
 
 <button onclick="modifierProduit('${produit.id}')">
 
 Modifier
 
 </button>
-
 
 
 <button onclick="supprimerProduit('${produit.id}')">
@@ -409,10 +383,7 @@ Supprimer
 </button>
 
 
-
 </td>
-
-
 
 `;
 
@@ -426,31 +397,20 @@ tableau.appendChild(ligne);
 
 
 
-
-
-
 document.getElementById("nbProduits").textContent =
-
 produits.length;
 
 
-
 document.getElementById("beneficeTotal").textContent =
-
 beneficeTotal + " FCFA";
 
 
-
 document.getElementById("beneficeJour").textContent =
-
 beneficeJour + " FCFA";
 
 
-
 document.getElementById("beneficeMois").textContent =
-
 beneficeMois + " FCFA";
-
 
 
 }
@@ -459,25 +419,14 @@ beneficeMois + " FCFA";
 
 
 
-
-
-
-
 // Préparer modification
-
 
 function modifierProduit(id){
 
 
-
-const produit =
-
-produits.find(
-
+const produit = produits.find(
 p => p.id === id
-
 );
-
 
 
 if(!produit)
@@ -486,34 +435,24 @@ return;
 
 
 
-
 document.getElementById("nom").value =
-
 produit.nom;
 
 
-
 document.getElementById("prixGros").value =
-
 produit.prixGros;
 
 
-
 document.getElementById("quantite").value =
-
 produit.quantite;
 
 
-
 document.getElementById("prixRevente").value =
-
 produit.prixRevente;
 
 
 
-
 produitModification = id;
-
 
 
 }
@@ -523,14 +462,9 @@ produitModification = id;
 
 
 
-
-
-
-// Supprimer
-
+// Supprimer avec historique
 
 async function supprimerProduit(id){
-
 
 
 if(!utilisateurConnecte || !auth.currentUser){
@@ -538,6 +472,23 @@ if(!utilisateurConnecte || !auth.currentUser){
 alert("Connectez-vous d'abord.");
 
 return;
+
+}
+
+
+
+const produit = produits.find(
+p => p.id === id
+);
+
+
+
+if(produit){
+
+await enregistrerHistorique(
+"suppression",
+produit.nom
+);
 
 }
 
@@ -554,11 +505,7 @@ doc(db,"produits",id)
 chargerProduits();
 
 
-
 }
-
-
-
 
 
 
@@ -567,15 +514,11 @@ chargerProduits();
 
 function viderChamps(){
 
-
 document.getElementById("nom").value="";
-
 
 document.getElementById("prixGros").value="";
 
-
 document.getElementById("quantite").value="";
-
 
 document.getElementById("prixRevente").value="";
 
@@ -588,10 +531,7 @@ document.getElementById("prixRevente").value="";
 
 
 
-
-
 // Authentification
-
 
 onAuthStateChanged(auth,(user)=>{
 
@@ -603,7 +543,6 @@ utilisateurConnecte = true;
 
 
 chargerProduits();
-
 
 
 }
@@ -620,14 +559,10 @@ produits = [];
 afficherProduits();
 
 
-
 }
 
 
-
 });
-
-
 
 
 
