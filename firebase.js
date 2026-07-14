@@ -12,6 +12,7 @@ import {
 getFirestore
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
+
 const firebaseConfig = {
 apiKey: "AIzaSyBcJ8ghcBNxJ-VJNksHfUffDuM5ZzwZTXw",
 authDomain: "qassimedv.firebaseapp.com",
@@ -21,7 +22,9 @@ messagingSenderId: "908242149044",
 appId: "1:908242149044:web:ec03eb653461152645c1e1"
 };
 
+
 const app = initializeApp(firebaseConfig);
+
 
 export const db = getFirestore(app);
 
@@ -29,107 +32,175 @@ export const auth = getAuth(app);
 
 export const provider = new GoogleAuthProvider();
 
+
 export {
 signInWithPopup,
 signOut,
 onAuthStateChanged
 };
 
+
+
 window.connexionGoogle = async function () {
 
-try {  
+try {
 
-    if (auth.currentUser) {  
 
-        alert(  
-            "Vous êtes déjà connecté : " +  
-            auth.currentUser.displayName  
-        );  
+    if (auth.currentUser) {
 
-        return;  
-    }  
 
-    const result =  
-        await signInWithPopup(auth, provider);  
+        alert(
+            "Vous êtes déjà connecté : " +
+            auth.currentUser.displayName
+        );
 
-    const user = result.user;  
 
-    const info =  
-        document.getElementById("userInfo");  
+        return;
 
-    if (info) {  
+    }
 
-        info.innerHTML =  
-            "👤 " + user.displayName;  
 
-    }  
 
-    alert(  
-        "Connexion réussie : " +  
-        user.displayName  
-    );  
+    const result =
+        await signInWithPopup(auth, provider);
 
-}  
 
-catch (error) {  
 
-    console.error(error);  
+    const user = result.user;
 
-    alert(error.message);  
+
+
+    console.log(
+        "Utilisateur connecté :",
+        user
+    );
+
+
+
+    const info =
+        document.getElementById("userInfo");
+
+
+
+    if (info) {
+
+
+        info.innerHTML =
+            "👤 " + user.displayName;
+
+
+    }
+
+
+
+    alert(
+        "Connexion réussie : " +
+        user.displayName
+    );
+
+
+
+}
+
+catch (error) {
+
+
+    console.error(
+        "Erreur Google :",
+        error
+    );
+
+
+    alert(
+        "Erreur Google : " +
+        error.code +
+        "\n" +
+        error.message
+    );
+
 
 }
 
 };
+
+
+
+
 
 window.deconnexionGoogle = async function () {
 
-try {  
+try {
 
-    await signOut(auth);  
 
-    const info =  
-        document.getElementById("userInfo");  
+    await signOut(auth);
 
-    if (info) {  
 
-        info.innerHTML =  
-            "Non connecté";  
+    const info =
+        document.getElementById("userInfo");
 
-    }  
 
-    alert("Déconnexion réussie");  
 
-}  
+    if (info) {
 
-catch (error) {  
 
-    console.error(error);  
+        info.innerHTML =
+            "Non connecté";
 
-    alert(error.message);  
+
+    }
+
+
+    alert("Déconnexion réussie");
+
+
+}
+
+catch (error) {
+
+
+    console.error(error);
+
+
+    alert(error.message);
+
 
 }
 
 };
 
+
+
+
+
 onAuthStateChanged(auth, (user) => {
 
-const info =  
-    document.getElementById("userInfo");  
 
-if (!info) return;  
+const info =
+    document.getElementById("userInfo");
 
-if (user) {  
 
-    info.innerHTML =  
-        "👤 " + user.displayName;  
 
-}  
+if (!info) return;
 
-else {  
 
-    info.innerHTML =  
-        "Non connecté";  
+
+if (user) {
+
+
+    info.innerHTML =
+        "👤 " + user.displayName;
+
 
 }
+
+else {
+
+
+    info.innerHTML =
+        "Non connecté";
+
+
+}
+
 
 });
