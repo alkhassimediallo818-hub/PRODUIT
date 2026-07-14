@@ -1,36 +1,27 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
 import {
-    getAuth,
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-
-import {
-    getAuth,
-    GoogleAuthProvider,
-    signInWithPopup,
-    signOut,
-    onAuthStateChanged
+getAuth,
+GoogleAuthProvider,
+signInWithPopup,
+signOut,
+onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 import {
-    getFirestore,
-    doc,
-    setDoc
+getFirestore
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-
 const firebaseConfig = {
-    apiKey: "AIzaSyBcJ8ghcBNxJ-VJNksHfUffDuM5ZzwZTXw",
-    authDomain: "qassimedv.firebaseapp.com",
-    projectId: "qassimedv",
-    storageBucket: "qassimedv.firebasestorage.app",
-    messagingSenderId: "908242149044",
-    appId: "1:908242149044:web:ec03eb653461152645c1e1"
+apiKey: "AIzaSyBcJ8ghcBNxJ-VJNksHfUffDuM5ZzwZTXw",
+authDomain: "qassimedv.firebaseapp.com",
+projectId: "qassimedv",
+storageBucket: "qassimedv.firebasestorage.app",
+messagingSenderId: "908242149044",
+appId: "1:908242149044:web:ec03eb653461152645c1e1"
 };
 
-
 const app = initializeApp(firebaseConfig);
-
 
 export const db = getFirestore(app);
 
@@ -38,153 +29,107 @@ export const auth = getAuth(app);
 
 export const provider = new GoogleAuthProvider();
 
-
 export {
-    signInWithPopup,
-    signOut,
-    onAuthStateChanged
+signInWithPopup,
+signOut,
+onAuthStateChanged
 };
-
-
 
 window.connexionGoogle = async function () {
 
-    try {
+try {  
 
-        if (auth.currentUser) {
+    if (auth.currentUser) {  
 
-            alert(
-                "Vous êtes déjà connecté : " +
-                auth.currentUser.displayName
-            );
+        alert(  
+            "Vous êtes déjà connecté : " +  
+            auth.currentUser.displayName  
+        );  
 
-            return;
-        }
+        return;  
+    }  
 
+    const result =  
+        await signInWithPopup(auth, provider);  
 
-        const result =
-            await signInWithPopup(auth, provider);
+    const user = result.user;  
 
+    const info =  
+        document.getElementById("userInfo");  
 
-        const user = result.user;
+    if (info) {  
 
+        info.innerHTML =  
+            "👤 " + user.displayName;  
 
-        // Création du profil utilisateur dans Firestore
+    }  
 
-        await setDoc(
-            doc(db, "users", user.uid),
-            {
-                nom: user.displayName,
-                email: user.email,
-                photo: user.photoURL,
-                derniereConnexion: new Date()
-            },
-            {
-                merge: true
-            }
-        );
+    alert(  
+        "Connexion réussie : " +  
+        user.displayName  
+    );  
 
+}  
 
+catch (error) {  
 
-        const info =
-            document.getElementById("userInfo");
+    console.error(error);  
 
+    alert(error.message);  
 
-        if (info) {
-
-            info.innerHTML =
-                "👤 " + user.displayName;
-
-        }
-
-
-        alert(
-            "Connexion réussie : " +
-            user.displayName
-        );
-
-
-    }
-
-    catch (error) {
-
-        console.error(error);
-
-        alert(error.message);
-
-    }
+}
 
 };
-
-
-
 
 window.deconnexionGoogle = async function () {
 
-    try {
+try {  
 
+    await signOut(auth);  
 
-        await signOut(auth);
+    const info =  
+        document.getElementById("userInfo");  
 
+    if (info) {  
 
-        const info =
-            document.getElementById("userInfo");
+        info.innerHTML =  
+            "Non connecté";  
 
+    }  
 
-        if (info) {
+    alert("Déconnexion réussie");  
 
-            info.innerHTML =
-                "Non connecté";
+}  
 
-        }
+catch (error) {  
 
+    console.error(error);  
 
-        alert("Déconnexion réussie");
+    alert(error.message);  
 
-
-    }
-
-    catch (error) {
-
-        console.error(error);
-
-        alert(error.message);
-
-    }
+}
 
 };
 
-
-
-
 onAuthStateChanged(auth, (user) => {
 
+const info =  
+    document.getElementById("userInfo");  
 
-    const info =
-        document.getElementById("userInfo");
+if (!info) return;  
 
+if (user) {  
 
-    if (!info) return;
+    info.innerHTML =  
+        "👤 " + user.displayName;  
 
+}  
 
+else {  
 
-    if (user) {
+    info.innerHTML =  
+        "Non connecté";  
 
-
-        info.innerHTML =
-            "👤 " + user.displayName;
-
-
-    }
-
-    else {
-
-
-        info.innerHTML =
-            "Non connecté";
-
-
-    }
-
+}
 
 });
