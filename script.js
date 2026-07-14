@@ -34,7 +34,9 @@ let produitModification = null;
 async function enregistrerHistorique(type, produit){
 
 await addDoc(
+
 collection(db,"historique"),
+
 {
 
 userId: auth.currentUser.uid,
@@ -54,7 +56,6 @@ date: serverTimestamp()
 
 
 
-
 // Charger historique utilisateur
 
 async function chargerHistorique(){
@@ -66,19 +67,21 @@ return;
 
 
 
+try{
+
+
 const historiqueQuery = query(
 
 collection(db,"historique"),
 
 where(
-"userId",
-"==",
-auth.currentUser.uid
-),
 
-orderBy(
-"date",
-"desc"
+"userId",
+
+"==",
+
+auth.currentUser.uid
+
 )
 
 );
@@ -109,7 +112,39 @@ id: document.id,
 
 
 
+// Tri du plus récent au plus ancien
+
+historique.sort((a,b)=>{
+
+
+if(!a.date || !b.date)
+
+return 0;
+
+
+return b.date.toMillis() - a.date.toMillis();
+
+
+});
+
+
+
 afficherHistorique(historique);
+
+
+
+}
+
+catch(error){
+
+
+console.log(
+"Erreur historique : ",
+error
+);
+
+
+}
 
 
 }
@@ -123,10 +158,13 @@ afficherHistorique(historique);
 function afficherHistorique(historique){
 
 
-const tableau = document.getElementById("tableauHistorique");
+const tableau =
+document.getElementById("tableauHistorique");
 
 
-if(!tableau) return;
+if(!tableau)
+
+return;
 
 
 
@@ -143,14 +181,16 @@ let date = "Date inconnue";
 
 if(action.date){
 
-date = action.date.toDate()
+date =
+action.date.toDate()
 .toLocaleString();
 
 }
 
 
 
-const ligne = document.createElement("tr");
+const ligne =
+document.createElement("tr");
 
 
 
@@ -173,12 +213,6 @@ tableau.appendChild(ligne);
 
 
 }
-
-
-
-
-
-
 // Ajouter ou modifier un produit
 
 async function ajouterProduit(){
@@ -239,7 +273,6 @@ const benefice =
 
 
 
-// Modification
 
 if(produitModification){
 
@@ -282,7 +315,8 @@ alert("Produit modifié avec succès.");
 
 
 }
-// Ajout
+
+
 
 else{
 
@@ -334,6 +368,7 @@ alert("Produit ajouté avec succès.");
 
 viderChamps();
 
+
 chargerProduits();
 
 chargerHistorique();
@@ -346,7 +381,7 @@ chargerHistorique();
 
 
 
-// Charger uniquement les produits de l'utilisateur connecté
+// Charger produits utilisateur
 
 async function chargerProduits(){
 
@@ -405,8 +440,7 @@ afficherProduits();
 
 
 
-
-// Affichage produits + statistiques
+// Affichage produits
 
 function afficherProduits(){
 
@@ -418,14 +452,8 @@ document.getElementById("tableauProduits");
 tableau.innerHTML = "";
 
 
+
 let beneficeTotal = 0;
-
-let beneficeJour = 0;
-
-let beneficeMois = 0;
-
-
-const maintenant = new Date();
 
 
 
@@ -436,12 +464,12 @@ beneficeTotal += produit.benefice;
 
 
 
-const ligne = document.createElement("tr");
+const ligne =
+document.createElement("tr");
 
 
 
 ligne.innerHTML = `
-
 
 <td>${produit.nom}</td>
 
@@ -454,7 +482,6 @@ ligne.innerHTML = `
 <td>${produit.prixRevente} FCFA</td>
 
 <td>${produit.benefice} FCFA</td>
-
 
 <td>
 
@@ -477,7 +504,6 @@ Supprimer
 tableau.appendChild(ligne);
 
 
-
 });
 
 
@@ -490,14 +516,6 @@ document.getElementById("beneficeTotal").textContent =
 beneficeTotal + " FCFA";
 
 
-document.getElementById("beneficeJour").textContent =
-beneficeJour + " FCFA";
-
-
-document.getElementById("beneficeMois").textContent =
-beneficeMois + " FCFA";
-
-
 }
 
 
@@ -506,15 +524,12 @@ beneficeMois + " FCFA";
 
 
 
-// Préparer modification
-
 function modifierProduit(id){
 
 
 const produit = produits.find(
 p => p.id === id
 );
-
 
 
 if(!produit)
@@ -550,19 +565,8 @@ produitModification = id;
 
 
 
-// Supprimer avec historique
 
 async function supprimerProduit(id){
-
-
-if(!utilisateurConnecte || !auth.currentUser){
-
-alert("Connectez-vous d'abord.");
-
-return;
-
-}
-
 
 
 const produit = produits.find(
@@ -583,9 +587,7 @@ produit.nom
 
 
 await deleteDoc(
-
 doc(db,"produits",id)
-
 );
 
 
@@ -596,7 +598,6 @@ chargerHistorique();
 
 
 }
-
 
 
 
@@ -620,9 +621,6 @@ document.getElementById("prixRevente").value="";
 
 
 
-
-
-// Authentification
 
 onAuthStateChanged(auth,(user)=>{
 
@@ -656,7 +654,6 @@ afficherProduits();
 
 
 });
-
 
 
 
