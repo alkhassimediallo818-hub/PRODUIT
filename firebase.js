@@ -2,107 +2,134 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/fireba
 
 import {
     getAuth,
-        GoogleAuthProvider,
-            signInWithPopup,
-                onAuthStateChanged
-                } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    GoogleAuthProvider,
+    signInWithPopup,
+    signOut,
+    onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-                import {
-                    getFirestore
-                    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import {
+    getFirestore
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
+const firebaseConfig = {
+    apiKey: "AIzaSyBcJ8ghcBNxJ-VJNksHfUffDuM5ZzwZTXw",
+    authDomain: "qassimedv.firebaseapp.com",
+    projectId: "qassimedv",
+    storageBucket: "qassimedv.firebasestorage.app",
+    messagingSenderId: "908242149044",
+    appId: "1:908242149044:web:ec03eb653461152645c1e1"
+};
 
+const app = initializeApp(firebaseConfig);
 
-                    const firebaseConfig = {
-                      apiKey: "AIzaSyBcJ8ghcBNxJ-VJNksHfUffDuM5ZzwZTXw",
-                        authDomain: "qassimedv.firebaseapp.com",
-                          projectId: "qassimedv",
-                            storageBucket: "qassimedv.firebasestorage.app",
-                              messagingSenderId: "908242149044",
-                                appId: "1:908242149044:web:ec03eb653461152645c1e1"
-                                };
+export const db = getFirestore(app);
 
+export const auth = getAuth(app);
 
+export const provider = new GoogleAuthProvider();
 
-                                const app = initializeApp(firebaseConfig);
+export {
+    signInWithPopup,
+    signOut,
+    onAuthStateChanged
+};
 
+window.connexionGoogle = async function () {
 
-                                // Firestore
-                                export const db = getFirestore(app);
+    try {
 
+        if (auth.currentUser) {
 
-                                // Auth Google
-                                const auth = getAuth(app);
+            alert(
+                "Vous êtes déjà connecté : " +
+                auth.currentUser.displayName
+            );
 
-                                const provider = new GoogleAuthProvider();
+            return;
+        }
 
+        const result =
+            await signInWithPopup(auth, provider);
 
+        const user = result.user;
 
-                                window.connexionGoogle = async function(){
+        const info =
+            document.getElementById("userInfo");
 
+        if (info) {
 
-                                try {
+            info.innerHTML =
+                "👤 " + user.displayName;
 
+        }
 
-                                const user = auth.currentUser;
+        alert(
+            "Connexion réussie : " +
+            user.displayName
+        );
 
+    }
 
-                                // Si déjà connecté
-                                if(user){
+    catch (error) {
 
-                                alert("Vous êtes déjà connecté : " + user.displayName);
-                                return;
+        console.error(error);
 
-                                }
+        alert(error.message);
 
+    }
 
-                                // Nouvelle connexion Google
+};
 
-                                const result = await signInWithPopup(auth, provider);
+window.deconnexionGoogle = async function () {
 
+    try {
 
-                                alert(
-                                "Connecté : " + result.user.displayName
-                                );
+        await signOut(auth);
 
+        const info =
+            document.getElementById("userInfo");
 
-                                }
-                                catch(error){
+        if (info) {
 
+            info.innerHTML =
+                "Non connecté";
 
-                                console.error(error);
+        }
 
-                                alert(error.message);
+        alert("Déconnexion réussie");
 
+    }
 
-                                }
+    catch (error) {
 
+        console.error(error);
 
-                                };
+        alert(error.message);
 
+    }
 
+};
 
-                                // Surveillance de connexion
+onAuthStateChanged(auth, (user) => {
 
-                                onAuthStateChanged(auth, (user)=>{
+    const info =
+        document.getElementById("userInfo");
 
+    if (!info) return;
 
-                                if(user){
+    if (user) {
 
-                                console.log(
-                                "Utilisateur connecté :",
-                                user.displayName
-                                );
+        info.innerHTML =
+            "👤 " + user.displayName;
 
+    }
 
-                                }else{
+    else {
 
-                                console.log(
-                                "Aucun utilisateur connecté"
-                                );
+        info.innerHTML =
+            "Non connecté";
 
+    }
 
-                                }
-
-
-                                });
+});
