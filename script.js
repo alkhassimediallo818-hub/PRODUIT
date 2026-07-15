@@ -10,7 +10,6 @@ import {
     where,
     serverTimestamp,
     updateDoc
-
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 
@@ -26,13 +25,41 @@ let utilisateurConnecte = false;
 
 let produitModification = null;
 
+let produitVenteActuel = null;
+
+let traitementVente = false;
 
 
 
 
-// Historique des actions
+
+// Vérification connexion
+
+function utilisateurValide(){
+
+return utilisateurConnecte 
+&& auth.currentUser;
+
+}
+
+
+
+
+
+
+// Historique sécurisé
 
 async function enregistrerHistorique(type, produit){
+
+
+if(!utilisateurValide())
+
+return;
+
+
+
+try{
+
 
 await addDoc(
 
@@ -42,9 +69,9 @@ collection(db,"historique"),
 
 userId: auth.currentUser.uid,
 
-type,
+type: type || "action",
 
-produit,
+produit: produit || "Inconnu",
 
 date: serverTimestamp()
 
@@ -52,15 +79,44 @@ date: serverTimestamp()
 
 );
 
+
+}
+
+catch(error){
+
+console.error(
+"Erreur historique : ",
+error
+);
+
+}
+
+
 }
 
 
 
 
 
-// Enregistrer une vente dans Firestore
 
-async function enregistrerVente(produit, quantiteVendue, benefice){
+
+// Enregistrer vente sécurisé
+
+async function enregistrerVente(
+produit,
+quantiteVendue,
+benefice
+){
+
+
+if(!utilisateurValide())
+
+return;
+
+
+
+try{
+
 
 await addDoc(
 
@@ -70,15 +126,19 @@ collection(db,"ventes"),
 
 userId: auth.currentUser.uid,
 
-produit: produit.nom,
+produit: produit.nom || "Produit",
 
-quantiteVendue,
+quantiteVendue: Number(quantiteVendue),
 
-prixVente: produit.prixRevente,
+prixVente: Number(produit.prixRevente || 0),
 
-benefice,
+benefice: Number(benefice || 0),
 
-montantTotal: produit.prixRevente * quantiteVendue,
+montantTotal:
+Number(produit.prixRevente || 0)
+*
+Number(quantiteVendue),
+
 
 date: serverTimestamp()
 
@@ -86,6 +146,19 @@ date: serverTimestamp()
 
 );
 
+
+}
+
+catch(error){
+
+console.error(
+"Erreur vente : ",
+error
+);
+
+}
+
+
 }
 
 
@@ -93,13 +166,19 @@ date: serverTimestamp()
 
 
 
-// Charger les ventes utilisateur
+
+// Charger ventes
 
 async function chargerVentes(){
 
-if(!utilisateurConnecte || !auth.currentUser)
+
+if(!utilisateurValide())
 
 return;
+
+
+
+try{
 
 
 const ventesQuery = query(
@@ -116,7 +195,8 @@ auth.currentUser.uid
 
 
 
-const snapshot = await getDocs(ventesQuery);
+const snapshot =
+await getDocs(ventesQuery);
 
 
 
@@ -147,12 +227,26 @@ calculerStatistiquesVentes(ventes);
 
 }
 
+catch(error){
+
+
+console.error(
+"Erreur chargement ventes : ",
+error
+);
+
+
+}
+
+
+}
 
 
 
 
 
-// Calcul des statistiques ventes
+
+// Statistiques ventes sécurisées
 
 function calculerStatistiquesVentes(ventes){
 
@@ -170,37 +264,52 @@ let ventesMois = 0;
 const aujourdHui = new Date();
 
 
+
 ventes.forEach((vente)=>{
 
 
-chiffreAffaires += vente.montantTotal || 0;
+chiffreAffaires +=
+Number(vente.montantTotal || 0);
 
-beneficeVentes += vente.benefice || 0;
+
+
+beneficeVentes +=
+Number(vente.benefice || 0);
 
 
 
 if(vente.date){
 
 
-const dateVente = vente.date.toDate();
+const dateVente =
+vente.date.toDate();
 
 
 
 if(
 
-dateVente.getDate() === aujourdHui.getDate()
+dateVente.getDate()
+===
+aujourdHui.getDate()
 
 &&
 
-dateVente.getMonth() === aujourdHui.getMonth()
+dateVente.getMonth()
+===
+aujourdHui.getMonth()
 
 &&
 
-dateVente.getFullYear() === aujourdHui.getFullYear()
+dateVente.getFullYear()
+===
+aujourdHui.getFullYear()
 
 ){
 
-ventesJour += vente.montantTotal || 0;
+
+ventesJour +=
+Number(vente.montantTotal || 0);
+
 
 }
 
@@ -208,49 +317,81 @@ ventesJour += vente.montantTotal || 0;
 
 if(
 
-dateVente.getMonth() === aujourdHui.getMonth()
+dateVente.getMonth()
+===
+aujourdHui.getMonth()
 
 &&
 
-dateVente.getFullYear() === aujourdHui.getFullYear()
+dateVente.getFullYear()
+===
+aujourdHui.getFullYear()
 
 ){
 
-ventesMois += vente.montantTotal || 0;
+
+ventesMois +=
+Number(vente.montantTotal || 0);
+
 
 }
 
 
 }
-
 
 
 });
 
 
 
-document.getElementById("chiffreAffaires").textContent =
+const ca =
+document.getElementById("chiffreAffaires");
+
+
+if(ca)
+
+ca.textContent =
 chiffreAffaires + " FCFA";
 
 
-document.getElementById("beneficeVentes").textContent =
+
+const benefice =
+document.getElementById("beneficeVentes");
+
+
+if(benefice)
+
+benefice.textContent =
 beneficeVentes + " FCFA";
 
 
-document.getElementById("ventesJour").textContent =
+
+const jour =
+document.getElementById("ventesJour");
+
+
+if(jour)
+
+jour.textContent =
 ventesJour + " FCFA";
 
 
-document.getElementById("ventesMois").textContent =
-ventesMois + " FCFA";
 
+const mois =
+document.getElementById("ventesMois");
+
+
+if(mois)
+
+mois.textContent =
+ventesMois + " FCFA";
 
 
 calculerStockRestant();
 
 
 }
-// Calcul du stock restant
+// Calcul stock restant
 
 function calculerStockRestant(){
 
@@ -262,7 +403,9 @@ let stock = 0;
 produits.forEach((produit)=>{
 
 
-stock += produit.stockTotal || 0;
+stock += Number(
+produit.stockTotal || 0
+);
 
 
 });
@@ -289,8 +432,7 @@ element.textContent = stock;
 
 
 
-
-// Afficher les ventes
+// Affichage ventes sécurisé
 
 function afficherVentes(ventes){
 
@@ -310,6 +452,21 @@ tableau.innerHTML = "";
 
 
 
+ventes.sort((a,b)=>{
+
+
+if(!a.date || !b.date)
+
+return 0;
+
+
+return b.date.toMillis() - a.date.toMillis();
+
+
+});
+
+
+
 ventes.forEach((vente)=>{
 
 
@@ -319,9 +476,11 @@ let date = "Date inconnue";
 
 if(vente.date){
 
+
 date =
 vente.date.toDate()
 .toLocaleString();
+
 
 }
 
@@ -334,13 +493,13 @@ document.createElement("tr");
 
 ligne.innerHTML = `
 
-<td>${vente.produit}</td>
+<td>${vente.produit || "Produit"}</td>
 
-<td>${vente.quantiteVendue}</td>
+<td>${vente.quantiteVendue || 0}</td>
 
-<td>${vente.montantTotal} FCFA</td>
+<td>${vente.montantTotal || 0} FCFA</td>
 
-<td>${vente.benefice} FCFA</td>
+<td>${vente.benefice || 0} FCFA</td>
 
 <td>${date}</td>
 
@@ -361,12 +520,14 @@ tableau.appendChild(ligne);
 
 
 
-// Charger historique utilisateur
+
+
+// Charger historique sécurisé
 
 async function chargerHistorique(){
 
 
-if(!utilisateurConnecte || !auth.currentUser)
+if(!utilisateurValide())
 
 return;
 
@@ -389,7 +550,8 @@ auth.currentUser.uid
 
 
 
-const snapshot = await getDocs(historiqueQuery);
+const snapshot =
+await getDocs(historiqueQuery);
 
 
 
@@ -421,7 +583,9 @@ if(!a.date || !b.date)
 return 0;
 
 
-return b.date.toMillis() - a.date.toMillis();
+return b.date.toMillis()
+-
+a.date.toMillis();
 
 
 });
@@ -431,34 +595,36 @@ return b.date.toMillis() - a.date.toMillis();
 afficherHistorique(historique);
 
 
-
 }
 
 catch(error){
 
-console.log(
+
+console.error(
 "Erreur historique : ",
 error
 );
 
-}
-
 
 }
 
 
+}
 
 
 
 
 
-// Afficher historique
+
+
+// Affichage historique sécurisé
 
 function afficherHistorique(historique){
 
 
 const tableau =
 document.getElementById("tableauHistorique");
+
 
 
 if(!tableau)
@@ -474,15 +640,18 @@ tableau.innerHTML = "";
 historique.forEach((action)=>{
 
 
-let date = "Date inconnue";
+let date =
+"Date inconnue";
 
 
 
 if(action.date){
 
+
 date =
 action.date.toDate()
 .toLocaleString();
+
 
 }
 
@@ -495,9 +664,9 @@ document.createElement("tr");
 
 ligne.innerHTML = `
 
-<td>${action.type}</td>
+<td>${action.type || "Action"}</td>
 
-<td>${action.produit}</td>
+<td>${action.produit || "Produit"}</td>
 
 <td>${date}</td>
 
@@ -510,6 +679,7 @@ tableau.appendChild(ligne);
 
 });
 
+
 }
 
 
@@ -518,87 +688,132 @@ tableau.appendChild(ligne);
 
 
 
-// Ajouter ou modifier un produit
+
+// Ajouter ou modifier produit sécurisé
 
 async function ajouterProduit(){
 
 
-if(!utilisateurConnecte || !auth.currentUser){
+if(!utilisateurValide()){
 
-alert("Connectez-vous d'abord avec Google.");
+
+alert(
+"Connectez-vous d'abord avec Google."
+);
+
 
 return;
+
 
 }
 
 
 
+try{
+
+
 const nom =
-document.getElementById("nom").value.trim();
+document.getElementById("nom")
+.value
+.trim();
 
 
 
 const prixGros =
-Number(document.getElementById("prixGros").value);
+Number(
+document.getElementById("prixGros")
+.value
+);
 
 
 
 const nombreCartons =
-Number(document.getElementById("nombreCartons").value);
+Number(
+document.getElementById("nombreCartons")
+.value
+);
 
 
 
 const produitsParCarton =
-Number(document.getElementById("produitsParCarton").value);
+Number(
+document.getElementById("produitsParCarton")
+.value
+);
 
 
 
 const prixRevente =
-Number(document.getElementById("prixRevente").value);
+Number(
+document.getElementById("prixRevente")
+.value
+);
+
+
 
 
 
 if(
-nom === "" ||
+
+!nom ||
+
 prixGros <= 0 ||
+
 nombreCartons <= 0 ||
+
 produitsParCarton <= 0 ||
+
 prixRevente <= 0
+
 ){
 
-alert("Veuillez remplir correctement tous les champs.");
+
+alert(
+"Veuillez remplir correctement tous les champs."
+);
+
 
 return;
+
 
 }
 
 
 
+
+
 const prixTotalStock =
-prixGros * nombreCartons;
+prixGros *
+nombreCartons;
 
 
 
 const stockTotal =
-nombreCartons * produitsParCarton;
+nombreCartons *
+produitsParCarton;
 
 
 
 const prixUnitaire =
-prixGros / produitsParCarton;
+prixGros /
+produitsParCarton;
 
 
 
 const benefice =
-(prixRevente * stockTotal) - prixTotalStock;
-if(produitModification){
+(
+prixRevente *
+stockTotal
+)
+-
+prixTotalStock;
 
 
-await updateDoc(
 
-doc(db,"produits",produitModification),
 
-{
+
+const donneesProduit = {
+
 
 nom,
 
@@ -618,7 +833,23 @@ prixRevente,
 
 benefice
 
-}
+
+};
+// Suite ajout / modification produit
+
+
+if(produitModification){
+
+
+await updateDoc(
+
+doc(
+db,
+"produits",
+produitModification
+),
+
+donneesProduit
 
 );
 
@@ -634,12 +865,14 @@ nom
 produitModification = null;
 
 
-alert("Produit modifié avec succès.");
+
+alert(
+"Produit modifié avec succès."
+);
+
 
 
 }
-
-
 
 else{
 
@@ -650,29 +883,13 @@ collection(db,"produits"),
 
 {
 
-nom,
+...donneesProduit,
 
-prixGros,
+userId:
+auth.currentUser.uid,
 
-nombreCartons,
-
-produitsParCarton,
-
-prixTotalStock,
-
-stockTotal,
-
-prixUnitaire,
-
-prixRevente,
-
-benefice,
-
-
-userId: auth.currentUser.uid,
-
-
-dateAjout: serverTimestamp()
+dateAjout:
+serverTimestamp()
 
 }
 
@@ -687,12 +904,18 @@ nom
 
 
 
-alert("Produit ajouté avec succès.");
+alert(
+"Produit ajouté avec succès."
+);
+
+
 
 }
 
 
+
 viderChamps();
+
 
 
 chargerProduits();
@@ -702,6 +925,26 @@ chargerHistorique();
 chargerVentes();
 
 
+
+}
+
+catch(error){
+
+
+console.error(
+"Erreur produit : ",
+error
+);
+
+
+alert(
+"Une erreur est survenue."
+);
+
+
+}
+
+
 }
 
 
@@ -710,15 +953,18 @@ chargerVentes();
 
 
 
-// Charger produits utilisateur
+// Charger produits
 
 async function chargerProduits(){
 
 
-if(!utilisateurConnecte || !auth.currentUser)
+if(!utilisateurValide())
 
 return;
 
+
+
+try{
 
 
 produits = [];
@@ -739,7 +985,8 @@ auth.currentUser.uid
 
 
 
-const snapshot = await getDocs(produitsUtilisateur);
+const snapshot =
+await getDocs(produitsUtilisateur);
 
 
 
@@ -764,19 +1011,41 @@ afficherProduits();
 
 }
 
+catch(error){
+
+
+console.error(
+"Erreur chargement produits : ",
+error
+);
+
+
+}
+
+
+}
 
 
 
 
 
 
-// Affichage produits
+
+
+// Afficher produits
 
 function afficherProduits(){
 
 
 const tableau =
 document.getElementById("tableauProduits");
+
+
+
+if(!tableau)
+
+return;
+
 
 
 tableau.innerHTML = "";
@@ -790,7 +1059,8 @@ let beneficeTotal = 0;
 produits.forEach((produit)=>{
 
 
-beneficeTotal += produit.benefice;
+beneficeTotal +=
+Number(produit.benefice || 0);
 
 
 
@@ -801,33 +1071,35 @@ document.createElement("tr");
 
 ligne.innerHTML = `
 
-<td>${produit.nom}</td>
+<td>${produit.nom || "Produit"}</td>
 
-<td>${produit.prixGros} FCFA / carton</td>
+<td>${produit.prixGros || 0} FCFA / carton</td>
 
-<td>${produit.nombreCartons} cartons</td>
+<td>${produit.nombreCartons || 0}</td>
 
-<td>${produit.produitsParCarton}</td>
+<td>${produit.produitsParCarton || 0}</td>
 
-<td>${produit.stockTotal}</td>
+<td>${produit.stockTotal || 0}</td>
 
-<td>${produit.prixUnitaire.toFixed(2)} FCFA</td>
+<td>${Number(produit.prixUnitaire || 0).toFixed(2)} FCFA</td>
 
-<td>${produit.prixRevente} FCFA</td>
+<td>${produit.prixRevente || 0} FCFA</td>
 
-<td>${produit.benefice} FCFA</td>
-
+<td>${produit.benefice || 0} FCFA</td>
 
 <td>
+
 
 <button onclick="vendreProduit('${produit.id}')">
 Vendre
 </button>
 
 
+
 <button onclick="modifierProduit('${produit.id}')">
 Modifier
 </button>
+
 
 
 <button onclick="supprimerProduit('${produit.id}')">
@@ -848,12 +1120,28 @@ tableau.appendChild(ligne);
 
 
 
-document.getElementById("nbProduits").textContent =
+const nb =
+document.getElementById("nbProduits");
+
+
+
+if(nb)
+
+nb.textContent =
 produits.length;
 
 
-document.getElementById("beneficeTotal").textContent =
+
+const benefice =
+document.getElementById("beneficeTotal");
+
+
+
+if(benefice)
+
+benefice.textContent =
 beneficeTotal + " FCFA";
+
 
 
 calculerStockRestant();
@@ -867,12 +1155,14 @@ calculerStockRestant();
 
 
 
-// Vente produit
-
-async function vendreProduit(id){
+// Ouvrir fenêtre vente
 
 
-const produit = produits.find(
+function vendreProduit(id){
+
+
+const produit =
+produits.find(
 p => p.id === id
 );
 
@@ -884,51 +1174,151 @@ return;
 
 
 
-const quantiteVendue = Number(
-prompt("Nombre de produits vendus :")
+produitVenteActuel = produit;
+
+
+
+const nom =
+document.getElementById("nomProduitVente");
+
+
+
+if(nom)
+
+nom.textContent =
+"Produit : "
++
+produit.nom;
+
+
+
+const quantite =
+document.getElementById("quantiteVente");
+
+
+
+if(quantite)
+
+quantite.value = "";
+
+
+
+const modal =
+document.getElementById("modalVente");
+
+
+
+if(modal)
+
+modal.style.display =
+"block";
+
+
+}
+
+
+
+
+
+
+
+// Confirmer vente
+
+
+async function confirmerVente(){
+
+
+if(traitementVente)
+
+return;
+
+
+
+if(!produitVenteActuel)
+
+return;
+
+
+
+const quantite =
+Number(
+document.getElementById("quantiteVente").value
 );
 
 
 
 if(
-!quantiteVendue ||
-quantiteVendue <= 0
+
+!quantite ||
+
+quantite <= 0
+
 ){
 
-alert("Quantité invalide.");
+
+alert(
+"Quantité invalide."
+);
+
 
 return;
+
 
 }
 
 
 
-if(quantiteVendue > produit.stockTotal){
+if(
+quantite >
+produitVenteActuel.stockTotal
+){
 
-alert("Stock insuffisant.");
+
+alert(
+"Stock insuffisant."
+);
+
 
 return;
 
+
 }
+
+
+
+try{
+
+
+traitementVente = true;
 
 
 
 const nouveauStock =
-produit.stockTotal - quantiteVendue;
+
+produitVenteActuel.stockTotal
+-
+quantite;
 
 
 
 const beneficeVente =
-(produit.prixRevente - produit.prixUnitaire)
-* quantiteVendue;
 
+(
+produitVenteActuel.prixRevente
+-
+produitVenteActuel.prixUnitaire
+)
+
+*
+quantite;
+// Suite confirmation vente
 
 
 await enregistrerVente(
 
-produit,
+produitVenteActuel,
 
-quantiteVendue,
+quantite,
 
 beneficeVente
 
@@ -938,11 +1328,16 @@ beneficeVente
 
 await updateDoc(
 
-doc(db,"produits",id),
+doc(
+db,
+"produits",
+produitVenteActuel.id
+),
 
 {
 
-stockTotal: nouveauStock
+stockTotal:
+nouveauStock
 
 }
 
@@ -954,7 +1349,13 @@ await enregistrerHistorique(
 
 "vente",
 
-produit.nom + " (" + quantiteVendue + " unités)"
+produitVenteActuel.nom
++
+" ("
++
+quantite
++
+" unités)"
 
 );
 
@@ -963,12 +1364,16 @@ produit.nom + " (" + quantiteVendue + " unités)"
 alert(
 
 "Vente enregistrée.\nBénéfice : "
-
-+ beneficeVente
-
-+ " FCFA"
++
+beneficeVente
++
+" FCFA"
 
 );
+
+
+
+fermerVente();
 
 
 
@@ -979,13 +1384,80 @@ chargerHistorique();
 chargerVentes();
 
 
+
 }
-// Préparer modification
+
+catch(error){
+
+
+console.error(
+"Erreur vente : ",
+error
+);
+
+
+
+alert(
+"Impossible d'enregistrer la vente."
+);
+
+
+}
+
+finally{
+
+
+traitementVente = false;
+
+
+}
+
+
+}
+
+
+
+
+
+
+
+// Fermer fenêtre vente
+
+
+function fermerVente(){
+
+
+const modal =
+document.getElementById("modalVente");
+
+
+
+if(modal)
+
+modal.style.display =
+"none";
+
+
+
+produitVenteActuel = null;
+
+
+}
+
+
+
+
+
+
+
+// Modifier produit
+
 
 function modifierProduit(id){
 
 
-const produit = produits.find(
+const produit =
+produits.find(
 p => p.id === id
 );
 
@@ -998,23 +1470,27 @@ return;
 
 
 document.getElementById("nom").value =
-produit.nom;
+produit.nom || "";
+
 
 
 document.getElementById("prixGros").value =
-produit.prixGros;
+produit.prixGros || "";
+
 
 
 document.getElementById("nombreCartons").value =
-produit.nombreCartons;
+produit.nombreCartons || "";
+
 
 
 document.getElementById("produitsParCarton").value =
-produit.produitsParCarton;
+produit.produitsParCarton || "";
+
 
 
 document.getElementById("prixRevente").value =
-produit.prixRevente;
+produit.prixRevente || "";
 
 
 
@@ -1029,31 +1505,66 @@ produitModification = id;
 
 
 
-// Supprimer produit
+
+// Supprimer produit sécurisé
+
 
 async function supprimerProduit(id){
 
 
-const produit = produits.find(
+if(!utilisateurValide())
+
+return;
+
+
+
+const produit =
+produits.find(
 p => p.id === id
 );
 
 
 
-if(produit){
+if(!produit)
 
-await enregistrerHistorique(
-"suppression",
-produit.nom
+return;
+
+
+
+const confirmation =
+confirm(
+"Supprimer ce produit ?"
 );
 
-}
+
+
+if(!confirmation)
+
+return;
+
+
+
+try{
+
+
+await enregistrerHistorique(
+
+"suppression",
+
+produit.nom
+
+);
 
 
 
 await deleteDoc(
 
-doc(db,"produits",id)
+doc(
+db,
+"produits",
+id
+
+)
 
 );
 
@@ -1068,25 +1579,62 @@ chargerVentes();
 
 }
 
+catch(error){
+
+
+console.error(
+"Erreur suppression : ",
+error
+);
+
+
+}
+
+
+}
 
 
 
 
 
 
-// Vider les champs
+
+// Vider champs
+
 
 function viderChamps(){
 
-document.getElementById("nom").value="";
 
-document.getElementById("prixGros").value="";
+const champs = [
 
-document.getElementById("nombreCartons").value="";
+"nom",
 
-document.getElementById("produitsParCarton").value="";
+"prixGros",
 
-document.getElementById("prixRevente").value="";
+"nombreCartons",
+
+"produitsParCarton",
+
+"prixRevente"
+
+];
+
+
+
+champs.forEach((id)=>{
+
+
+const element =
+document.getElementById(id);
+
+
+
+if(element)
+
+element.value = "";
+
+
+});
 
 
 }
@@ -1099,17 +1647,19 @@ document.getElementById("prixRevente").value="";
 
 // Vider historique
 
+
 async function viderHistorique(){
 
 
-if(!utilisateurConnecte || !auth.currentUser)
+if(!utilisateurValide())
 
 return;
 
 
 
-const confirmation = confirm(
-"Voulez-vous vraiment supprimer tout l'historique ?"
+const confirmation =
+confirm(
+"Voulez-vous supprimer tout l'historique ?"
 );
 
 
@@ -1118,6 +1668,9 @@ if(!confirmation)
 
 return;
 
+
+
+try{
 
 
 const historiqueQuery = query(
@@ -1134,11 +1687,14 @@ auth.currentUser.uid
 
 
 
-const snapshot = await getDocs(historiqueQuery);
+const snapshot =
+await getDocs(historiqueQuery);
 
 
 
-for(const documentHistorique of snapshot.docs){
+for(
+const documentHistorique of snapshot.docs
+){
 
 
 await deleteDoc(
@@ -1159,7 +1715,19 @@ documentHistorique.id
 chargerHistorique();
 
 
-alert("Historique supprimé avec succès.");
+}
+
+catch(error){
+
+
+console.error(
+"Erreur suppression historique : ",
+error
+);
+
+
+}
+
 
 }
 
@@ -1171,10 +1739,14 @@ alert("Historique supprimé avec succès.");
 
 // Authentification
 
-onAuthStateChanged(auth,(user)=>{
+
+onAuthStateChanged(
+auth,
+(user)=>{
 
 
 if(user){
+
 
 utilisateurConnecte = true;
 
@@ -1190,11 +1762,15 @@ chargerVentes();
 
 else{
 
+
 utilisateurConnecte = false;
+
 
 produits = [];
 
+
 afficherProduits();
+
 
 }
 
@@ -1207,12 +1783,32 @@ afficherProduits();
 
 
 
-window.ajouterProduit = ajouterProduit;
+// Fonctions globales
 
-window.supprimerProduit = supprimerProduit;
 
-window.modifierProduit = modifierProduit;
+window.ajouterProduit =
+ajouterProduit;
 
-window.viderHistorique = viderHistorique;
 
-window.vendreProduit = vendreProduit;
+window.supprimerProduit =
+supprimerProduit;
+
+
+window.modifierProduit =
+modifierProduit;
+
+
+window.viderHistorique =
+viderHistorique;
+
+
+window.vendreProduit =
+vendreProduit;
+
+
+window.confirmerVente =
+confirmerVente;
+
+
+window.fermerVente =
+fermerVente;
