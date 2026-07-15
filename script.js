@@ -242,8 +242,13 @@ Number(document.getElementById("prixGros").value);
 
 
 
-const quantite =
-Number(document.getElementById("quantite").value);
+const nombreCartons =
+Number(document.getElementById("nombreCartons").value);
+
+
+
+const produitsParCarton =
+Number(document.getElementById("produitsParCarton").value);
 
 
 
@@ -255,7 +260,8 @@ Number(document.getElementById("prixRevente").value);
 if(
 nom === "" ||
 prixGros <= 0 ||
-quantite <= 0 ||
+nombreCartons <= 0 ||
+produitsParCarton <= 0 ||
 prixRevente <= 0
 ){
 
@@ -267,15 +273,24 @@ return;
 
 
 
+const stockTotal =
+nombreCartons * produitsParCarton;
+
+
+
 const prixUnitaire =
-prixGros / quantite;
+prixGros / stockTotal;
 
 
 
 const benefice =
-(prixRevente * quantite) - prixGros;
+(prixRevente * stockTotal) - prixGros;
 
 
+
+
+
+// Modification
 
 if(produitModification){
 
@@ -290,7 +305,11 @@ nom,
 
 prixGros,
 
-quantite,
+nombreCartons,
+
+produitsParCarton,
+
+stockTotal,
 
 prixUnitaire,
 
@@ -318,6 +337,8 @@ alert("Produit modifié avec succès.");
 
 
 }
+// Ajout produit
+
 else{
 
 
@@ -331,9 +352,11 @@ nom,
 
 prixGros,
 
-quantite,
+nombreCartons,
 
-stockRestant: quantite,
+produitsParCarton,
+
+stockTotal,
 
 prixUnitaire,
 
@@ -467,10 +490,6 @@ beneficeTotal += produit.benefice;
 
 
 
-const stock = produit.stockRestant ?? produit.quantite;
-
-
-
 const ligne =
 document.createElement("tr");
 
@@ -482,9 +501,11 @@ ligne.innerHTML = `
 
 <td>${produit.prixGros} FCFA</td>
 
-<td>${produit.quantite}</td>
+<td>${produit.nombreCartons} cartons</td>
 
-<td>${stock}</td>
+<td>${produit.produitsParCarton}</td>
+
+<td>${produit.stockTotal}</td>
 
 <td>${produit.prixUnitaire.toFixed(2)} FCFA</td>
 
@@ -494,13 +515,18 @@ ligne.innerHTML = `
 
 <td>
 
+
 <button onclick="modifierProduit('${produit.id}')">
+
 Modifier
+
 </button>
 
 
 <button onclick="supprimerProduit('${produit.id}')">
+
 Supprimer
+
 </button>
 
 
@@ -557,8 +583,12 @@ document.getElementById("prixGros").value =
 produit.prixGros;
 
 
-document.getElementById("quantite").value =
-produit.quantite;
+document.getElementById("nombreCartons").value =
+produit.nombreCartons;
+
+
+document.getElementById("produitsParCarton").value =
+produit.produitsParCarton;
 
 
 document.getElementById("prixRevente").value =
@@ -628,7 +658,9 @@ document.getElementById("nom").value="";
 
 document.getElementById("prixGros").value="";
 
-document.getElementById("quantite").value="";
+document.getElementById("nombreCartons").value="";
+
+document.getElementById("produitsParCarton").value="";
 
 document.getElementById("prixRevente").value="";
 
@@ -694,72 +726,4 @@ await deleteDoc(
 doc(
 db,
 "historique",
-documentHistorique.id
-)
-
-);
-
-
-}
-
-
-
-chargerHistorique();
-
-
-alert("Historique supprimé avec succès.");
-
-}
-
-
-
-
-
-
-// Authentification
-
-onAuthStateChanged(auth,(user)=>{
-
-
-if(user){
-
-
-utilisateurConnecte = true;
-
-
-chargerProduits();
-
-chargerHistorique();
-
-
-}
-
-else{
-
-
-utilisateurConnecte = false;
-
-
-produits = [];
-
-
-afficherProduits();
-
-
-}
-
-
-});
-
-
-
-
-
-
-window.ajouterProduit = ajouterProduit;
-
-window.supprimerProduit = supprimerProduit;
-
-window.modifierProduit = modifierProduit;
-
-window.viderHistorique = viderHistorique;
+document
