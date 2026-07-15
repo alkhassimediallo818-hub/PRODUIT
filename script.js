@@ -113,8 +113,6 @@ id: document.id,
 
 
 
-// Tri du plus récent au plus ancien
-
 historique.sort((a,b)=>{
 
 
@@ -320,8 +318,6 @@ alert("Produit modifié avec succès.");
 
 
 }
-
-
 else{
 
 
@@ -336,6 +332,8 @@ nom,
 prixGros,
 
 quantite,
+
+stockRestant: quantite,
 
 prixUnitaire,
 
@@ -379,6 +377,13 @@ chargerHistorique();
 
 
 }
+
+
+
+
+
+
+
 // Charger produits utilisateur
 
 async function chargerProduits(){
@@ -462,6 +467,10 @@ beneficeTotal += produit.benefice;
 
 
 
+const stock = produit.stockRestant ?? produit.quantite;
+
+
+
 const ligne =
 document.createElement("tr");
 
@@ -474,6 +483,8 @@ ligne.innerHTML = `
 <td>${produit.prixGros} FCFA</td>
 
 <td>${produit.quantite}</td>
+
+<td>${stock}</td>
 
 <td>${produit.prixUnitaire.toFixed(2)} FCFA</td>
 
@@ -623,6 +634,7 @@ document.getElementById("prixRevente").value="";
 
 
 }
+
 
 
 
