@@ -726,4 +726,72 @@ await deleteDoc(
 doc(
 db,
 "historique",
-document
+documentHistorique.id
+)
+
+);
+
+
+}
+
+
+
+chargerHistorique();
+
+
+alert("Historique supprimé avec succès.");
+
+}
+
+
+
+
+
+
+// Authentification
+
+onAuthStateChanged(auth,(user)=>{
+
+
+if(user){
+
+
+utilisateurConnecte = true;
+
+
+chargerProduits();
+
+chargerHistorique();
+
+
+}
+
+else{
+
+
+utilisateurConnecte = false;
+
+
+produits = [];
+
+
+afficherProduits();
+
+
+}
+
+
+});
+
+
+
+
+
+
+window.ajouterProduit = ajouterProduit;
+
+window.supprimerProduit = supprimerProduit;
+
+window.modifierProduit = modifierProduit;
+
+window.viderHistorique = viderHistorique;
