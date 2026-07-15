@@ -9,8 +9,7 @@ import {
     query,
     where,
     serverTimestamp,
-    updateDoc,
-    orderBy
+    updateDoc
 
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
@@ -76,13 +75,9 @@ const historiqueQuery = query(
 collection(db,"historique"),
 
 where(
-
 "userId",
-
 "==",
-
 auth.currentUser.uid
-
 )
 
 );
@@ -147,6 +142,8 @@ error
 
 
 }
+
+
 
 
 
@@ -217,6 +214,8 @@ tableau.appendChild(ligne);
 
 
 
+
+
 // Ajouter ou modifier un produit
 
 async function ajouterProduit(){
@@ -273,18 +272,26 @@ return;
 
 
 
+
+// Nouveau calcul stock carton
+
+const prixTotalStock =
+prixGros * nombreCartons;
+
+
+
 const stockTotal =
 nombreCartons * produitsParCarton;
 
 
 
 const prixUnitaire =
-prixGros / stockTotal;
+prixGros / produitsParCarton;
 
 
 
 const benefice =
-(prixRevente * stockTotal) - prixGros;
+(prixRevente * stockTotal) - prixTotalStock;
 
 
 
@@ -308,6 +315,8 @@ prixGros,
 nombreCartons,
 
 produitsParCarton,
+
+prixTotalStock,
 
 stockTotal,
 
@@ -337,6 +346,8 @@ alert("Produit modifié avec succès.");
 
 
 }
+
+
 // Ajout produit
 
 else{
@@ -356,6 +367,8 @@ nombreCartons,
 
 produitsParCarton,
 
+prixTotalStock,
+
 stockTotal,
 
 prixUnitaire,
@@ -369,7 +382,6 @@ userId: auth.currentUser.uid,
 
 
 dateAjout: serverTimestamp()
-
 
 }
 
@@ -400,13 +412,6 @@ chargerHistorique();
 
 
 }
-
-
-
-
-
-
-
 // Charger produits utilisateur
 
 async function chargerProduits(){
@@ -466,6 +471,7 @@ afficherProduits();
 
 
 
+
 // Affichage produits
 
 function afficherProduits(){
@@ -499,7 +505,7 @@ ligne.innerHTML = `
 
 <td>${produit.nom}</td>
 
-<td>${produit.prixGros} FCFA</td>
+<td>${produit.prixGros} FCFA / carton</td>
 
 <td>${produit.nombreCartons} cartons</td>
 
@@ -512,6 +518,7 @@ ligne.innerHTML = `
 <td>${produit.prixRevente} FCFA</td>
 
 <td>${produit.benefice} FCFA</td>
+
 
 <td>
 
@@ -552,6 +559,7 @@ beneficeTotal + " FCFA";
 
 
 }
+
 
 
 
@@ -748,6 +756,7 @@ alert("Historique supprimé avec succès.");
 
 
 
+
 // Authentification
 
 onAuthStateChanged(auth,(user)=>{
@@ -782,6 +791,7 @@ afficherProduits();
 
 
 });
+
 
 
 
