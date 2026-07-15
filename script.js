@@ -28,6 +28,7 @@ let produitModification = null;
 
 
 
+
 // Historique des actions
 
 async function enregistrerHistorique(type, produit){
@@ -51,6 +52,7 @@ date: serverTimestamp()
 );
 
 }
+
 
 
 
@@ -131,12 +133,10 @@ afficherHistorique(historique);
 
 catch(error){
 
-
 console.log(
 "Erreur historique : ",
 error
 );
-
 
 }
 
@@ -216,6 +216,7 @@ tableau.appendChild(ligne);
 
 
 
+
 // Ajouter ou modifier un produit
 
 async function ajouterProduit(){
@@ -256,6 +257,7 @@ Number(document.getElementById("prixRevente").value);
 
 
 
+
 if(
 nom === "" ||
 prixGros <= 0 ||
@@ -272,8 +274,6 @@ return;
 
 
 
-
-// Nouveau calcul stock carton
 
 const prixTotalStock =
 prixGros * nombreCartons;
@@ -296,8 +296,6 @@ const benefice =
 
 
 
-
-// Modification
 
 if(produitModification){
 
@@ -348,7 +346,6 @@ alert("Produit modifié avec succès.");
 }
 
 
-// Ajout produit
 
 else{
 
@@ -398,9 +395,7 @@ nom
 
 alert("Produit ajouté avec succès.");
 
-
 }
-
 
 
 viderChamps();
@@ -522,18 +517,18 @@ ligne.innerHTML = `
 
 <td>
 
+<button onclick="vendreProduit('${produit.id}')">
+Vendre
+</button>
+
 
 <button onclick="modifierProduit('${produit.id}')">
-
 Modifier
-
 </button>
 
 
 <button onclick="supprimerProduit('${produit.id}')">
-
 Supprimer
-
 </button>
 
 
@@ -556,6 +551,109 @@ produits.length;
 
 document.getElementById("beneficeTotal").textContent =
 beneficeTotal + " FCFA";
+
+
+}
+
+
+
+
+
+
+
+
+// Vente produit
+
+async function vendreProduit(id){
+
+
+const produit = produits.find(
+p => p.id === id
+);
+
+
+
+if(!produit)
+
+return;
+
+
+
+const quantiteVendue = Number(
+prompt("Nombre de produits vendus :")
+);
+
+
+
+if(
+!quantiteVendue ||
+quantiteVendue <= 0
+){
+
+alert("Quantité invalide.");
+
+return;
+
+}
+
+
+
+if(quantiteVendue > produit.stockTotal){
+
+alert("Stock insuffisant.");
+
+return;
+
+}
+
+
+
+const nouveauStock =
+produit.stockTotal - quantiteVendue;
+
+
+
+const beneficeVente =
+(produit.prixRevente - produit.prixUnitaire)
+* quantiteVendue;
+
+
+
+await updateDoc(
+
+doc(db,"produits",id),
+
+{
+
+stockTotal: nouveauStock
+
+}
+
+);
+
+
+
+await enregistrerHistorique(
+
+"vente",
+
+produit.nom + " (" + quantiteVendue + " unités)"
+
+);
+
+
+
+alert(
+"Vente enregistrée. Bénéfice : "
++ beneficeVente
++ " FCFA"
+);
+
+
+
+chargerProduits();
+
+chargerHistorique();
 
 
 }
@@ -615,7 +713,7 @@ produitModification = id;
 
 
 
-// Supprimer produit avec historique
+// Supprimer produit
 
 async function supprimerProduit(id){
 
@@ -658,8 +756,6 @@ chargerHistorique();
 
 
 
-// Vider les champs
-
 function viderChamps(){
 
 document.getElementById("nom").value="";
@@ -681,18 +777,14 @@ document.getElementById("prixRevente").value="";
 
 
 
-// Vider tout l'historique
+// Vider historique
 
 async function viderHistorique(){
 
 
-if(!utilisateurConnecte || !auth.currentUser){
-
-alert("Connectez-vous d'abord.");
+if(!utilisateurConnecte || !auth.currentUser)
 
 return;
-
-}
 
 
 
@@ -756,7 +848,6 @@ alert("Historique supprimé avec succès.");
 
 
 
-
 // Authentification
 
 onAuthStateChanged(auth,(user)=>{
@@ -764,9 +855,7 @@ onAuthStateChanged(auth,(user)=>{
 
 if(user){
 
-
 utilisateurConnecte = true;
-
 
 chargerProduits();
 
@@ -777,21 +866,16 @@ chargerHistorique();
 
 else{
 
-
 utilisateurConnecte = false;
-
 
 produits = [];
 
-
 afficherProduits();
-
 
 }
 
 
 });
-
 
 
 
@@ -805,3 +889,5 @@ window.supprimerProduit = supprimerProduit;
 window.modifierProduit = modifierProduit;
 
 window.viderHistorique = viderHistorique;
+
+window.vendreProduit = vendreProduit;
