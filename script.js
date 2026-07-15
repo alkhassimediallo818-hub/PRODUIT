@@ -56,6 +56,7 @@ date: serverTimestamp()
 
 
 
+
 // Charger historique utilisateur
 
 async function chargerHistorique(){
@@ -213,6 +214,11 @@ tableau.appendChild(ligne);
 
 
 }
+
+
+
+
+
 // Ajouter ou modifier un produit
 
 async function ajouterProduit(){
@@ -273,7 +279,6 @@ const benefice =
 
 
 
-
 if(produitModification){
 
 
@@ -315,7 +320,6 @@ alert("Produit modifié avec succès.");
 
 
 }
-
 
 
 else{
@@ -375,12 +379,6 @@ chargerHistorique();
 
 
 }
-
-
-
-
-
-
 // Charger produits utilisateur
 
 async function chargerProduits(){
@@ -523,6 +521,7 @@ beneficeTotal + " FCFA";
 
 
 
+// Préparer modification
 
 function modifierProduit(id){
 
@@ -530,6 +529,7 @@ function modifierProduit(id){
 const produit = produits.find(
 p => p.id === id
 );
+
 
 
 if(!produit)
@@ -566,6 +566,8 @@ produitModification = id;
 
 
 
+// Supprimer produit avec historique
+
 async function supprimerProduit(id){
 
 
@@ -587,7 +589,9 @@ produit.nom
 
 
 await deleteDoc(
+
 doc(db,"produits",id)
+
 );
 
 
@@ -603,6 +607,9 @@ chargerHistorique();
 
 
 
+
+
+// Vider les champs
 
 function viderChamps(){
 
@@ -621,6 +628,83 @@ document.getElementById("prixRevente").value="";
 
 
 
+
+// Vider tout l'historique
+
+async function viderHistorique(){
+
+
+if(!utilisateurConnecte || !auth.currentUser){
+
+alert("Connectez-vous d'abord.");
+
+return;
+
+}
+
+
+
+const confirmation = confirm(
+"Voulez-vous vraiment supprimer tout l'historique ?"
+);
+
+
+
+if(!confirmation)
+
+return;
+
+
+
+const historiqueQuery = query(
+
+collection(db,"historique"),
+
+where(
+"userId",
+"==",
+auth.currentUser.uid
+)
+
+);
+
+
+
+const snapshot = await getDocs(historiqueQuery);
+
+
+
+for(const documentHistorique of snapshot.docs){
+
+
+await deleteDoc(
+
+doc(
+db,
+"historique",
+documentHistorique.id
+)
+
+);
+
+
+}
+
+
+
+chargerHistorique();
+
+
+alert("Historique supprimé avec succès.");
+
+}
+
+
+
+
+
+
+// Authentification
 
 onAuthStateChanged(auth,(user)=>{
 
@@ -659,8 +743,11 @@ afficherProduits();
 
 
 
+
 window.ajouterProduit = ajouterProduit;
 
 window.supprimerProduit = supprimerProduit;
 
 window.modifierProduit = modifierProduit;
+
+window.viderHistorique = viderHistorique;
