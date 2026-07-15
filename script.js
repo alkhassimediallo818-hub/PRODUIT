@@ -78,6 +78,8 @@ prixVente: produit.prixRevente,
 
 benefice,
 
+montantTotal: produit.prixRevente * quantiteVendue,
+
 date: serverTimestamp()
 
 }
@@ -85,6 +87,135 @@ date: serverTimestamp()
 );
 
 }
+
+
+
+
+
+
+// Charger les ventes utilisateur
+
+async function chargerVentes(){
+
+if(!utilisateurConnecte || !auth.currentUser)
+
+return;
+
+
+const ventesQuery = query(
+
+collection(db,"ventes"),
+
+where(
+"userId",
+"==",
+auth.currentUser.uid
+)
+
+);
+
+
+
+const snapshot = await getDocs(ventesQuery);
+
+
+
+let ventes = [];
+
+
+
+snapshot.forEach((document)=>{
+
+
+ventes.push({
+
+id: document.id,
+
+...document.data()
+
+});
+
+
+});
+
+
+
+afficherVentes(ventes);
+
+
+}
+
+
+
+
+
+
+// Afficher les ventes
+
+function afficherVentes(ventes){
+
+
+const tableau =
+document.getElementById("tableauVentes");
+
+
+
+if(!tableau)
+
+return;
+
+
+
+tableau.innerHTML = "";
+
+
+
+ventes.forEach((vente)=>{
+
+
+let date = "Date inconnue";
+
+
+
+if(vente.date){
+
+date =
+vente.date.toDate()
+.toLocaleString();
+
+}
+
+
+
+const ligne =
+document.createElement("tr");
+
+
+
+ligne.innerHTML = `
+
+<td>${vente.produit}</td>
+
+<td>${vente.quantiteVendue}</td>
+
+<td>${vente.montantTotal} FCFA</td>
+
+<td>${vente.benefice} FCFA</td>
+
+<td>${date}</td>
+
+`;
+
+
+
+tableau.appendChild(ligne);
+
+
+});
+
+
+}
+
 
 
 
@@ -139,9 +270,6 @@ id: document.id,
 
 
 });
-
-
-
 historique.sort((a,b)=>{
 
 
@@ -240,6 +368,14 @@ tableau.appendChild(ligne);
 });
 
 }
+
+
+
+
+
+
+
+
 // Ajouter ou modifier un produit
 
 async function ajouterProduit(){
@@ -428,15 +564,10 @@ chargerProduits();
 
 chargerHistorique();
 
+chargerVentes();
+
 
 }
-
-
-
-
-
-
-
 // Charger produits utilisateur
 
 async function chargerProduits(){
@@ -584,6 +715,14 @@ beneficeTotal + " FCFA";
 
 
 }
+
+
+
+
+
+
+
+
 // Vente produit
 
 async function vendreProduit(id){
@@ -642,18 +781,19 @@ const beneficeVente =
 
 
 
-// Sauvegarde de la vente
-
 await enregistrerVente(
+
 produit,
+
 quantiteVendue,
+
 beneficeVente
+
 );
 
 
 
 
-// Mise à jour du stock
 
 await updateDoc(
 
@@ -670,7 +810,6 @@ stockTotal: nouveauStock
 
 
 
-// Historique
 
 await enregistrerHistorique(
 
@@ -697,6 +836,8 @@ alert(
 chargerProduits();
 
 chargerHistorique();
+
+chargerVentes();
 
 
 }
@@ -749,13 +890,6 @@ produitModification = id;
 
 
 }
-
-
-
-
-
-
-
 // Supprimer produit
 
 async function supprimerProduit(id){
@@ -789,6 +923,8 @@ doc(db,"produits",id)
 chargerProduits();
 
 chargerHistorique();
+
+chargerVentes();
 
 
 }
@@ -903,9 +1039,12 @@ if(user){
 
 utilisateurConnecte = true;
 
+
 chargerProduits();
 
 chargerHistorique();
+
+chargerVentes();
 
 
 }
@@ -922,6 +1061,7 @@ afficherProduits();
 
 
 });
+
 
 
 
