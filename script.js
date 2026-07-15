@@ -142,8 +142,148 @@ id: document.id,
 
 afficherVentes(ventes);
 
+calculerStatistiquesVentes(ventes);
+
 
 }
+
+
+
+
+
+
+// Calcul des statistiques ventes
+
+function calculerStatistiquesVentes(ventes){
+
+
+let chiffreAffaires = 0;
+
+let beneficeVentes = 0;
+
+let ventesJour = 0;
+
+let ventesMois = 0;
+
+
+
+const aujourdHui = new Date();
+
+
+ventes.forEach((vente)=>{
+
+
+chiffreAffaires += vente.montantTotal || 0;
+
+beneficeVentes += vente.benefice || 0;
+
+
+
+if(vente.date){
+
+
+const dateVente = vente.date.toDate();
+
+
+
+if(
+
+dateVente.getDate() === aujourdHui.getDate()
+
+&&
+
+dateVente.getMonth() === aujourdHui.getMonth()
+
+&&
+
+dateVente.getFullYear() === aujourdHui.getFullYear()
+
+){
+
+ventesJour += vente.montantTotal || 0;
+
+}
+
+
+
+if(
+
+dateVente.getMonth() === aujourdHui.getMonth()
+
+&&
+
+dateVente.getFullYear() === aujourdHui.getFullYear()
+
+){
+
+ventesMois += vente.montantTotal || 0;
+
+}
+
+
+}
+
+
+
+});
+
+
+
+document.getElementById("chiffreAffaires").textContent =
+chiffreAffaires + " FCFA";
+
+
+document.getElementById("beneficeVentes").textContent =
+beneficeVentes + " FCFA";
+
+
+document.getElementById("ventesJour").textContent =
+ventesJour + " FCFA";
+
+
+document.getElementById("ventesMois").textContent =
+ventesMois + " FCFA";
+
+
+
+calculerStockRestant();
+
+
+}
+// Calcul du stock restant
+
+function calculerStockRestant(){
+
+
+let stock = 0;
+
+
+
+produits.forEach((produit)=>{
+
+
+stock += produit.stockTotal || 0;
+
+
+});
+
+
+
+const element =
+document.getElementById("stockRestant");
+
+
+
+if(element){
+
+element.textContent = stock;
+
+}
+
+
+}
+
+
 
 
 
@@ -270,6 +410,9 @@ id: document.id,
 
 
 });
+
+
+
 historique.sort((a,b)=>{
 
 
@@ -375,7 +518,6 @@ tableau.appendChild(ligne);
 
 
 
-
 // Ajouter ou modifier un produit
 
 async function ajouterProduit(){
@@ -416,7 +558,6 @@ Number(document.getElementById("prixRevente").value);
 
 
 
-
 if(
 nom === "" ||
 prixGros <= 0 ||
@@ -430,7 +571,6 @@ alert("Veuillez remplir correctement tous les champs.");
 return;
 
 }
-
 
 
 
@@ -451,11 +591,6 @@ prixGros / produitsParCarton;
 
 const benefice =
 (prixRevente * stockTotal) - prixTotalStock;
-
-
-
-
-
 if(produitModification){
 
 
@@ -568,6 +703,13 @@ chargerVentes();
 
 
 }
+
+
+
+
+
+
+
 // Charger produits utilisateur
 
 async function chargerProduits(){
@@ -714,8 +856,10 @@ document.getElementById("beneficeTotal").textContent =
 beneficeTotal + " FCFA";
 
 
-}
+calculerStockRestant();
 
+
+}
 
 
 
@@ -780,7 +924,6 @@ const beneficeVente =
 
 
 
-
 await enregistrerVente(
 
 produit,
@@ -790,8 +933,6 @@ quantiteVendue,
 beneficeVente
 
 );
-
-
 
 
 
@@ -806,8 +947,6 @@ stockTotal: nouveauStock
 }
 
 );
-
-
 
 
 
@@ -841,13 +980,6 @@ chargerVentes();
 
 
 }
-
-
-
-
-
-
-
 // Préparer modification
 
 function modifierProduit(id){
@@ -890,6 +1022,13 @@ produitModification = id;
 
 
 }
+
+
+
+
+
+
+
 // Supprimer produit
 
 async function supprimerProduit(id){
