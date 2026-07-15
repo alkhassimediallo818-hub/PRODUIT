@@ -33,6 +33,8 @@ let traitementVente = false;
 
 
 
+
+
 // Vérification utilisateur
 
 function utilisateurValide(){
@@ -40,6 +42,8 @@ function utilisateurValide(){
     return utilisateurConnecte && auth.currentUser;
 
 }
+
+
 
 
 
@@ -83,10 +87,12 @@ async function enregistrerHistorique(type, produit){
 
     catch(error){
 
+
         console.error(
             "Erreur historique : ",
             error
         );
+
 
     }
 
@@ -99,7 +105,9 @@ async function enregistrerHistorique(type, produit){
 
 
 
-// Enregistrer vente Firestore
+
+
+// Enregistrer vente sécurisée
 
 async function enregistrerVente(
     produit,
@@ -123,32 +131,47 @@ async function enregistrerVente(
 
             {
 
+
                 userId: auth.currentUser.uid,
 
-                produit: produit.nom || "Produit",
+
+                produit:
+                produit.nom || "Produit",
+
 
                 quantiteVendue:
                 Number(quantiteVendue || 0),
+
 
 
                 prixVente:
                 Number(produit.prixRevente || 0),
 
 
+
                 benefice:
                 Number(benefice || 0),
 
 
+
                 montantTotal:
+
                 Number(produit.prixRevente || 0)
+
                 *
+
                 Number(quantiteVendue || 0),
 
 
-                statut:"validée",
+
+                statut:
+                "validée",
 
 
-                date:serverTimestamp()
+
+                date:
+                serverTimestamp()
+
 
             }
 
@@ -159,15 +182,18 @@ async function enregistrerVente(
 
     catch(error){
 
+
         console.error(
-            "Erreur enregistrement vente : ",
+            "Erreur vente : ",
             error
         );
+
 
     }
 
 
 }
+
 
 
 
@@ -195,9 +221,13 @@ async function chargerVentes(){
             collection(db,"ventes"),
 
             where(
+
                 "userId",
+
                 "==",
+
                 auth.currentUser.uid
+
             )
 
         );
@@ -231,17 +261,21 @@ async function chargerVentes(){
 
         afficherVentes(ventes);
 
+
         calculerStatistiquesVentes(ventes);
+
 
 
     }
 
     catch(error){
 
+
         console.error(
             "Erreur chargement ventes : ",
             error
         );
+
 
     }
 
@@ -255,7 +289,8 @@ async function chargerVentes(){
 
 
 
-// Calcul statistiques ventes
+
+// Calcul résumé rapide corrigé
 
 function calculerStatistiquesVentes(ventes){
 
@@ -274,16 +309,47 @@ function calculerStatistiquesVentes(ventes){
 
 
 
+
     ventes.forEach((vente)=>{
 
 
-        chiffreAffaires +=
-        Number(vente.montantTotal || 0);
+        const montant =
+
+        Number(
+
+            vente.montantTotal ||
+
+            (
+
+                Number(vente.prixVente || 0)
+
+                *
+
+                Number(vente.quantiteVendue || 0)
+
+            )
+
+            ||
+
+            0
+
+        );
+
+
+
+
+        chiffreAffaires += montant;
 
 
 
         beneficeVentes +=
-        Number(vente.benefice || 0);
+
+        Number(
+
+            vente.benefice || 0
+
+        );
+
 
 
 
@@ -316,11 +382,12 @@ function calculerStatistiquesVentes(ventes){
             ){
 
 
-                ventesJour +=
-                Number(vente.montantTotal || 0);
+                ventesJour += montant;
 
 
             }
+
+
 
 
 
@@ -339,8 +406,7 @@ function calculerStatistiquesVentes(ventes){
             ){
 
 
-                ventesMois +=
-                Number(vente.montantTotal || 0);
+                ventesMois += montant;
 
 
             }
@@ -355,14 +421,17 @@ function calculerStatistiquesVentes(ventes){
 
 
 
+
     const ca =
     document.getElementById("chiffreAffaires");
+
 
 
     if(ca)
 
         ca.textContent =
-        chiffreAffaires+" FCFA";
+        chiffreAffaires + " FCFA";
+
 
 
 
@@ -370,10 +439,12 @@ function calculerStatistiquesVentes(ventes){
     document.getElementById("beneficeVentes");
 
 
+
     if(benefice)
 
         benefice.textContent =
-        beneficeVentes+" FCFA";
+        beneficeVentes + " FCFA";
+
 
 
 
@@ -381,10 +452,12 @@ function calculerStatistiquesVentes(ventes){
     document.getElementById("ventesJour");
 
 
+
     if(jour)
 
         jour.textContent =
-        ventesJour+" FCFA";
+        ventesJour + " FCFA";
+
 
 
 
@@ -392,10 +465,16 @@ function calculerStatistiquesVentes(ventes){
     document.getElementById("ventesMois");
 
 
+
     if(mois)
 
         mois.textContent =
-        ventesMois+" FCFA";
+        ventesMois + " FCFA";
+
+
+
+
+    calculerStockRestant();
 
 
 }
@@ -439,7 +518,8 @@ function calculerStockRestant(){
 
 
 
-// Afficher ventes
+
+// Affichage ventes
 
 function afficherVentes(ventes){
 
@@ -555,9 +635,13 @@ async function chargerHistorique(){
             collection(db,"historique"),
 
             where(
+
                 "userId",
+
                 "==",
+
                 auth.currentUser.uid
+
             )
 
         );
@@ -600,7 +684,9 @@ async function chargerHistorique(){
 
 
             return b.date.toMillis()
+
             -
+
             a.date.toMillis();
 
 
@@ -627,6 +713,7 @@ async function chargerHistorique(){
 
 
 }
+
 
 
 
@@ -945,15 +1032,14 @@ async function ajouterProduit(){
 
 
 
-
         viderChamps();
 
 
-        chargerProduits();
+        await chargerProduits();
 
-        chargerHistorique();
+        await chargerHistorique();
 
-        chargerVentes();
+        await chargerVentes();
 
 
 
@@ -1001,9 +1087,13 @@ async function chargerProduits(){
             collection(db,"produits"),
 
             where(
+
                 "userId",
+
                 "==",
+
                 auth.currentUser.uid
+
             )
 
         );
@@ -1034,6 +1124,17 @@ async function chargerProduits(){
         afficherProduits();
 
 
+
+        // Correction résumé rapide
+
+        if(typeof chargerVentes === "function"){
+
+            await chargerVentes();
+
+        }
+
+
+
     }
 
     catch(error){
@@ -1057,7 +1158,8 @@ async function chargerProduits(){
 
 
 
-// Affichage produits
+
+// Afficher produits
 
 function afficherProduits(){
 
@@ -1085,7 +1187,10 @@ function afficherProduits(){
 
 
         beneficeTotal +=
-        Number(produit.benefice || 0);
+
+        Number(
+            produit.benefice || 0
+        );
 
 
 
@@ -1175,7 +1280,7 @@ function afficherProduits(){
     if(benefice)
 
         benefice.textContent =
-        beneficeTotal+" FCFA";
+        beneficeTotal + " FCFA";
 
 
 
@@ -1200,7 +1305,9 @@ function vendreProduit(id){
 
     const produit =
     produits.find(
-        p=>p.id===id
+
+        p => p.id === id
+
     );
 
 
@@ -1237,7 +1344,7 @@ function vendreProduit(id){
 
     if(quantite)
 
-        quantite.value="";
+        quantite.value = "";
 
 
 
@@ -1249,7 +1356,7 @@ function vendreProduit(id){
 
     if(modal)
 
-        modal.style.display="block";
+        modal.style.display = "block";
 
 
 }
@@ -1280,6 +1387,7 @@ async function confirmerVente(){
 
 
     const champ =
+
     document.getElementById("quantiteVente");
 
 
@@ -1291,6 +1399,7 @@ async function confirmerVente(){
 
 
     const quantite =
+
     Number(champ.value);
 
 
@@ -1300,7 +1409,7 @@ async function confirmerVente(){
 
         !quantite ||
 
-        quantite <=0
+        quantite <= 0
 
     ){
 
@@ -1322,7 +1431,8 @@ async function confirmerVente(){
     if(
 
         quantite >
-        produitVenteActuel.stockTotal
+
+        Number(produitVenteActuel.stockTotal || 0)
 
     ){
 
@@ -1344,13 +1454,14 @@ async function confirmerVente(){
     try{
 
 
-        traitementVente=true;
+        traitementVente = true;
 
 
 
         const nouveauStock =
 
-        produitVenteActuel.stockTotal
+
+        Number(produitVenteActuel.stockTotal || 0)
 
         -
 
@@ -1362,13 +1473,14 @@ async function confirmerVente(){
 
         const beneficeVente =
 
+
         (
 
-            produitVenteActuel.prixRevente
+            Number(produitVenteActuel.prixRevente || 0)
 
             -
 
-            produitVenteActuel.prixUnitaire
+            Number(produitVenteActuel.prixUnitaire || 0)
 
         )
 
@@ -1410,6 +1522,7 @@ async function confirmerVente(){
             {
 
                 stockTotal:
+
                 nouveauStock
 
             }
@@ -1467,11 +1580,11 @@ async function confirmerVente(){
 
 
 
-        chargerProduits();
+        await chargerProduits();
 
-        chargerHistorique();
+        await chargerHistorique();
 
-        chargerVentes();
+        await chargerVentes();
 
 
 
@@ -1496,21 +1609,13 @@ async function confirmerVente(){
     finally{
 
 
-        traitementVente=false;
+        traitementVente = false;
 
 
     }
 
 
 }
-
-
-
-
-
-
-
-
 // Fermer fenêtre vente
 
 function fermerVente(){
@@ -1523,11 +1628,11 @@ function fermerVente(){
 
     if(modal)
 
-        modal.style.display="none";
+        modal.style.display = "none";
 
 
 
-    produitVenteActuel=null;
+    produitVenteActuel = null;
 
 
 }
@@ -1547,7 +1652,9 @@ function modifierProduit(id){
 
     const produit =
     produits.find(
-        p=>p.id===id
+
+        p => p.id === id
+
     );
 
 
@@ -1558,35 +1665,60 @@ function modifierProduit(id){
 
 
 
-    document.getElementById("nom").value =
-    produit.nom || "";
+
+    const champs = {
+
+
+        nom: produit.nom || "",
+
+
+        prixGros: produit.prixGros || "",
+
+
+        nombreCartons: produit.nombreCartons || "",
+
+
+        produitsParCarton: produit.produitsParCarton || "",
+
+
+        prixRevente: produit.prixRevente || ""
+
+
+    };
 
 
 
-    document.getElementById("prixGros").value =
-    produit.prixGros || "";
+
+    Object.keys(champs).forEach((id)=>{
+
+
+        const element =
+        document.getElementById(id);
 
 
 
-    document.getElementById("nombreCartons").value =
-    produit.nombreCartons || "";
+        if(element)
+
+            element.value = champs[id];
+
+
+    });
 
 
 
-    document.getElementById("produitsParCarton").value =
-    produit.produitsParCarton || "";
-
-
-
-    document.getElementById("prixRevente").value =
-    produit.prixRevente || "";
-
-
-
-    produitModification=id;
+    produitModification = id;
 
 
 }
+
+
+
+
+
+
+
+
+
 // Supprimer produit sécurisé
 
 async function supprimerProduit(id){
@@ -1600,7 +1732,9 @@ async function supprimerProduit(id){
 
     const produit =
     produits.find(
-        p=>p.id===id
+
+        p => p.id === id
+
     );
 
 
@@ -1613,7 +1747,9 @@ async function supprimerProduit(id){
 
     const confirmation =
     confirm(
+
         "Voulez-vous vraiment supprimer ce produit ?"
+
     );
 
 
@@ -1621,6 +1757,7 @@ async function supprimerProduit(id){
     if(!confirmation)
 
         return;
+
 
 
 
@@ -1640,20 +1777,25 @@ async function supprimerProduit(id){
         await deleteDoc(
 
             doc(
+
                 db,
+
                 "produits",
+
                 id
+
             )
 
         );
 
 
 
-        chargerProduits();
+        await chargerProduits();
 
-        chargerHistorique();
+        await chargerHistorique();
 
-        chargerVentes();
+        await chargerVentes();
+
 
 
     }
@@ -1662,13 +1804,19 @@ async function supprimerProduit(id){
 
 
         console.error(
+
             "Erreur suppression produit : ",
+
             error
+
         );
 
 
+
         alert(
+
             "Impossible de supprimer le produit."
+
         );
 
 
@@ -1690,17 +1838,23 @@ async function supprimerProduit(id){
 function viderChamps(){
 
 
-    const champs=[
+    const champs = [
+
 
         "nom",
 
+
         "prixGros",
+
 
         "nombreCartons",
 
+
         "produitsParCarton",
 
+
         "prixRevente"
+
 
     ];
 
@@ -1716,11 +1870,10 @@ function viderChamps(){
 
         if(element)
 
-            element.value="";
+            element.value = "";
 
 
     });
-
 
 
 }
@@ -1746,7 +1899,9 @@ async function viderHistorique(){
 
     const confirmation =
     confirm(
+
         "Voulez-vous supprimer tout l'historique ?"
+
     );
 
 
@@ -1783,7 +1938,6 @@ async function viderHistorique(){
 
 
 
-
         for(
             const documentHistorique of snapshot.docs
         ){
@@ -1808,12 +1962,14 @@ async function viderHistorique(){
 
 
 
-        chargerHistorique();
+        await chargerHistorique();
 
 
 
         alert(
+
             "Historique supprimé."
+
         );
 
 
@@ -1823,8 +1979,11 @@ async function viderHistorique(){
 
 
         console.error(
+
             "Erreur suppression historique : ",
+
             error
+
         );
 
 
@@ -1847,21 +2006,21 @@ onAuthStateChanged(
 
     auth,
 
-    (user)=>{
+    async(user)=>{
 
 
         if(user){
 
 
-            utilisateurConnecte=true;
+            utilisateurConnecte = true;
 
 
 
-            chargerProduits();
+            await chargerProduits();
 
-            chargerHistorique();
+            await chargerHistorique();
 
-            chargerVentes();
+            await chargerVentes();
 
 
         }
@@ -1869,15 +2028,47 @@ onAuthStateChanged(
         else{
 
 
-            utilisateurConnecte=false;
+            utilisateurConnecte = false;
 
 
-
-            produits=[];
-
+            produits = [];
 
 
             afficherProduits();
+
+
+            const elements = [
+
+
+                "chiffreAffaires",
+
+                "beneficeVentes",
+
+                "ventesJour",
+
+                "ventesMois",
+
+                "stockRestant"
+
+
+            ];
+
+
+
+            elements.forEach((id)=>{
+
+
+                const element =
+                document.getElementById(id);
+
+
+
+                if(element)
+
+                    element.textContent = "0";
+
+
+            });
 
 
         }
