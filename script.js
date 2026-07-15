@@ -29,6 +29,7 @@ let produitModification = null;
 
 
 
+
 // Historique des actions
 
 async function enregistrerHistorique(type, produit){
@@ -53,6 +54,37 @@ date: serverTimestamp()
 
 }
 
+
+
+
+
+// Enregistrer une vente dans Firestore
+
+async function enregistrerVente(produit, quantiteVendue, benefice){
+
+await addDoc(
+
+collection(db,"ventes"),
+
+{
+
+userId: auth.currentUser.uid,
+
+produit: produit.nom,
+
+quantiteVendue,
+
+prixVente: produit.prixRevente,
+
+benefice,
+
+date: serverTimestamp()
+
+}
+
+);
+
+}
 
 
 
@@ -207,16 +239,7 @@ tableau.appendChild(ligne);
 
 });
 
-
 }
-
-
-
-
-
-
-
-
 // Ajouter ou modifier un produit
 
 async function ajouterProduit(){
@@ -407,6 +430,13 @@ chargerHistorique();
 
 
 }
+
+
+
+
+
+
+
 // Charger produits utilisateur
 
 async function chargerProduits(){
@@ -554,14 +584,6 @@ beneficeTotal + " FCFA";
 
 
 }
-
-
-
-
-
-
-
-
 // Vente produit
 
 async function vendreProduit(id){
@@ -619,6 +641,20 @@ const beneficeVente =
 
 
 
+
+// Sauvegarde de la vente
+
+await enregistrerVente(
+produit,
+quantiteVendue,
+beneficeVente
+);
+
+
+
+
+// Mise à jour du stock
+
 await updateDoc(
 
 doc(db,"produits",id),
@@ -633,6 +669,9 @@ stockTotal: nouveauStock
 
 
 
+
+// Historique
+
 await enregistrerHistorique(
 
 "vente",
@@ -644,9 +683,13 @@ produit.nom + " (" + quantiteVendue + " unités)"
 
 
 alert(
-"Vente enregistrée. Bénéfice : "
+
+"Vente enregistrée.\nBénéfice : "
+
 + beneficeVente
+
 + " FCFA"
+
 );
 
 
@@ -756,6 +799,8 @@ chargerHistorique();
 
 
 
+// Vider les champs
+
 function viderChamps(){
 
 document.getElementById("nom").value="";
@@ -842,6 +887,7 @@ chargerHistorique();
 alert("Historique supprimé avec succès.");
 
 }
+
 
 
 
