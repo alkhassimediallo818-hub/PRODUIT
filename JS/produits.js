@@ -170,3 +170,77 @@ export async function supprimerProduit(
     );
 
 }
+// ===============================
+// MODIFIER PRODUIT
+// ===============================
+
+export function modifierProduit(id){
+
+    const produit =
+
+    produits.find(
+        p => p.id === id
+    );
+
+
+    if(!produit)
+        return;
+
+
+
+    document.getElementById("nom").value =
+    produit.nom || "";
+
+
+    document.getElementById("prixGros").value =
+    produit.prixGros || "";
+
+
+    document.getElementById("nombreCartons").value =
+    produit.nombreCartons || "";
+
+
+    document.getElementById("produitsParCarton").value =
+    produit.produitsParCarton || "";
+
+
+    document.getElementById("prixRevente").value =
+    produit.prixRevente || "";
+
+
+    produitModification = id;
+
+}
+
+
+
+
+
+// ===============================
+// VIDER CHAMPS
+// ===============================
+
+export function viderChamps(){
+
+    [
+        "nom",
+        "prixGros",
+        "nombreCartons",
+        "produitsParCarton",
+        "prixRevente"
+
+    ].forEach((id)=>{
+
+
+        const element =
+        document.getElementById(id);
+
+
+        if(element)
+
+            element.value = "";
+
+
+    });
+
+}
