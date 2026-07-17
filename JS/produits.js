@@ -169,28 +169,78 @@ export async function ajouterProduit(
 ){
 
     if(!utilisateurValide(auth, utilisateurConnecte))
-        return;
+        return false;
 
 
 
-    await addDoc(
+    try{
 
-        collection(db,"produits"),
 
-        {
+        if(produitModification){
 
-            ...produit,
 
-            userId:
-            auth.currentUser.uid,
+            await updateDoc(
 
-            dateAjout:
-            serverTimestamp()
+                doc(
+                    db,
+                    "produits",
+                    produitModification
+                ),
+
+                produit
+
+            );
+
+
+            produitModification = null;
+
 
         }
 
-    );
+        else{
 
+
+            await addDoc(
+
+                collection(db,"produits"),
+
+                {
+
+                    ...produit,
+
+                    userId:
+                    auth.currentUser.uid,
+
+                    dateAjout:
+                    serverTimestamp()
+
+                }
+
+            );
+
+
+        }
+
+
+
+        return true;
+
+
+    }
+
+    catch(error){
+
+
+        console.error(
+            "Erreur produit:",
+            error
+        );
+
+
+        return false;
+
+
+    }
 
 }
 
