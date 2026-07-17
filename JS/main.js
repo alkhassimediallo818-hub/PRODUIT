@@ -2,7 +2,6 @@
 // IMPORTS
 // ===============================
 
-
 import {
     auth
 } from "./firebase.js";
@@ -13,18 +12,15 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 
-
 import {
     chargerProduits,
     ajouterProduit,
     supprimerProduit,
     modifierProduit,
     viderChamps,
-    estEnModification,
-    annulerModification
+    annulerModification as resetModification
 
 } from "./produits.js";
-
 
 
 import {
@@ -36,13 +32,11 @@ import {
 } from "./ventes.js";
 
 
-
 import {
     chargerHistorique,
     viderHistorique
 
 } from "./historique.js";
-
 
 
 import {
@@ -53,9 +47,8 @@ import {
 
 
 
-
 // ===============================
-// VARIABLES GLOBALES
+// VARIABLES
 // ===============================
 
 
@@ -66,20 +59,6 @@ let produits = [];
 
 
 let ventesGlobales = [];
-
-
-
-
-// ===============================
-// ETAT UTILISATEUR
-// ===============================
-
-
-function utilisateurEtat(){
-
-    return utilisateurConnecte;
-
-}
 
 
 
@@ -96,11 +75,530 @@ onAuthStateChanged(
     async(user)=>{
 
 
-        if(user){
+        try{
 
 
-            utilisateurConnecte = true;
+            if(user){
 
+
+                utilisateurConnecte = true;
+
+
+
+                produits =
+
+                await chargerProduits(
+
+                    utilisateurConnecte
+
+                ) || [];
+
+
+
+                ventesGlobales =
+
+                await chargerVentes(
+
+                    utilisateurConnecte
+
+                ) || [];
+
+
+
+                await chargerHistorique(
+
+                    utilisateurConnecte
+
+                );
+
+
+
+                mettreAJourResume(
+
+                    produits,
+
+                    ventesGlobales
+
+                );
+
+
+
+                calculerStockRestant(
+
+                    produits
+
+                );
+
+
+
+                console.log(
+                    "Utilisateur connecté"
+                );
+
+
+            }
+
+            else{
+
+
+                utilisateurConnecte = false;
+
+
+                produits = [];
+
+
+                ventesGlobales = [];
+
+
+
+                console.log(
+                    "Utilisateur déconnecté"
+                );
+
+
+            }
+
+
+        }
+
+
+        catch(error){
+
+
+            console.error(
+                "Erreur chargement:",
+                error
+            );
+
+
+        }
+
+
+    }
+
+);
+// ===============================
+// VENTE
+// ===============================
+
+
+window.vendreProduit = (id)=>{
+
+
+    if(!utilisateurConnecte){
+
+        alert(
+            "Connectez-vous d'abord"
+        );
+
+        return;
+
+    }
+
+
+
+    vendreProduit(
+
+        id,
+
+        produits
+
+    );
+
+
+};
+
+
+
+
+
+window.confirmerVente = async ()=>{
+
+
+    try{
+
+
+        if(!utilisateurConnecte){
+
+            alert(
+                "Utilisateur non connecté"
+            );
+
+            return;
+
+        }
+
+
+
+        const resultat =
+
+        await confirmerVente(
+
+            utilisateurConnecte
+
+        );
+
+
+
+        if(resultat === false)
+
+            return;
+
+
+
+        produits =
+
+        await chargerProduits(
+
+            utilisateurConnecte
+
+        ) || [];
+
+
+
+        ventesGlobales =
+
+        await chargerVentes(
+
+            utilisateurConnecte
+
+        ) || [];
+
+
+
+        mettreAJourResume(
+
+            produits,
+
+            ventesGlobales
+
+        );
+
+
+
+        calculerStockRestant(
+
+            produits
+
+        );
+
+
+    }
+
+
+    catch(error){
+
+
+        console.error(
+            "Erreur confirmation vente:",
+            error
+        );
+
+
+        alert(
+            "Erreur pendant la vente"
+        );
+
+
+    }
+
+
+};
+
+
+
+
+
+window.fermerVente =
+
+fermerVente;
+
+
+
+
+
+// ===============================
+// HISTORIQUE
+// ===============================
+
+
+window.viderHistorique = async ()=>{
+
+
+    try{
+
+
+        if(!utilisateurConnecte){
+
+            alert(
+                "Connectez-vous d'abord"
+            );
+
+            return;
+
+        }
+
+
+
+        await viderHistorique(
+
+            utilisateurConnecte
+
+        );
+
+
+    }
+
+
+    catch(error){
+
+
+        console.error(
+            "Erreur historique:",
+            error
+        );
+
+
+    }
+
+
+};
+
+
+
+
+
+// ===============================
+// MODIFIER PRODUIT
+// ===============================
+
+
+window.modifierProduit =
+
+(id)=>{
+
+
+    try{
+
+
+        modifierProduit(id);
+
+
+    }
+
+
+    catch(error){
+
+
+        console.error(
+            "Erreur modification:",
+            error
+        );
+
+
+    }
+
+
+};
+
+
+
+
+
+// ===============================
+// AJOUT PRODUIT
+// ===============================
+
+
+window.ajouterProduit = async ()=>{
+
+
+    try{
+
+
+        if(!utilisateurConnecte){
+
+
+            alert(
+                "Connectez-vous d'abord"
+            );
+
+
+            return;
+
+
+        }
+
+
+
+        const nom =
+
+        document
+        .getElementById("nom")
+        ?.value
+        .trim();
+
+
+
+        const prixGros =
+
+        Number(
+
+            document
+            .getElementById("prixGros")
+            ?.value
+
+        );
+
+
+
+        const cartons =
+
+        Number(
+
+            document
+            .getElementById("nombreCartons")
+            ?.value
+
+        );
+
+
+
+        const parCarton =
+
+        Number(
+
+            document
+            .getElementById("produitsParCarton")
+            ?.value
+
+        );
+
+
+
+        const prixRevente =
+
+        Number(
+
+            document
+            .getElementById("prixRevente")
+            ?.value
+
+        );
+
+
+
+        if(
+
+            !nom ||
+
+            !Number.isFinite(prixGros) ||
+
+            prixGros <= 0 ||
+
+            cartons <= 0 ||
+
+            parCarton <= 0 ||
+
+            prixRevente <= 0
+
+        ){
+
+
+            alert(
+                "Informations produit invalides"
+            );
+
+
+            return;
+
+
+        }
+        // ===============================
+// CALCUL PRODUIT
+// ===============================
+
+
+        const stockTotal =
+
+        cartons * parCarton;
+
+
+
+        const prixTotalStock =
+
+        prixGros * cartons;
+
+
+
+        const prixUnitaire =
+
+        prixGros / stockTotal;
+
+
+
+        const benefice =
+
+        (prixRevente * stockTotal)
+
+        -
+
+        prixTotalStock;
+
+
+
+        const produit = {
+
+
+            nom,
+
+
+            prixGros,
+
+
+            nombreCartons:
+
+            cartons,
+
+
+            produitsParCarton:
+
+            parCarton,
+
+
+            prixTotalStock,
+
+
+            stockTotal,
+
+
+            prixUnitaire,
+
+
+            prixRevente,
+
+
+            benefice
+
+
+        };
+
+
+
+
+        const resultat =
+
+        await ajouterProduit(
+
+            utilisateurConnecte,
+
+            produit
+
+        );
+
+
+
+        if(resultat){
 
 
             produits =
@@ -109,25 +607,7 @@ onAuthStateChanged(
 
                 utilisateurConnecte
 
-            );
-
-
-
-            ventesGlobales =
-
-            await chargerVentes(
-
-                utilisateurConnecte
-
-            );
-
-
-
-            await chargerHistorique(
-
-                utilisateurConnecte
-
-            );
+            ) || [];
 
 
 
@@ -149,32 +629,15 @@ onAuthStateChanged(
 
 
 
-            console.log(
-
-                "Utilisateur connecté"
-
-            );
-
-
-        }
-
-        else{
-
-
-            utilisateurConnecte = false;
-
-
-            produits = [];
-
-
-            ventesGlobales = [];
+            viderChamps();
 
 
 
-            console.log(
+            resetModification();
 
-                "Utilisateur déconnecté"
 
+            alert(
+                "Produit enregistré"
             );
 
 
@@ -183,409 +646,112 @@ onAuthStateChanged(
 
     }
 
-);
+
+    catch(error){
 
 
+        console.error(
 
+            "Erreur ajout produit:",
 
-// ===============================
-// CONNEXION HTML
-// ===============================
-
-
-window.vendreProduit = (id)=>{
-
-
-    vendreProduit(
-
-        id,
-
-        produits
-
-    );
-
-
-};
-// ===============================
-// CONFIRMATION VENTE
-// ===============================
-
-
-window.confirmerVente = async ()=>{
-
-
-    const resultat =
-
-    await confirmerVente(
-
-        utilisateurConnecte
-
-    );
-
-
-
-    if(resultat){
-
-
-        produits =
-
-        await chargerProduits(
-
-            utilisateurConnecte
+            error
 
         );
-
-
-
-        ventesGlobales =
-
-        await chargerVentes(
-
-            utilisateurConnecte
-
-        );
-
-
-
-        mettreAJourResume(
-
-            produits,
-
-            ventesGlobales
-
-        );
-
-
-
-        calculerStockRestant(
-
-            produits
-
-        );
-
-
-    }
-
-
-};
-
-
-
-
-
-// ===============================
-// FERMER VENTE
-// ===============================
-
-
-window.fermerVente =
-
-fermerVente;
-
-
-
-
-
-// ===============================
-// HISTORIQUE
-// ===============================
-
-
-window.viderHistorique = ()=>{
-
-
-    viderHistorique(
-
-        utilisateurConnecte
-
-    );
-
-
-};
-
-
-
-
-
-// ===============================
-// MODIFICATION PRODUIT
-// ===============================
-
-
-window.modifierProduit =
-
-modifierProduit;
-
-
-
-
-
-// ===============================
-// AJOUT / MODIFICATION PRODUIT
-// ===============================
-
-
-window.ajouterProduit = async ()=>{
-alert("main.js fonctionne");
-
-    const nom =
-
-    document.getElementById("nom")?.value
-
-    ||
-
-    "";
-
-
-
-    const prixGros =
-
-    Number(
-
-        document.getElementById("prixGros")?.value
-
-    );
-
-
-
-    const cartons =
-
-    Number(
-
-        document.getElementById("nombreCartons")?.value
-
-    );
-
-
-
-    const parCarton =
-
-    Number(
-
-        document.getElementById("produitsParCarton")?.value
-
-    );
-
-
-
-    const prixRevente =
-
-    Number(
-
-        document.getElementById("prixRevente")?.value
-
-    );
-
-
-
-
-
-    if(
-
-        !nom ||
-
-        prixGros <= 0 ||
-
-        cartons <= 0 ||
-
-        parCarton <= 0 ||
-
-        prixRevente <= 0
-
-    ){
 
 
         alert(
-
-            "Veuillez remplir tous les champs correctement"
-
+            "Impossible d'ajouter le produit"
         );
-
-
-        return;
-
-
-    }
-
-
-
-
-
-    const stockTotal =
-
-    cartons * parCarton;
-
-
-
-
-    const prixTotalStock =
-
-    prixGros * cartons;
-
-
-
-
-    const prixUnitaire =
-
-    prixGros / stockTotal;
-
-
-
-
-    const benefice =
-
-    (prixRevente * stockTotal)
-
-    -
-
-    prixTotalStock;
-
-
-
-
-
-    const produit = {
-
-
-        nom,
-
-
-        prixGros,
-
-
-        nombreCartons:
-
-        cartons,
-
-
-        produitsParCarton:
-
-        parCarton,
-
-
-        prixTotalStock,
-
-
-        stockTotal,
-
-
-        prixUnitaire,
-
-
-        prixRevente,
-
-
-        benefice
-
-
-    };
-
-
-
-
-
-    const resultat =
-
-    await ajouterProduit(
-
-        utilisateurConnecte,
-
-        produit
-
-    );
-
-
-
-
-
-    if(resultat){
-
-
-        produits =
-
-        await chargerProduits(
-
-            utilisateurConnecte
-
-        );
-
-
-
-        mettreAJourResume(
-
-            produits,
-
-            ventesGlobales
-
-        );
-
-
-
-        calculerStockRestant(
-
-            produits
-
-        );
-
-
-
-        viderChamps();
-
-
-
-        annulerModification();
 
 
     }
 
 
 };
+
+
+
+
+
 // ===============================
 // SUPPRESSION PRODUIT
 // ===============================
 
 
-window.supprimerProduit = async (id)=>{
+window.supprimerProduit = async(id)=>{
 
 
-    const resultat =
-
-    await supprimerProduit(
-
-        utilisateurConnecte,
-
-        id
-
-    );
+    try{
 
 
+        if(!utilisateurConnecte){
 
-    if(resultat){
+            alert(
+                "Connectez-vous d'abord"
+            );
 
+            return;
 
-        produits =
-
-        await chargerProduits(
-
-            utilisateurConnecte
-
-        );
+        }
 
 
 
-        mettreAJourResume(
+        const resultat =
 
-            produits,
+        await supprimerProduit(
 
-            ventesGlobales
+            utilisateurConnecte,
+
+            id
 
         );
 
 
 
-        calculerStockRestant(
+        if(resultat){
 
-            produits
+
+            produits =
+
+            await chargerProduits(
+
+                utilisateurConnecte
+
+            ) || [];
+
+
+
+            mettreAJourResume(
+
+                produits,
+
+                ventesGlobales
+
+            );
+
+
+
+            calculerStockRestant(
+
+                produits
+
+            );
+
+
+        }
+
+
+    }
+
+
+    catch(error){
+
+
+        console.error(
+
+            "Erreur suppression:",
+
+            error
 
         );
 
@@ -598,16 +764,16 @@ window.supprimerProduit = async (id)=>{
 
 
 
+
 // ===============================
-// ANNULATION MODIFICATION
+// ANNULER MODIFICATION
 // ===============================
 
 
 window.annulerModification = ()=>{
 
 
-    annulerModification();
-
+    resetModification();
 
 
     viderChamps();
@@ -618,8 +784,9 @@ window.annulerModification = ()=>{
 
 
 
+
 // ===============================
-// PROTECTION ERREURS GLOBALES
+// ERREURS GLOBALES
 // ===============================
 
 
