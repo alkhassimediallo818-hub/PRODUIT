@@ -185,3 +185,84 @@ export function calculerResumeVentes(ventesGlobales){
 
 
 }
+// ===============================
+// PRODUIT VEDETTE
+// ===============================
+
+export function afficherProduitVedette(ventesGlobales){
+
+
+    const compteur = {};
+
+
+
+    ventesGlobales.forEach((vente)=>{
+
+
+        const nom =
+
+        vente.produit ||
+        "Produit";
+
+
+
+        compteur[nom] =
+
+        (compteur[nom] || 0)
+
+        +
+
+        nombreValide(
+            vente.quantiteVendue
+        );
+
+
+    });
+
+
+
+    let meilleur =
+    "Aucun";
+
+
+    let maximum = 0;
+
+
+
+    Object.keys(compteur)
+    .forEach((nom)=>{
+
+
+        if(compteur[nom] > maximum){
+
+
+            maximum =
+            compteur[nom];
+
+
+            meilleur =
+            nom;
+
+
+        }
+
+
+    });
+
+
+
+    const element =
+
+    document.getElementById(
+        "produitVedette"
+    );
+
+
+
+    if(element)
+
+        element.textContent =
+        meilleur;
+
+
+}
