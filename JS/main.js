@@ -12,6 +12,7 @@ import {
     onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
+
 import {
     chargerProduits,
     ajouterProduit,
@@ -19,14 +20,18 @@ import {
     modifierProduit,
     viderChamps,
     getProduits,
-    estEnModification
+    estEnModification,
+    annulerModification
+
 } from "./produits.js";
+
 
 import {
     chargerVentes,
     vendreProduit,
     confirmerVente,
     fermerVente
+
 } from "./ventes.js";
 
 
@@ -34,13 +39,20 @@ import {
 import {
     chargerHistorique,
     viderHistorique
+
 } from "./historique.js";
+
 
 
 import {
     mettreAJourResume,
     calculerStockRestant
+
 } from "./dashboard.js";
+
+
+
+
 // ===============================
 // VARIABLES GLOBALES
 // ===============================
@@ -53,9 +65,14 @@ let produits = [];
 
 
 let ventesGlobales = [];
+
+
+
+
 // ===============================
 // ETAT UTILISATEUR
 // ===============================
+
 
 function utilisateurEtat(){
 
@@ -65,6 +82,7 @@ function utilisateurEtat(){
 // ===============================
 // AUTHENTIFICATION
 // ===============================
+
 
 onAuthStateChanged(
 
@@ -79,39 +97,62 @@ onAuthStateChanged(
             utilisateurConnecte = true;
 
 
-            produits = await chargerProduits(
+
+            produits =
+
+            await chargerProduits(
+
                 utilisateurConnecte
+
             );
 
 
-            ventesGlobales = await chargerVentes(
+
+            ventesGlobales =
+
+            await chargerVentes(
+
                 utilisateurConnecte
+
             );
+
 
 
             await chargerHistorique(
+
                 utilisateurConnecte
+
             );
 
 
 
             mettreAJourResume(
+
                 produits,
+
                 ventesGlobales
+
             );
+
 
 
             calculerStockRestant(
+
                 produits
+
             );
 
 
+
             console.log(
+
                 "Utilisateur connecté"
+
             );
 
 
         }
+
 
         else{
 
@@ -121,12 +162,15 @@ onAuthStateChanged(
 
             produits = [];
 
+
             ventesGlobales = [];
 
 
 
             console.log(
+
                 "Utilisateur déconnecté"
+
             );
 
 
@@ -136,19 +180,32 @@ onAuthStateChanged(
     }
 
 );
+
+
+
+
+
 // ===============================
 // CONNEXION HTML
 // ===============================
 
 
+
 window.vendreProduit = (id)=>{
 
+
     vendreProduit(
+
         id,
+
         produits
+
     );
 
+
 };
+
+
 
 
 
@@ -159,31 +216,46 @@ window.confirmerVente = ()=>{
 
         utilisateurConnecte,
 
+
         async()=>{
 
+
             produits =
+
             await chargerProduits(
+
                 utilisateurConnecte
+
             );
+
 
 
             mettreAJourResume(
+
                 produits,
+
                 ventesGlobales
+
             );
+
 
         },
 
 
         async()=>{
 
+
             ventesGlobales =
+
             await chargerVentes(
+
                 utilisateurConnecte
+
             );
 
 
         }
+
 
     );
 
@@ -192,8 +264,13 @@ window.confirmerVente = ()=>{
 
 
 
+
+
 window.fermerVente =
+
 fermerVente;
+
+
 
 
 
@@ -201,64 +278,99 @@ window.viderHistorique = ()=>{
 
 
     viderHistorique(
+
         utilisateurConnecte
+
     );
 
 
 };
-window.modifierProduit = modifierProduit;
+
+
+
+
+
+window.modifierProduit =
+
+modifierProduit;
+
+
+
 
 
 window.ajouterProduit = async ()=>{
 
 
     const nom =
+
     document.getElementById("nom")?.value;
 
 
+
     const prixGros =
+
     Number(
+
         document.getElementById("prixGros")?.value
+
     );
+
 
 
     const cartons =
+
     Number(
+
         document.getElementById("nombreCartons")?.value
+
     );
+
 
 
     const parCarton =
+
     Number(
+
         document.getElementById("produitsParCarton")?.value
+
     );
 
 
+
     const prixRevente =
+
     Number(
+
         document.getElementById("prixRevente")?.value
+
     );
 
 
 
     const stockTotal =
+
     cartons * parCarton;
 
 
 
     const prixTotalStock =
+
     prixGros * cartons;
 
 
 
     const prixUnitaire =
+
     prixGros / parCarton;
 
 
 
     const benefice =
+
     (prixRevente * stockTotal)
+
     -
+
     prixTotalStock;
 
 
@@ -268,83 +380,130 @@ window.ajouterProduit = async ()=>{
 
         nom,
 
+
         prixGros,
 
-        nombreCartons: cartons,
 
-        produitsParCarton: parCarton,
+        nombreCartons:
+
+        cartons,
+
+
+        produitsParCarton:
+
+        parCarton,
+
 
         prixTotalStock,
 
+
         stockTotal,
+
 
         prixUnitaire,
 
+
         prixRevente,
+
 
         benefice
 
 
     };
-
-
-
     if(estEnModification()){
 
-    console.log(
-        "Mode modification"
-    );
 
-}
-else{
+        console.log(
 
-    console.log(
-        "Mode ajout"
-    );
+            "Mode modification"
 
-}
-
-
-const resultat =
-
-await ajouterProduit(
-
-    utilisateurConnecte,
-
-    produit
-
-);
-
-
-    if(resultat){
-
-
-        produits =
-        await chargerProduits(
-            utilisateurConnecte
         );
 
 
-        mettreAJourResume(
-            produits,
-            ventesGlobales
+    }
+
+    else{
+
+
+        console.log(
+
+            "Mode ajout"
+
         );
-
-
-        viderChamps();
 
 
     }
 
 
+
+
+
+    const resultat =
+
+    await ajouterProduit(
+
+        utilisateurConnecte,
+
+        produit
+
+    );
+
+
+
+
+
+    if(resultat){
+
+
+
+        produits =
+
+        await chargerProduits(
+
+            utilisateurConnecte
+
+        );
+
+
+
+        mettreAJourResume(
+
+            produits,
+
+            ventesGlobales
+
+        );
+
+
+
+        viderChamps();
+
+
+
+        annulerModification();
+
+
+    }
+
+
+
 };
+
+
+
+
 
 
 window.supprimerProduit = (id)=>{
 
+
     supprimerProduit(
+
         utilisateurConnecte,
+
         id
+
     );
+
 
 };
