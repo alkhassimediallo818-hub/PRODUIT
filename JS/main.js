@@ -3,9 +3,10 @@
 // ===============================
 
 import {
-    auth
+    auth,
+    connexionGoogle,
+    deconnexionGoogle
 } from "./firebase.js";
-
 
 import {
     onAuthStateChanged
