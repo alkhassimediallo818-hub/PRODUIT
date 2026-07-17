@@ -7,7 +7,6 @@ import {
     auth,
     connexionGoogle as lancerConnexion,
     deconnexionGoogle as lancerDeconnexion
-
 } from "./firebase.js";
 
 
@@ -18,18 +17,20 @@ import {
 
 
 import {
+
     chargerProduits,
     ajouterProduit,
     supprimerProduit,
     modifierProduit,
     viderChamps,
-    annulerModification as resetModification
+    annulerModification
 
 } from "./produits.js";
 
 
 
 import {
+
     chargerVentes,
     vendreProduit,
     confirmerVente,
@@ -40,6 +41,7 @@ import {
 
 
 import {
+
     chargerHistorique,
     viderHistorique
 
@@ -48,6 +50,7 @@ import {
 
 
 import {
+
     mettreAJourResume,
     calculerStockRestant
 
@@ -57,7 +60,7 @@ import {
 
 
 // ===============================
-// VARIABLES
+// VARIABLES GLOBALES
 // ===============================
 
 
@@ -70,14 +73,104 @@ let produits = [];
 let ventesGlobales = [];
 
 
+let chargement = false;
+
+
+
 
 
 // ===============================
-// AUTHENTIFICATION HTML
+// RAFRAICHISSEMENT CENTRAL
 // ===============================
 
 
-window.connexionGoogle = async ()=>{
+async function actualiserApplication(){
+
+
+    if(!utilisateurConnecte)
+
+        return;
+
+
+
+    try{
+
+
+        produits =
+
+        await chargerProduits(
+
+            utilisateurConnecte
+
+        ) || [];
+
+
+
+        ventesGlobales =
+
+        await chargerVentes(
+
+            utilisateurConnecte
+
+        ) || [];
+
+
+
+        await chargerHistorique(
+
+            utilisateurConnecte
+
+        );
+
+
+
+        mettreAJourResume(
+
+            produits,
+
+            ventesGlobales
+
+        );
+
+
+
+        calculerStockRestant(
+
+            produits
+
+        );
+
+
+    }
+
+
+    catch(error){
+
+
+        console.error(
+
+            "Erreur actualisation:",
+
+            error
+
+        );
+
+
+    }
+
+
+}
+
+
+
+
+
+// ===============================
+// CONNEXION GOOGLE
+// ===============================
+
+
+window.connexionGoogle = async function(){
 
 
     try{
@@ -94,11 +187,12 @@ window.connexionGoogle = async ()=>{
 
         console.error(
 
-            "Erreur connexion:",
+            "Erreur connexion Google:",
 
             error
 
         );
+
 
 
         alert(
@@ -117,7 +211,12 @@ window.connexionGoogle = async ()=>{
 
 
 
-window.deconnexionGoogle = async ()=>{
+// ===============================
+// DECONNEXION GOOGLE
+// ===============================
+
+
+window.deconnexionGoogle = async function(){
 
 
     try{
@@ -149,8 +248,9 @@ window.deconnexionGoogle = async ()=>{
 
 
 
+
 // ===============================
-// AUTHENTIFICATION FIREBASE
+// SURVEILLANCE AUTH FIREBASE
 // ===============================
 
 
@@ -171,55 +271,15 @@ onAuthStateChanged(
 
 
 
-                produits =
-
-                await chargerProduits(
-
-                    utilisateurConnecte
-
-                ) || [];
-
-
-
-                ventesGlobales =
-
-                await chargerVentes(
-
-                    utilisateurConnecte
-
-                ) || [];
-
-
-
-                await chargerHistorique(
-
-                    utilisateurConnecte
-
-                );
-
-
-
-                mettreAJourResume(
-
-                    produits,
-
-                    ventesGlobales
-
-                );
-
-
-
-                calculerStockRestant(
-
-                    produits
-
-                );
+                await actualiserApplication();
 
 
 
                 console.log(
 
-                    "Utilisateur connecté"
+                    "Utilisateur connecté:",
+
+                    user.email
 
                 );
 
@@ -237,6 +297,24 @@ onAuthStateChanged(
 
 
                 ventesGlobales = [];
+
+
+
+                mettreAJourResume(
+
+                    [],
+
+                    []
+
+                );
+
+
+
+                calculerStockRestant(
+
+                    []
+
+                );
 
 
 
@@ -258,7 +336,7 @@ onAuthStateChanged(
 
             console.error(
 
-                "Erreur chargement:",
+                "Erreur auth:",
 
                 error
 
@@ -276,7 +354,7 @@ onAuthStateChanged(
 // ===============================
 
 
-window.vendreProduit = (id)=>{
+window.vendreProduit = function(id){
 
 
     if(!utilisateurConnecte){
@@ -296,6 +374,8 @@ window.vendreProduit = (id)=>{
 
 
 
+    const resultat =
+
     vendreProduit(
 
         id,
@@ -305,13 +385,33 @@ window.vendreProduit = (id)=>{
     );
 
 
+
+    if(resultat === false){
+
+
+        alert(
+
+            "Produit introuvable"
+
+        );
+
+
+    }
+
+
 };
 
 
 
 
 
-window.confirmerVente = async ()=>{
+window.confirmerVente = async function(){
+
+
+    if(chargement)
+
+        return;
+
 
 
     try{
@@ -322,7 +422,7 @@ window.confirmerVente = async ()=>{
 
             alert(
 
-                "Utilisateur non connecté"
+                "Connectez-vous d'abord"
 
             );
 
@@ -331,6 +431,10 @@ window.confirmerVente = async ()=>{
 
 
         }
+
+
+
+        chargement = true;
 
 
 
@@ -344,47 +448,13 @@ window.confirmerVente = async ()=>{
 
 
 
-        if(resultat === false)
-
-            return;
+        if(resultat){
 
 
-
-        produits =
-
-        await chargerProduits(
-
-            utilisateurConnecte
-
-        ) || [];
+            await actualiserApplication();
 
 
-
-        ventesGlobales =
-
-        await chargerVentes(
-
-            utilisateurConnecte
-
-        ) || [];
-
-
-
-        mettreAJourResume(
-
-            produits,
-
-            ventesGlobales
-
-        );
-
-
-
-        calculerStockRestant(
-
-            produits
-
-        );
+        }
 
 
     }
@@ -412,26 +482,44 @@ window.confirmerVente = async ()=>{
     }
 
 
+    finally{
+
+
+        chargement = false;
+
+
+    }
+
+
 };
 
 
 
 
 
-window.fermerVente =
+window.fermerVente = function(){
 
-fermerVente;
 
+    fermerVente();
+
+
+};
 
 
 
 
 // ===============================
-// HISTORIQUE
+// AJOUT / MODIFICATION PRODUIT
 // ===============================
 
 
-window.viderHistorique = async ()=>{
+window.ajouterProduit = async function(){
+
+
+    if(chargement)
+
+        return;
+
 
 
     try{
@@ -454,11 +542,113 @@ window.viderHistorique = async ()=>{
 
 
 
-        await viderHistorique(
+        const donnees = {
 
-            utilisateurConnecte
+
+            nom:
+
+            document
+
+            .getElementById("nom")
+
+            ?.value,
+
+
+
+            prixGros:
+
+            document
+
+            .getElementById("prixGros")
+
+            ?.value,
+
+
+
+            nombreCartons:
+
+            document
+
+            .getElementById("nombreCartons")
+
+            ?.value,
+
+
+
+            produitsParCarton:
+
+            document
+
+            .getElementById("produitsParCarton")
+
+            ?.value,
+
+
+
+            prixRevente:
+
+            document
+
+            .getElementById("prixRevente")
+
+            ?.value
+
+
+        };
+
+
+
+        chargement = true;
+
+
+
+        const resultat =
+
+        await ajouterProduit(
+
+            utilisateurConnecte,
+
+            donnees
 
         );
+
+
+
+        if(resultat){
+
+
+            await actualiserApplication();
+
+
+
+            viderChamps();
+
+
+
+            annulerModification();
+
+
+
+            alert(
+
+                "Produit enregistré"
+
+            );
+
+
+        }
+
+        else{
+
+
+            alert(
+
+                "Impossible d'enregistrer"
+
+            );
+
+
+        }
 
 
     }
@@ -469,11 +659,27 @@ window.viderHistorique = async ()=>{
 
         console.error(
 
-            "Erreur historique:",
+            "Erreur produit:",
 
             error
 
         );
+
+
+        alert(
+
+            "Erreur produit"
+
+        );
+
+
+    }
+
+
+    finally{
+
+
+        chargement = false;
 
 
     }
@@ -486,11 +692,11 @@ window.viderHistorique = async ()=>{
 
 
 // ===============================
-// MODIFICATION PRODUIT
+// MODIFIER PRODUIT
 // ===============================
 
 
-window.modifierProduit = (id)=>{
+window.modifierProduit = function(id){
 
 
     try{
@@ -540,11 +746,17 @@ window.modifierProduit = (id)=>{
 
 
 // ===============================
-// AJOUT / MODIFICATION PRODUIT
+// SUPPRIMER PRODUIT
 // ===============================
 
 
-window.ajouterProduit = async ()=>{
+window.supprimerProduit = async function(id){
+
+
+    if(chargement)
+
+        return;
+
 
 
     try{
@@ -567,270 +779,23 @@ window.ajouterProduit = async ()=>{
 
 
 
-        const nom =
+        const confirmation =
 
-        document
-        .getElementById("nom")
-        ?.value
-        .trim();
+        confirm(
 
-
-
-        const prixGros =
-
-        Number(
-
-            document
-            .getElementById("prixGros")
-            ?.value
+            "Supprimer ce produit ?"
 
         );
 
 
 
-        const cartons =
-
-        Number(
-
-            document
-            .getElementById("nombreCartons")
-            ?.value
-
-        );
-
-
-
-        const parCarton =
-
-        Number(
-
-            document
-            .getElementById("produitsParCarton")
-            ?.value
-
-        );
-
-
-
-        const prixRevente =
-
-        Number(
-
-            document
-            .getElementById("prixRevente")
-            ?.value
-
-        );
-
-
-
-        if(
-
-            !nom ||
-
-            prixGros <= 0 ||
-
-            cartons <= 0 ||
-
-            parCarton <= 0 ||
-
-            prixRevente <= 0
-
-        ){
-
-
-            alert(
-
-                "Informations produit invalides"
-
-            );
-
+        if(!confirmation)
 
             return;
 
 
-        }
 
-
-
-        const stockTotal =
-
-        cartons * parCarton;
-
-
-
-        const prixTotalStock =
-
-        prixGros * cartons;
-
-
-
-        const prixUnitaire =
-
-        prixGros / stockTotal;
-
-
-
-        const benefice =
-
-        (prixRevente * stockTotal)
-
-        -
-
-        prixTotalStock;
-
-
-
-        const produit = {
-
-
-            nom,
-
-
-            prixGros,
-
-
-            nombreCartons:
-
-            cartons,
-
-
-            produitsParCarton:
-
-            parCarton,
-
-
-            prixTotalStock,
-
-
-            stockTotal,
-
-
-            prixUnitaire,
-
-
-            prixRevente,
-
-
-            benefice
-
-
-        };
-
-
-
-        const resultat =
-
-        await ajouterProduit(
-
-            utilisateurConnecte,
-
-            produit
-
-        );
-
-
-
-        if(resultat){
-
-
-            produits =
-
-            await chargerProduits(
-
-                utilisateurConnecte
-
-            ) || [];
-
-
-
-            mettreAJourResume(
-
-                produits,
-
-                ventesGlobales
-
-            );
-
-
-
-            calculerStockRestant(
-
-                produits
-
-            );
-
-
-
-            viderChamps();
-
-
-
-            resetModification();
-
-
-
-            alert(
-
-                "Produit enregistré"
-
-            );
-
-
-        }
-
-
-    }
-
-
-    catch(error){
-
-
-        console.error(
-
-            "Erreur ajout produit:",
-
-            error
-
-        );
-
-
-        alert(
-
-            "Impossible d'ajouter le produit"
-
-        );
-
-
-    }
-
-
-};
-// ===============================
-// SUPPRESSION PRODUIT
-// ===============================
-
-
-window.supprimerProduit = async(id)=>{
-
-
-    try{
-
-
-        if(!utilisateurConnecte){
-
-
-            alert(
-
-                "Connectez-vous d'abord"
-
-            );
-
-
-            return;
-
-
-        }
+        chargement = true;
 
 
 
@@ -849,29 +814,18 @@ window.supprimerProduit = async(id)=>{
         if(resultat){
 
 
-            produits =
-
-            await chargerProduits(
-
-                utilisateurConnecte
-
-            ) || [];
+            await actualiserApplication();
 
 
-
-            mettreAJourResume(
-
-                produits,
-
-                ventesGlobales
-
-            );
+        }
 
 
+        else{
 
-            calculerStockRestant(
 
-                produits
+            alert(
+
+                "Suppression refusée"
 
             );
 
@@ -887,7 +841,7 @@ window.supprimerProduit = async(id)=>{
 
         console.error(
 
-            "Erreur suppression produit:",
+            "Erreur suppression:",
 
             error
 
@@ -904,6 +858,15 @@ window.supprimerProduit = async(id)=>{
     }
 
 
+    finally{
+
+
+        chargement = false;
+
+
+    }
+
+
 };
 
 
@@ -915,13 +878,117 @@ window.supprimerProduit = async(id)=>{
 // ===============================
 
 
-window.annulerModification = ()=>{
+window.annulerModification = function(){
 
 
-    resetModification();
+    annulerModification();
 
 
     viderChamps();
+
+
+};
+// ===============================
+// HISTORIQUE
+// ===============================
+
+
+window.viderHistorique = async function(){
+
+
+    try{
+
+
+        if(!utilisateurConnecte){
+
+
+            alert(
+
+                "Connectez-vous d'abord"
+
+            );
+
+
+            return;
+
+
+        }
+
+
+
+        const resultat =
+
+        await viderHistorique(
+
+            utilisateurConnecte
+
+        );
+
+
+
+        if(resultat){
+
+
+            await chargerHistorique(
+
+                utilisateurConnecte
+
+            );
+
+
+        }
+
+
+    }
+
+
+    catch(error){
+
+
+        console.error(
+
+            "Erreur historique:",
+
+            error
+
+        );
+
+
+    }
+
+
+};
+
+
+
+
+
+// ===============================
+// RAFRAICHISSEMENT MANUEL
+// ===============================
+
+
+window.actualiser = async function(){
+
+
+    if(!utilisateurConnecte){
+
+
+        alert(
+
+            "Connectez-vous d'abord"
+
+        );
+
+
+        return;
+
+
+    }
+
+
+
+    await actualiserApplication();
 
 
 };
@@ -939,12 +1006,12 @@ window.addEventListener(
 
     "error",
 
-    (event)=>{
+    function(event){
 
 
         console.error(
 
-            "Erreur application:",
+            "Erreur JavaScript:",
 
             event.error
 
@@ -963,14 +1030,41 @@ window.addEventListener(
 
     "unhandledrejection",
 
-    (event)=>{
+    function(event){
 
 
         console.error(
 
-            "Erreur promise:",
+            "Erreur Promise:",
 
             event.reason
+
+        );
+
+
+    }
+
+);
+
+
+
+
+
+// ===============================
+// VERIFICATION DOM
+// ===============================
+
+
+document.addEventListener(
+
+    "DOMContentLoaded",
+
+    ()=>{
+
+
+        console.log(
+
+            "Application prête"
 
         );
 
