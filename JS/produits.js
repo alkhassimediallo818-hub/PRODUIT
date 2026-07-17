@@ -313,6 +313,13 @@ export function modifierProduit(id){
 
     produitModification = id;
 
+return true;
+    export function annulerModification(){
+
+    produitModification = null;
+
+    }
+
 }
 
 
