@@ -1876,5 +1876,4 @@ window.confirmerVente =
 confirmerVente;
 
 
-window.fermerVente =
-fermerVente;
+window.fermerVente = fermerVente;
