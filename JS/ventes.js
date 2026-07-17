@@ -44,7 +44,9 @@ import {
 
 let ventesGlobales = [];
 
+
 let produitVenteActuel = null;
+
 
 let traitementVente = false;
 
@@ -65,9 +67,8 @@ export function getVentes(){
 
 
 
-
 // ===============================
-// CHARGER VENTES
+// CHARGER LES VENTES
 // ===============================
 
 
@@ -90,7 +91,7 @@ export async function chargerVentes(
 
     )
 
-        return [];
+    return [];
 
 
 
@@ -99,6 +100,7 @@ export async function chargerVentes(
 
         const q = query(
 
+
             collection(
 
                 db,
@@ -106,6 +108,7 @@ export async function chargerVentes(
                 "ventes"
 
             ),
+
 
 
             where(
@@ -118,11 +121,12 @@ export async function chargerVentes(
 
             )
 
+
         );
 
 
 
-        const snapshot =
+        const resultat =
 
         await getDocs(q);
 
@@ -132,26 +136,22 @@ export async function chargerVentes(
 
 
 
-        snapshot.forEach(
-
-            (docSnap)=>{
+        resultat.forEach((vente)=>{
 
 
-                ventesGlobales.push({
+            ventesGlobales.push({
 
-                    id:
+                id:
 
-                    docSnap.id,
-
-
-                    ...docSnap.data()
-
-                });
+                vente.id,
 
 
-            }
+                ...vente.data()
 
-        );
+            });
+
+
+        });
 
 
 
@@ -173,6 +173,10 @@ export async function chargerVentes(
         );
 
 
+
+        ventesGlobales = [];
+
+
         return [];
 
 
@@ -184,9 +188,8 @@ export async function chargerVentes(
 
 
 
-
 // ===============================
-// ENREGISTRER VENTE
+// ENREGISTRER UNE VENTE
 // ===============================
 
 
@@ -215,11 +218,41 @@ export async function enregistrerVente(
 
     )
 
-        return false;
+    return false;
 
 
 
     try{
+
+
+        const quantiteFinale =
+
+        nombreValide(
+
+            quantite
+
+        );
+
+
+
+        if(
+
+            quantiteFinale <= 0
+
+        )
+
+        return false;
+
+
+
+        const prix =
+
+        nombreValide(
+
+            produit.prixRevente
+
+        );
+
 
 
         const vente = {
@@ -247,39 +280,21 @@ export async function enregistrerVente(
 
             quantiteVendue:
 
-            nombreValide(
-
-                quantite
-
-            ),
+            quantiteFinale,
 
 
 
             prixVente:
 
-            nombreValide(
-
-                produit.prixRevente
-
-            ),
+            prix,
 
 
 
             montantTotal:
 
-            nombreValide(
+            prix *
 
-                produit.prixRevente
-
-            )
-
-            *
-
-            nombreValide(
-
-                quantite
-
-            ),
+            quantiteFinale,
 
 
 
@@ -308,16 +323,7 @@ export async function enregistrerVente(
 
 
 
-
-        if(
-
-            vente.quantiteVendue <= 0
-
-        )
-
-            return false;
-
-
+        const ajout =
 
         await addDoc(
 
@@ -335,6 +341,20 @@ export async function enregistrerVente(
 
 
 
+        ventesGlobales.push({
+
+            id:
+
+            ajout.id,
+
+
+            ...vente
+
+
+        });
+
+
+
         return true;
 
 
@@ -346,7 +366,7 @@ export async function enregistrerVente(
 
         console.error(
 
-            "Erreur enregistrement vente:",
+            "Erreur création vente:",
 
             error
 
@@ -361,7 +381,7 @@ export async function enregistrerVente(
 
     }
 // ===============================
-// OUVRIR FENETRE VENTE
+// OUVRIR FENÊTRE DE VENTE
 // ===============================
 
 
@@ -386,7 +406,7 @@ export function vendreProduit(
 
     if(!produit)
 
-        return false;
+    return false;
 
 
 
@@ -394,7 +414,7 @@ export function vendreProduit(
 
 
 
-    const nom =
+    const nomProduit =
 
     document.getElementById(
 
@@ -404,9 +424,10 @@ export function vendreProduit(
 
 
 
-    if(nom)
+    if(nomProduit){
 
-        nom.textContent =
+
+        nomProduit.textContent =
 
         "Produit : "
 
@@ -415,8 +436,13 @@ export function vendreProduit(
         produit.nom;
 
 
+    }
 
-    const champ =
+
+
+
+
+    const champQuantite =
 
     document.getElementById(
 
@@ -426,9 +452,17 @@ export function vendreProduit(
 
 
 
-    if(champ)
+    if(champQuantite){
 
-        champ.value = "";
+
+        champQuantite.value = "";
+
+        champQuantite.focus();
+
+
+    }
+
+
 
 
 
@@ -442,9 +476,15 @@ export function vendreProduit(
 
 
 
-    if(modal)
+    if(modal){
 
-        modal.style.display = "block";
+
+        modal.style.display =
+
+        "block";
+
+
+    }
 
 
 
@@ -458,7 +498,7 @@ export function vendreProduit(
 
 
 // ===============================
-// CONFIRMER VENTE
+// CONFIRMER UNE VENTE
 // ===============================
 
 
@@ -471,7 +511,7 @@ export async function confirmerVente(
 
     if(traitementVente)
 
-        return false;
+    return false;
 
 
 
@@ -487,7 +527,7 @@ export async function confirmerVente(
 
     )
 
-        return false;
+    return false;
 
 
 
@@ -505,6 +545,8 @@ export async function confirmerVente(
 
 
     }
+
+
 
 
 
@@ -529,7 +571,7 @@ export async function confirmerVente(
 
 
 
-        const produitFirestore =
+        const resultat =
 
         await getDoc(reference);
 
@@ -537,35 +579,45 @@ export async function confirmerVente(
 
         if(
 
-            !produitFirestore.exists()
+            !resultat.exists()
 
         )
 
-            throw new Error(
+        throw new Error(
 
-                "Produit introuvable"
+            "Produit supprimé ou introuvable"
 
-            );
+        );
 
 
 
-        const data =
 
-        produitFirestore.data();
+
+        const produit =
+
+        resultat.data();
+
+
 
 
 
         if(
 
-            data.userId !== auth.currentUser.uid
+            produit.userId
+
+            !==
+
+            auth.currentUser.uid
 
         )
 
-            throw new Error(
+        throw new Error(
 
-                "Accès refusé"
+            "Accès interdit"
 
-            );
+        );
+
+
 
 
 
@@ -589,13 +641,17 @@ export async function confirmerVente(
 
 
 
-        const stock =
+
+
+        const stockActuel =
 
         nombreValide(
 
-            data.stockTotal
+            produit.stockTotal
 
         );
+
+
 
 
 
@@ -605,14 +661,14 @@ export async function confirmerVente(
 
             ||
 
-            quantite > stock
+            quantite > stockActuel
 
         ){
 
 
             alert(
 
-                "Quantité invalide ou stock insuffisant"
+                "Stock insuffisant ou quantité invalide"
 
             );
 
@@ -624,43 +680,43 @@ export async function confirmerVente(
 
 
 
+
+
         const nouveauStock =
 
-        stock - quantite;
+        stockActuel
+
+        -
+
+        quantite;
 
 
 
-        const prixUnitaire =
-
-        nombreValide(
-
-            data.prixUnitaire
-
-        );
 
 
-
-        const prixRevente =
+        const beneficeUnitaire =
 
         nombreValide(
 
-            data.prixRevente
-
-        );
-
-
-
-        const benefice =
-
-        (
-
-            prixRevente
-
-            -
-
-            prixUnitaire
+            produit.prixRevente
 
         )
+
+        -
+
+        nombreValide(
+
+            produit.prixUnitaire
+
+        );
+
+
+
+
+
+        const beneficeTotal =
+
+        beneficeUnitaire
 
         *
 
@@ -669,29 +725,35 @@ export async function confirmerVente(
 
 
 
-        const venteOk =
+
+        const vente =
 
         await enregistrerVente(
 
             utilisateurConnecte,
 
-            data,
+            produit,
 
             quantite,
 
-            benefice
+            beneficeTotal
 
         );
 
 
 
-        if(!venteOk)
 
-            throw new Error(
 
-                "Vente non enregistrée"
+        if(!vente)
 
-            );
+
+        throw new Error(
+
+            "Impossible d'enregistrer la vente"
+
+        );
+
+
 
 
 
@@ -701,9 +763,11 @@ export async function confirmerVente(
 
             {
 
+
                 stockTotal:
 
                 nouveauStock,
+
 
 
                 derniereVente:
@@ -714,6 +778,8 @@ export async function confirmerVente(
             }
 
         );
+
+
 
 
 
@@ -741,7 +807,7 @@ export async function confirmerVente(
 
         alert(
 
-            "Impossible de terminer la vente"
+            error.message
 
         );
 
@@ -761,14 +827,9 @@ export async function confirmerVente(
     }
 
 
-}
-
-
-
-
-
+            }
 // ===============================
-// FERMER FENETRE VENTE
+// FERMER FENÊTRE DE VENTE
 // ===============================
 
 
@@ -785,9 +846,57 @@ export function fermerVente(){
 
 
 
-    if(modal)
+    if(modal){
 
-        modal.style.display = "none";
+
+        modal.style.display =
+
+        "none";
+
+
+    }
+
+
+
+    const champ =
+
+    document.getElementById(
+
+        "quantiteVente"
+
+    );
+
+
+
+    if(champ){
+
+
+        champ.value = "";
+
+
+    }
+
+
+
+    const nomProduit =
+
+    document.getElementById(
+
+        "nomProduitVente"
+
+    );
+
+
+
+    if(nomProduit){
+
+
+        nomProduit.textContent =
+
+        "Produit sélectionné";
+
+
+    }
 
 
 
