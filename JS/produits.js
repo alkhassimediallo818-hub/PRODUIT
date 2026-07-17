@@ -33,6 +33,11 @@ import {
 let produits = [];
 
 let produitModification = null;
+export function estEnModification(){
+
+    return produitModification !== null;
+
+}
 function creerProduit(
     nom,
     prixGros,
