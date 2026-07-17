@@ -326,7 +326,7 @@ modifierProduit;
 
 
 window.ajouterProduit = async ()=>{
-
+alert("main.js fonctionne");
 
     const nom =
 
