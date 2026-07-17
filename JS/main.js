@@ -289,16 +289,31 @@ window.ajouterProduit = async ()=>{
 
 
 
-    const resultat =
+    if(estEnModification()){
 
-    await ajouterProduit(
-
-        utilisateurConnecte,
-
-        produit
-
+    console.log(
+        "Mode modification"
     );
 
+}
+else{
+
+    console.log(
+        "Mode ajout"
+    );
+
+}
+
+
+const resultat =
+
+await ajouterProduit(
+
+    utilisateurConnecte,
+
+    produit
+
+);
 
 
     if(resultat){
