@@ -266,3 +266,43 @@ export function afficherProduitVedette(ventesGlobales){
 
 
 }
+// ===============================
+// STOCK RESTANT
+// ===============================
+
+export function calculerStockRestant(produits){
+
+
+    let total = 0;
+
+
+
+    produits.forEach((produit)=>{
+
+
+        total +=
+
+        nombreValide(
+            produit.stockTotal
+        );
+
+
+    });
+
+
+
+    const element =
+
+    document.getElementById(
+        "stockRestant"
+    );
+
+
+
+    if(element)
+
+        element.textContent =
+        total;
+
+
+}
