@@ -54,3 +54,12 @@ let produits = [];
 
 
 let ventesGlobales = [];
+// ===============================
+// ETAT UTILISATEUR
+// ===============================
+
+function utilisateurEtat(){
+
+    return utilisateurConnecte;
+
+}
