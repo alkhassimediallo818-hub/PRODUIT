@@ -137,3 +137,73 @@ onAuthStateChanged(
     }
 
 );
+// ===============================
+// CONNEXION HTML
+// ===============================
+
+
+window.vendreProduit = (id)=>{
+
+    vendreProduit(
+        id,
+        produits
+    );
+
+};
+
+
+
+window.confirmerVente = ()=>{
+
+
+    confirmerVente(
+
+        utilisateurConnecte,
+
+        async()=>{
+
+            produits =
+            await chargerProduits(
+                utilisateurConnecte
+            );
+
+
+            mettreAJourResume(
+                produits,
+                ventesGlobales
+            );
+
+        },
+
+
+        async()=>{
+
+            ventesGlobales =
+            await chargerVentes(
+                utilisateurConnecte
+            );
+
+
+        }
+
+    );
+
+
+};
+
+
+
+window.fermerVente =
+fermerVente;
+
+
+
+window.viderHistorique = ()=>{
+
+
+    viderHistorique(
+        utilisateurConnecte
+    );
+
+
+};
