@@ -748,7 +748,7 @@ function mettreAJourResume(){
 
 
 
-        stock += valor;
+        stock += valeur;
 
 
 
