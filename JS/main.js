@@ -104,37 +104,24 @@ let ventesGlobales = [];
 
 window.connexionGoogle = async function(){
 
+    alert("Test bouton");
 
     try{
 
-
         await lancerConnexion();
 
-
     }
-
 
     catch(error){
 
-
         console.error(
-
             "Erreur connexion Google:",
-
             error
-
         );
 
-
-        alert(
-
-            "Connexion impossible"
-
-        );
-
+        alert(error.message);
 
     }
-
 
 };
 
