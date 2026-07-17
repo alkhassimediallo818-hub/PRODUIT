@@ -1,10 +1,4 @@
 // ===============================
-// MAIN.JS
-// CHEF D'ORCHESTRE APPLICATION
-// ===============================
-
-
-// ===============================
 // IMPORTS
 // ===============================
 
@@ -75,7 +69,11 @@ import {
 
     mettreAJourResume,
 
-    calculerStockRestant
+    calculerStockRestant,
+
+    viderDashboard,
+
+    preparerGraphique
 
 } from "./dashboard.js";
 
@@ -84,7 +82,7 @@ import {
 
 
 // ===============================
-// VARIABLES GLOBALES
+// ETAT APPLICATION
 // ===============================
 
 
@@ -95,96 +93,6 @@ let produits = [];
 
 
 let ventesGlobales = [];
-
-
-let operationEnCours = false;
-
-
-
-
-
-// ===============================
-// CHARGEMENT CENTRAL
-// ===============================
-
-
-async function actualiserDonnees(){
-
-
-    if(!utilisateurConnecte)
-
-        return;
-
-
-
-    try{
-
-
-        produits =
-
-        await chargerProduits(
-
-            utilisateurConnecte
-
-        ) || [];
-
-
-
-        ventesGlobales =
-
-        await chargerVentes(
-
-            utilisateurConnecte
-
-        ) || [];
-
-
-
-        await chargerHistorique(
-
-            utilisateurConnecte
-
-        );
-
-
-
-        mettreAJourResume(
-
-            produits,
-
-            ventesGlobales
-
-        );
-
-
-
-        calculerStockRestant(
-
-            produits
-
-        );
-
-
-    }
-
-
-    catch(error){
-
-
-        console.error(
-
-            "Erreur synchronisation:",
-
-            error
-
-        );
-
-
-    }
-
-
-}
-
 
 
 
@@ -211,7 +119,7 @@ window.connexionGoogle = async function(){
 
         console.error(
 
-            "Connexion Google échouée:",
+            "Erreur connexion Google:",
 
             error
 
@@ -220,7 +128,7 @@ window.connexionGoogle = async function(){
 
         alert(
 
-            "Impossible de se connecter"
+            "Connexion impossible"
 
         );
 
@@ -256,7 +164,7 @@ window.deconnexionGoogle = async function(){
 
         console.error(
 
-            "Déconnexion échouée:",
+            "Erreur déconnexion:",
 
             error
 
@@ -273,7 +181,7 @@ window.deconnexionGoogle = async function(){
 
 
 // ===============================
-// AUTH FIREBASE
+// SURVEILLANCE AUTH FIREBASE
 // ===============================
 
 
@@ -294,13 +202,63 @@ onAuthStateChanged(
 
 
 
-                await actualiserDonnees();
+                produits =
+
+                await chargerProduits(
+
+                    utilisateurConnecte
+
+                ) || [];
+
+
+
+                ventesGlobales =
+
+                await chargerVentes(
+
+                    utilisateurConnecte
+
+                ) || [];
+
+
+
+                await chargerHistorique(
+
+                    utilisateurConnecte
+
+                );
+
+
+
+                mettreAJourResume(
+
+                    produits,
+
+                    ventesGlobales
+
+                );
+
+
+
+                calculerStockRestant(
+
+                    produits
+
+                );
+
+
+
+                preparerGraphique(
+
+                    ventesGlobales
+
+                );
 
 
 
                 console.log(
 
-                    "Utilisateur connecté",
+                    "Session active:",
 
                     user.email
 
@@ -308,7 +266,6 @@ onAuthStateChanged(
 
 
             }
-
 
             else{
 
@@ -322,28 +279,13 @@ onAuthStateChanged(
                 ventesGlobales = [];
 
 
-
-                mettreAJourResume(
-
-                    [],
-
-                    []
-
-                );
-
-
-
-                calculerStockRestant(
-
-                    []
-
-                );
+                viderDashboard();
 
 
 
                 console.log(
 
-                    "Utilisateur déconnecté"
+                    "Aucune session"
 
                 );
 
@@ -359,7 +301,7 @@ onAuthStateChanged(
 
             console.error(
 
-                "Erreur auth:",
+                "Erreur initialisation:",
 
                 error
 
@@ -373,355 +315,7 @@ onAuthStateChanged(
 
 );
 // ===============================
-// AJOUT PRODUIT
-// ===============================
-
-
-window.ajouterProduit = async function(){
-
-
-    if(operationEnCours)
-
-        return;
-
-
-
-    if(!utilisateurConnecte){
-
-
-        alert(
-
-            "Connectez-vous d'abord"
-
-        );
-
-
-        return;
-
-
-    }
-
-
-
-    try{
-
-
-        operationEnCours = true;
-
-
-
-        const donnees = {
-
-
-            nom:
-
-            document
-
-            .getElementById("nom")
-
-            ?.value,
-
-
-
-            prixGros:
-
-            document
-
-            .getElementById("prixGros")
-
-            ?.value,
-
-
-
-            nombreCartons:
-
-            document
-
-            .getElementById("nombreCartons")
-
-            ?.value,
-
-
-
-            produitsParCarton:
-
-            document
-
-            .getElementById("produitsParCarton")
-
-            ?.value,
-
-
-
-            prixRevente:
-
-            document
-
-            .getElementById("prixRevente")
-
-            ?.value
-
-
-        };
-
-
-
-        const resultat =
-
-        await ajouterProduit(
-
-            utilisateurConnecte,
-
-            donnees
-
-        );
-
-
-
-        if(resultat){
-
-
-            await actualiserDonnees();
-
-
-            viderChamps();
-
-
-            annulerModification();
-
-
-
-            alert(
-
-                "Produit enregistré"
-
-            );
-
-
-        }
-
-
-    }
-
-
-    catch(error){
-
-
-        console.error(
-
-            "Erreur ajout produit:",
-
-            error
-
-        );
-
-
-        alert(
-
-            "Erreur produit"
-
-        );
-
-
-    }
-
-
-    finally{
-
-
-        operationEnCours = false;
-
-
-    }
-
-
-};
-
-
-
-
-
-
-
-// ===============================
-// MODIFICATION PRODUIT
-// ===============================
-
-
-window.modifierProduit = function(id){
-
-
-    try{
-
-
-        const resultat =
-
-        modifierProduit(id);
-
-
-
-        if(!resultat){
-
-
-            alert(
-
-                "Produit introuvable"
-
-            );
-
-
-        }
-
-
-    }
-
-
-    catch(error){
-
-
-        console.error(
-
-            "Erreur modification:",
-
-            error
-
-        );
-
-
-    }
-
-
-};
-
-
-
-
-
-
-
-// ===============================
-// ANNULER MODIFICATION
-// ===============================
-
-
-window.annulerModification = function(){
-
-
-    annulerModification();
-
-
-    viderChamps();
-
-
-};
-
-
-
-
-
-
-
-// ===============================
-// SUPPRESSION PRODUIT
-// ===============================
-
-
-window.supprimerProduit = async function(id){
-
-
-    if(operationEnCours)
-
-        return;
-
-
-
-    if(!utilisateurConnecte)
-
-        return;
-
-
-
-    try{
-
-
-        const confirmation =
-
-        confirm(
-
-            "Supprimer ce produit ?"
-
-        );
-
-
-
-        if(!confirmation)
-
-            return;
-
-
-
-        operationEnCours = true;
-
-
-
-        const resultat =
-
-        await supprimerProduit(
-
-            utilisateurConnecte,
-
-            id
-
-        );
-
-
-
-        if(resultat){
-
-
-            await actualiserDonnees();
-
-
-        }
-
-
-    }
-
-
-    catch(error){
-
-
-        console.error(
-
-            "Erreur suppression:",
-
-            error
-
-        );
-
-
-    }
-
-
-    finally{
-
-
-        operationEnCours = false;
-
-
-    }
-
-
-};
-
-
-
-
-
-
-
-// ===============================
-// VENTES
+// GESTION VENTE
 // ===============================
 
 
@@ -763,16 +357,23 @@ window.vendreProduit = function(id){
 window.confirmerVente = async function(){
 
 
-    if(operationEnCours)
-
-        return;
-
-
-
     try{
 
 
-        operationEnCours = true;
+        if(!utilisateurConnecte){
+
+
+            alert(
+
+                "Utilisateur non connecté"
+
+            );
+
+
+            return;
+
+
+        }
 
 
 
@@ -786,13 +387,58 @@ window.confirmerVente = async function(){
 
 
 
-        if(resultat){
+        if(!resultat)
+
+            return;
 
 
-            await actualiserDonnees();
 
 
-        }
+        produits =
+
+        await chargerProduits(
+
+            utilisateurConnecte
+
+        ) || [];
+
+
+
+        ventesGlobales =
+
+        await chargerVentes(
+
+            utilisateurConnecte
+
+        ) || [];
+
+
+
+
+
+        mettreAJourResume(
+
+            produits,
+
+            ventesGlobales
+
+        );
+
+
+
+        calculerStockRestant(
+
+            produits
+
+        );
+
+
+
+        preparerGraphique(
+
+            ventesGlobales
+
+        );
 
 
     }
@@ -803,20 +449,18 @@ window.confirmerVente = async function(){
 
         console.error(
 
-            "Erreur vente:",
+            "Erreur confirmation vente:",
 
             error
 
         );
 
 
-    }
+        alert(
 
+            "Erreur pendant la vente"
 
-    finally{
-
-
-        operationEnCours = false;
+        );
 
 
     }
@@ -840,8 +484,321 @@ window.fermerVente = function(){
 
 
 
+// ===============================
+// AJOUT / MODIFICATION PRODUIT
+// ===============================
 
 
+window.ajouterProduit = async function(){
+
+
+    try{
+
+
+        if(!utilisateurConnecte){
+
+
+            alert(
+
+                "Connectez-vous d'abord"
+
+            );
+
+
+            return;
+
+
+        }
+
+
+
+
+        const donnees = {
+
+
+            nom:
+
+            document
+
+            .getElementById("nom")
+
+            ?.value,
+
+
+
+            prixGros:
+
+            Number(
+
+                document
+
+                .getElementById("prixGros")
+
+                ?.value
+
+            ),
+
+
+
+            nombreCartons:
+
+            Number(
+
+                document
+
+                .getElementById("nombreCartons")
+
+                ?.value
+
+            ),
+
+
+
+            produitsParCarton:
+
+            Number(
+
+                document
+
+                .getElementById("produitsParCarton")
+
+                ?.value
+
+            ),
+
+
+
+            prixRevente:
+
+            Number(
+
+                document
+
+                .getElementById("prixRevente")
+
+                ?.value
+
+            )
+
+
+        };
+
+
+
+
+
+        const resultat =
+
+        await ajouterProduit(
+
+            utilisateurConnecte,
+
+            donnees
+
+        );
+
+
+
+        if(!resultat)
+
+            return;
+
+
+
+
+        produits =
+
+        await chargerProduits(
+
+            utilisateurConnecte
+
+        ) || [];
+
+
+
+
+
+        mettreAJourResume(
+
+            produits,
+
+            ventesGlobales
+
+        );
+
+
+
+        calculerStockRestant(
+
+            produits
+
+        );
+
+
+
+        viderChamps();
+
+
+
+        annulerModification();
+
+
+
+        alert(
+
+            "Produit enregistré"
+
+        );
+
+
+    }
+
+
+    catch(error){
+
+
+        console.error(
+
+            "Erreur produit:",
+
+            error
+
+        );
+
+
+        alert(
+
+            "Impossible d'enregistrer le produit"
+
+        );
+
+
+    }
+
+
+};
+
+
+
+
+
+// ===============================
+// MODIFIER PRODUIT
+// ===============================
+
+
+window.modifierProduit = function(id){
+
+
+    const resultat =
+
+    modifierProduit(id);
+
+
+
+    if(!resultat){
+
+
+        alert(
+
+            "Produit introuvable"
+
+        );
+
+
+    }
+
+
+};
+
+
+
+
+
+// ===============================
+// SUPPRIMER PRODUIT
+// ===============================
+
+
+window.supprimerProduit = async function(id){
+
+
+    try{
+
+
+        if(!utilisateurConnecte)
+
+            return;
+
+
+
+
+        const resultat =
+
+        await supprimerProduit(
+
+            utilisateurConnecte,
+
+            id
+
+        );
+
+
+
+        if(!resultat)
+
+            return;
+
+
+
+
+        produits =
+
+        await chargerProduits(
+
+            utilisateurConnecte
+
+        ) || [];
+
+
+
+
+        mettreAJourResume(
+
+            produits,
+
+            ventesGlobales
+
+        );
+
+
+
+        calculerStockRestant(
+
+            produits
+
+        );
+
+
+    }
+
+
+    catch(error){
+
+
+        console.error(
+
+            "Erreur suppression:",
+
+            error
+
+        );
+
+
+    }
+
+
+};
 // ===============================
 // HISTORIQUE
 // ===============================
@@ -850,36 +807,31 @@ window.fermerVente = function(){
 window.viderHistorique = async function(){
 
 
-    if(!utilisateurConnecte)
-
-        return;
-
-
-
     try{
 
 
-        const resultat =
+        if(!utilisateurConnecte){
+
+
+            alert(
+
+                "Connectez-vous d'abord"
+
+            );
+
+
+            return;
+
+
+        }
+
+
 
         await viderHistorique(
 
             utilisateurConnecte
 
         );
-
-
-
-        if(resultat){
-
-
-            await chargerHistorique(
-
-                utilisateurConnecte
-
-            );
-
-
-        }
 
 
     }
@@ -906,10 +858,107 @@ window.viderHistorique = async function(){
 
 
 
+// ===============================
+// ANNULER MODIFICATION
+// ===============================
+
+
+window.annulerModification = function(){
+
+
+    annulerModification();
+
+
+    viderChamps();
+
+
+};
+
+
+
 
 
 // ===============================
-// GESTION ERREURS GLOBALES
+// RAFRAICHISSEMENT AUTOMATIQUE
+// ===============================
+
+
+async function actualiserDonnees(){
+
+
+    if(!utilisateurConnecte)
+
+        return;
+
+
+
+    try{
+
+
+        produits =
+
+        await chargerProduits(
+
+            utilisateurConnecte
+
+        ) || [];
+
+
+
+        ventesGlobales =
+
+        await chargerVentes(
+
+            utilisateurConnecte
+
+        ) || [];
+
+
+
+        mettreAJourResume(
+
+            produits,
+
+            ventesGlobales
+
+        );
+
+
+
+        calculerStockRestant(
+
+            produits
+
+        );
+
+
+
+    }
+
+
+    catch(error){
+
+
+        console.error(
+
+            "Erreur actualisation:",
+
+            error
+
+        );
+
+
+    }
+
+
+}
+
+
+
+
+
+// ===============================
+// PROTECTION ERREURS
 // ===============================
 
 
@@ -960,6 +1009,36 @@ window.addEventListener(
 
 
 
+
 // ===============================
-// FIN MAIN.JS
+// VERIFICATION SESSION
 // ===============================
+
+
+setInterval(
+
+    ()=>{
+
+
+        if(
+
+            auth.currentUser
+
+            &&
+
+            utilisateurConnecte
+
+        ){
+
+
+            actualiserDonnees();
+
+
+        }
+
+
+    },
+
+    300000
+
+);
