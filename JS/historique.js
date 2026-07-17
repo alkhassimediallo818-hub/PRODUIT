@@ -141,3 +141,80 @@ export async function chargerHistorique(utilisateurConnecte){
     return historique;
 
 }
+// ===============================
+// AFFICHER HISTORIQUE
+// ===============================
+
+export function afficherHistorique(historique){
+
+
+    const tableau =
+
+    document.getElementById(
+        "tableauHistorique"
+    );
+
+
+
+    if(!tableau)
+        return;
+
+
+
+    tableau.innerHTML = "";
+
+
+
+    historique.forEach((action)=>{
+
+
+        const ligne =
+
+        document.createElement(
+            "tr"
+        );
+
+
+
+        let date =
+        "Date inconnue";
+
+
+
+        if(
+
+            action.date &&
+
+            typeof action.date.toDate === "function"
+
+        ){
+
+            date =
+
+            action.date
+            .toDate()
+            .toLocaleString();
+
+        }
+
+
+
+        ligne.innerHTML = `
+
+        <td>${action.type || "Action"}</td>
+
+        <td>${action.produit || "Produit"}</td>
+
+        <td>${date}</td>
+
+        `;
+
+
+
+        tableau.appendChild(ligne);
+
+
+    });
+
+
+                       }
