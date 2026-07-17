@@ -8,7 +8,6 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
 
-
 import {
     getAuth,
     GoogleAuthProvider,
@@ -16,7 +15,6 @@ import {
     signOut,
     onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-
 
 
 import {
@@ -27,29 +25,36 @@ import {
 
 
 // ===============================
-// CONFIG FIREBASE
+// CONFIGURATION
 // ===============================
 
 
 const firebaseConfig = {
 
+
     apiKey:
     "AIzaSyBcJ8ghcBNxJ-VJNksHfUffDuM5ZzwZTXw",
+
 
     authDomain:
     "qassimedv.firebaseapp.com",
 
+
     projectId:
     "qassimedv",
+
 
     storageBucket:
     "qassimedv.firebasestorage.app",
 
+
     messagingSenderId:
     "908242149044",
 
+
     appId:
     "1:908242149044:web:ec03eb653461152645c1e1"
+
 
 };
 
@@ -61,15 +66,14 @@ const firebaseConfig = {
 // ===============================
 
 
-const app = initializeApp(
-    firebaseConfig
-);
+const app =
+initializeApp(firebaseConfig);
 
 
 
 
 // ===============================
-// SERVICES FIREBASE
+// SERVICES
 // ===============================
 
 
@@ -77,10 +81,8 @@ export const db =
 getFirestore(app);
 
 
-
 export const auth =
 getAuth(app);
-
 
 
 export const provider =
@@ -90,15 +92,11 @@ new GoogleAuthProvider();
 
 
 // ===============================
-// EXPORTS FIREBASE
+// EXPORTS AUTH
 // ===============================
 
 
 export {
-
-    signInWithPopup,
-
-    signOut,
 
     onAuthStateChanged
 
@@ -151,7 +149,7 @@ export async function connexionGoogle(){
 
         console.error(
 
-            "Erreur connexion Google:",
+            "Erreur connexion Google :",
 
             error
 
@@ -183,6 +181,8 @@ export async function deconnexionGoogle(){
         await signOut(auth);
 
 
+        return true;
+
 
     }
 
@@ -192,14 +192,14 @@ export async function deconnexionGoogle(){
 
         console.error(
 
-            "Erreur déconnexion:",
+            "Erreur déconnexion Google :",
 
             error
 
         );
 
 
-        throw error;
+        return false;
 
 
     }
