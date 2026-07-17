@@ -13,11 +13,12 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 
-
 import {
     chargerProduits,
     ajouterProduit,
     supprimerProduit,
+    modifierProduit,
+    viderChamps,
     getProduits
 } from "./produits.js";
 
@@ -205,5 +206,25 @@ window.viderHistorique = ()=>{
         utilisateurConnecte
     );
 
+
+};
+window.modifierProduit = modifierProduit;
+
+
+window.ajouterProduit = ()=>{
+
+    ajouterProduit(
+        utilisateurConnecte
+    );
+
+};
+
+
+window.supprimerProduit = (id)=>{
+
+    supprimerProduit(
+        utilisateurConnecte,
+        id
+    );
 
 };
