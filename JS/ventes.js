@@ -257,3 +257,200 @@ export function vendreProduit(id, produits){
 
 
 }
+// ===============================
+// CONFIRMER VENTE
+// ===============================
+
+export async function confirmerVente(
+    utilisateurConnecte,
+    chargerProduits,
+    chargerVentes
+){
+
+
+    if(traitementVente)
+        return;
+
+
+
+    if(!produitVenteActuel){
+
+        alert(
+            "Aucun produit sélectionné"
+        );
+
+        return;
+
+    }
+
+
+
+    const champ =
+
+    document.getElementById(
+        "quantiteVente"
+    );
+
+
+
+    const quantite =
+
+    nombreValide(
+        champ?.value
+    );
+
+
+
+    if(quantite <= 0){
+
+        alert(
+            "Quantité invalide"
+        );
+
+        return;
+
+    }
+
+
+
+    const stock =
+
+    nombreValide(
+        produitVenteActuel.stockTotal
+    );
+
+
+
+    if(quantite > stock){
+
+        alert(
+            "Stock insuffisant"
+        );
+
+        return;
+
+    }
+
+
+
+    try{
+
+
+        traitementVente = true;
+
+
+
+        const nouveauStock =
+
+        stock - quantite;
+
+
+
+        const benefice =
+
+        (
+
+            nombreValide(
+                produitVenteActuel.prixRevente
+            )
+
+            -
+
+            nombreValide(
+                produitVenteActuel.prixUnitaire
+            )
+
+        )
+
+        *
+
+        quantite;
+
+
+
+        const ok =
+
+        await enregistrerVente(
+
+            utilisateurConnecte,
+
+            produitVenteActuel,
+
+            quantite,
+
+            benefice
+
+        );
+
+
+
+        if(!ok)
+
+            throw new Error(
+                "Vente refusée"
+            );
+
+
+
+        await updateDoc(
+
+            doc(
+
+                db,
+
+                "produits",
+
+                produitVenteActuel.id
+
+            ),
+
+            {
+
+                stockTotal:
+                nouveauStock
+
+            }
+
+        );
+
+
+
+        fermerVente();
+
+
+
+        await chargerProduits();
+
+        await chargerVentes();
+
+
+    }
+
+
+    catch(error){
+
+
+        console.error(
+            "Erreur vente:",
+            error
+        );
+
+
+        alert(
+            "Erreur pendant la vente"
+        );
+
+
+    }
+
+
+    finally{
+
+
+        traitementVente = false;
+
+
+    }
+
+
+}
