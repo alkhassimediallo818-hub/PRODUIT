@@ -186,4 +186,74 @@ export async function enregistrerVente(
 
 
 }
+// ===============================
+// OUVRIR FENETRE VENTE
+// ===============================
 
+export function vendreProduit(id, produits){
+
+
+    const produit =
+
+    produits.find(
+        p => p.id === id
+    );
+
+
+
+    if(!produit)
+        return;
+
+
+
+    produitVenteActuel =
+    produit;
+
+
+
+    const nom =
+
+    document.getElementById(
+        "nomProduitVente"
+    );
+
+
+
+    if(nom)
+
+        nom.textContent =
+        "Produit : "
+        +
+        produit.nom;
+
+
+
+    const champ =
+
+    document.getElementById(
+        "quantiteVente"
+    );
+
+
+
+    if(champ)
+
+        champ.value = "";
+
+
+
+    const modal =
+
+    document.getElementById(
+        "modalVente"
+    );
+
+
+
+    if(modal)
+
+        modal.style.display =
+        "block";
+
+
+}
