@@ -9,7 +9,16 @@ import {
 
 
 
-export function mettreAJourResume(produits, ventesGlobales){
+
+// ===============================
+// RESUME GENERAL
+// ===============================
+
+
+export function mettreAJourResume(
+    produits = [],
+    ventesGlobales = []
+){
 
 
     let stock = 0;
@@ -18,7 +27,7 @@ export function mettreAJourResume(produits, ventesGlobales){
 
 
 
-    produits.forEach((produit)=>{
+    (produits || []).forEach((produit)=>{
 
 
         const valeur =
@@ -42,18 +51,25 @@ export function mettreAJourResume(produits, ventesGlobales){
 
 
 
+
+
     const valeurs = {
 
 
         resumeProduits:
+
         produits.length,
 
 
+
         resumeStock:
+
         stock,
 
 
+
         stockFaible:
+
         stockFaible
 
 
@@ -61,7 +77,10 @@ export function mettreAJourResume(produits, ventesGlobales){
 
 
 
+
+
     Object.keys(valeurs)
+
     .forEach((id)=>{
 
 
@@ -74,6 +93,7 @@ export function mettreAJourResume(produits, ventesGlobales){
         if(element)
 
             element.textContent =
+
             valeurs[id];
 
 
@@ -81,17 +101,29 @@ export function mettreAJourResume(produits, ventesGlobales){
 
 
 
+
+
     calculerResumeVentes(
+
         ventesGlobales
+
     );
 
 
 }
+
+
+
+
+
 // ===============================
 // RESUME VENTES
 // ===============================
 
-export function calculerResumeVentes(ventesGlobales){
+
+export function calculerResumeVentes(
+    ventesGlobales = []
+){
 
 
     let ca = 0;
@@ -102,13 +134,16 @@ export function calculerResumeVentes(ventesGlobales){
 
 
 
-    ventesGlobales.forEach((vente)=>{
+
+    (ventesGlobales || []).forEach((vente)=>{
 
 
         ca +=
 
         nombreValide(
+
             vente.montantTotal
+
         );
 
 
@@ -116,7 +151,9 @@ export function calculerResumeVentes(ventesGlobales){
         benefice +=
 
         nombreValide(
+
             vente.benefice
+
         );
 
 
@@ -124,7 +161,9 @@ export function calculerResumeVentes(ventesGlobales){
         unites +=
 
         nombreValide(
+
             vente.quantiteVendue
+
         );
 
 
@@ -132,26 +171,37 @@ export function calculerResumeVentes(ventesGlobales){
 
 
 
+
+
     const elements = {
 
 
         resumeVentes:
+
         unites,
+
 
 
         resumeCA:
+
         ca + " FCFA",
 
 
+
         resumeBenefice:
+
         benefice + " FCFA",
 
 
+
         unitesVendues:
+
         unites,
 
 
+
         nbTransactions:
+
         ventesGlobales.length
 
 
@@ -159,7 +209,10 @@ export function calculerResumeVentes(ventesGlobales){
 
 
 
+
+
     Object.keys(elements)
+
     .forEach((id)=>{
 
 
@@ -172,6 +225,7 @@ export function calculerResumeVentes(ventesGlobales){
         if(element)
 
             element.textContent =
+
             elements[id];
 
 
@@ -179,8 +233,12 @@ export function calculerResumeVentes(ventesGlobales){
 
 
 
+
+
     afficherProduitVedette(
+
         ventesGlobales
+
     );
 
 
@@ -189,19 +247,23 @@ export function calculerResumeVentes(ventesGlobales){
 // PRODUIT VEDETTE
 // ===============================
 
-export function afficherProduitVedette(ventesGlobales){
+
+export function afficherProduitVedette(
+    ventesGlobales = []
+){
 
 
     const compteur = {};
 
 
 
-    ventesGlobales.forEach((vente)=>{
+    (ventesGlobales || []).forEach((vente)=>{
 
 
         const nom =
 
         vente.produit ||
+
         "Produit";
 
 
@@ -213,7 +275,9 @@ export function afficherProduitVedette(ventesGlobales){
         +
 
         nombreValide(
+
             vente.quantiteVendue
+
         );
 
 
@@ -221,15 +285,22 @@ export function afficherProduitVedette(ventesGlobales){
 
 
 
+
+
     let meilleur =
+
     "Aucun";
+
 
 
     let maximum = 0;
 
 
 
+
+
     Object.keys(compteur)
+
     .forEach((nom)=>{
 
 
@@ -237,10 +308,13 @@ export function afficherProduitVedette(ventesGlobales){
 
 
             maximum =
+
             compteur[nom];
 
 
+
             meilleur =
+
             nom;
 
 
@@ -251,10 +325,14 @@ export function afficherProduitVedette(ventesGlobales){
 
 
 
+
+
     const element =
 
     document.getElementById(
+
         "produitVedette"
+
     );
 
 
@@ -262,28 +340,40 @@ export function afficherProduitVedette(ventesGlobales){
     if(element)
 
         element.textContent =
+
         meilleur;
 
 
 }
+
+
+
+
+
 // ===============================
 // STOCK RESTANT
 // ===============================
 
-export function calculerStockRestant(produits){
+
+export function calculerStockRestant(
+    produits = []
+){
 
 
     let total = 0;
 
 
 
-    produits.forEach((produit)=>{
+
+    (produits || []).forEach((produit)=>{
 
 
         total +=
 
         nombreValide(
+
             produit.stockTotal
+
         );
 
 
@@ -291,10 +381,14 @@ export function calculerStockRestant(produits){
 
 
 
+
+
     const element =
 
     document.getElementById(
+
         "stockRestant"
+
     );
 
 
@@ -302,6 +396,7 @@ export function calculerStockRestant(produits){
     if(element)
 
         element.textContent =
+
         total;
 
 
