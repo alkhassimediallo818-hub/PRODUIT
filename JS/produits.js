@@ -50,22 +50,21 @@ let produitModification = null;
 
 
 // ===============================
-// ETAT MODIFICATION
+// GETTERS
 // ===============================
-
-
-export function estEnModification(){
-
-    return produitModification !== null;
-
-}
-
-
 
 
 export function getProduits(){
 
     return produits;
+
+}
+
+
+
+export function estEnModification(){
+
+    return produitModification !== null;
 
 }
 
@@ -116,6 +115,7 @@ function creerProduit(data){
 
 
     const prixUnitaire =
+
     stockTotal > 0
 
     ?
@@ -129,6 +129,7 @@ function creerProduit(data){
 
 
     const benefice =
+
     (prixRevente * stockTotal)
 
     -
@@ -142,31 +143,31 @@ function creerProduit(data){
 
         nom,
 
-
         prixGros,
 
+        nombreCartons: cartons,
 
-        nombreCartons:
-        cartons,
-
-
-        produitsParCarton:
-        parCarton,
-
+        produitsParCarton: parCarton,
 
         prixTotalStock,
 
-
         stockTotal,
-
 
         prixUnitaire,
 
-
         prixRevente,
 
+        benefice:
+
+        benefice > 0
+
+        ?
 
         benefice
+
+        :
+
+        0
 
 
     };
@@ -183,9 +184,7 @@ function creerProduit(data){
 // ===============================
 
 
-export async function chargerProduits(
-    utilisateurConnecte
-){
+export async function chargerProduits(utilisateurConnecte){
 
 
     if(
@@ -195,7 +194,7 @@ export async function chargerProduits(
         )
     )
 
-        return [];
+    return [];
 
 
 
@@ -224,6 +223,7 @@ export async function chargerProduits(
 
 
         const snapshot =
+
         await getDocs(q);
 
 
@@ -232,16 +232,14 @@ export async function chargerProduits(
 
 
 
-        snapshot.forEach((docSnap)=>{
+        snapshot.forEach((item)=>{
 
 
             produits.push({
 
-                id:
-                docSnap.id,
+                id:item.id,
 
-
-                ...docSnap.data()
+                ...item.data()
 
             });
 
@@ -260,15 +258,15 @@ export async function chargerProduits(
 
 
         console.error(
-
             "Erreur chargement produits:",
-
             error
-
         );
 
 
+        produits = [];
+
         return [];
+
 
     }
 
@@ -300,7 +298,7 @@ export async function ajouterProduit(
         )
     )
 
-        return false;
+    return false;
 
 
 
@@ -308,7 +306,17 @@ export async function ajouterProduit(
 
 
         const produit =
+
         creerProduit(donnees);
+
+
+
+        if(
+            !produit.nom ||
+            produit.stockTotal <= 0
+        )
+
+        return false;
 
 
 
@@ -316,7 +324,7 @@ export async function ajouterProduit(
 
 
 
-            const reference =
+            const ref =
 
             doc(
 
@@ -331,25 +339,24 @@ export async function ajouterProduit(
 
 
             const ancien =
-            await getDoc(reference);
+
+            await getDoc(ref);
 
 
 
             if(
                 !ancien.exists()
                 ||
-                ancien.data().userId
-                !==
-                auth.currentUser.uid
+                ancien.data().userId !== auth.currentUser.uid
             )
 
-                return false;
+            return false;
 
 
 
             await updateDoc(
 
-                reference,
+                ref,
 
                 {
 
@@ -383,7 +390,6 @@ export async function ajouterProduit(
 
                     ...produit,
 
-
                     userId:
                     auth.currentUser.uid,
 
@@ -412,11 +418,14 @@ export async function ajouterProduit(
 
         console.error(
 
-            "Erreur produit:",
+            "Erreur ajout produit:",
 
             error
 
         );
+
+
+        produitModification = null;
 
 
         return false;
@@ -452,14 +461,14 @@ export async function supprimerProduit(
         )
     )
 
-        return false;
+    return false;
 
 
 
     try{
 
 
-        const reference =
+        const ref =
 
         doc(
 
@@ -473,24 +482,31 @@ export async function supprimerProduit(
 
 
 
-        const produit =
-        await getDoc(reference);
+        const resultat =
+
+        await getDoc(ref);
 
 
 
         if(
-            !produit.exists()
+            !resultat.exists()
             ||
-            produit.data().userId
-            !==
-            auth.currentUser.uid
+            resultat.data().userId !== auth.currentUser.uid
         )
 
-            return false;
+        return false;
 
 
 
-        await deleteDoc(reference);
+        await deleteDoc(ref);
+
+
+
+        produits = produits.filter(
+
+            p=>p.id !== id
+
+        );
 
 
 
@@ -525,7 +541,7 @@ export async function supprimerProduit(
 
 
 // ===============================
-// MODIFICATION
+// MODIFIER
 // ===============================
 
 
@@ -544,32 +560,41 @@ export function modifierProduit(id){
 
     if(!produit)
 
-        return false;
+    return false;
 
 
 
-    document.getElementById("nom").value =
-    produit.nom || "";
+    const champs = {
+
+        nom: produit.nom,
+
+        prixGros: produit.prixGros,
+
+        nombreCartons: produit.nombreCartons,
+
+        produitsParCarton: produit.produitsParCarton,
+
+        prixRevente: produit.prixRevente
+
+    };
 
 
 
-    document.getElementById("prixGros").value =
-    produit.prixGros || "";
+    Object.keys(champs).forEach((id)=>{
+
+
+        const element =
+
+        document.getElementById(id);
 
 
 
-    document.getElementById("nombreCartons").value =
-    produit.nombreCartons || "";
+        if(element)
+
+        element.value = champs[id];
 
 
-
-    document.getElementById("produitsParCarton").value =
-    produit.produitsParCarton || "";
-
-
-
-    document.getElementById("prixRevente").value =
-    produit.prixRevente || "";
+    });
 
 
 
@@ -587,7 +612,7 @@ export function modifierProduit(id){
 
 
 // ===============================
-// ANNULER
+// ANNULER MODIFICATION
 // ===============================
 
 
@@ -604,7 +629,7 @@ export function annulerModification(){
 
 
 // ===============================
-// VIDER FORMULAIRE
+// VIDER CHAMPS
 // ===============================
 
 
@@ -636,10 +661,10 @@ export function viderChamps(){
 
         if(element)
 
-            element.value = "";
+        element.value = "";
 
 
     });
 
 
-        }
+}
