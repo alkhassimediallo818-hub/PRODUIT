@@ -10,6 +10,7 @@ import {
 
 
 import {
+
     collection,
     addDoc,
     getDocs,
@@ -18,15 +19,27 @@ import {
     query,
     where,
     serverTimestamp,
-    updateDoc
+    updateDoc,
+    getDoc
+
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 
+
 import {
+
     nombreValide,
-    utilisateurValide
+    utilisateurValide,
+    nettoyerTexte
+
 } from "./utils.js";
 
+
+
+
+// ===============================
+// VARIABLES
+// ===============================
 
 
 let produits = [];
@@ -35,65 +48,18 @@ let produitModification = null;
 
 
 
+
+// ===============================
+// ETAT MODIFICATION
+// ===============================
+
+
 export function estEnModification(){
 
     return produitModification !== null;
 
 }
 
-
-
-function creerProduit(
-    nom,
-    prixGros,
-    cartons,
-    parCarton,
-    prixRevente
-){
-
-    const stockTotal =
-    cartons * parCarton;
-
-
-    const prixTotalStock =
-    prixGros * cartons;
-
-
-    const prixUnitaire =
-    prixGros / parCarton;
-
-
-    const benefice =
-    (prixRevente * stockTotal)
-    -
-    prixTotalStock;
-
-
-    return {
-
-        nom,
-
-        prixGros,
-
-        nombreCartons:
-        cartons,
-
-        produitsParCarton:
-        parCarton,
-
-        prixTotalStock,
-
-        stockTotal,
-
-        prixUnitaire,
-
-        prixRevente,
-
-        benefice
-
-    };
-
-}
 
 
 
@@ -106,109 +72,234 @@ export function getProduits(){
 
 
 
+// ===============================
+// CREATION PRODUIT
+// ===============================
+
+
+function creerProduit(data){
+
+
+    const nom =
+    nettoyerTexte(data.nom);
+
+
+
+    const prixGros =
+    nombreValide(data.prixGros);
+
+
+
+    const cartons =
+    nombreValide(data.nombreCartons);
+
+
+
+    const parCarton =
+    nombreValide(data.produitsParCarton);
+
+
+
+    const prixRevente =
+    nombreValide(data.prixRevente);
+
+
+
+    const stockTotal =
+    cartons * parCarton;
+
+
+
+    const prixTotalStock =
+    prixGros * cartons;
+
+
+
+    const prixUnitaire =
+    stockTotal > 0
+
+    ?
+
+    prixGros / stockTotal
+
+    :
+
+    0;
+
+
+
+    const benefice =
+    (prixRevente * stockTotal)
+
+    -
+
+    prixTotalStock;
+
+
+
+    return {
+
+
+        nom,
+
+
+        prixGros,
+
+
+        nombreCartons:
+        cartons,
+
+
+        produitsParCarton:
+        parCarton,
+
+
+        prixTotalStock,
+
+
+        stockTotal,
+
+
+        prixUnitaire,
+
+
+        prixRevente,
+
+
+        benefice
+
+
+    };
+
+
+}
+
+
+
+
+
+// ===============================
+// CHARGER PRODUITS
+// ===============================
+
 
 export async function chargerProduits(
     utilisateurConnecte
 ){
 
 
-    if(!utilisateurValide(auth, utilisateurConnecte))
+    if(
+        !utilisateurValide(
+            auth,
+            utilisateurConnecte
+        )
+    )
+
         return [];
 
 
 
-    produits = [];
+    try{
 
 
+        const q = query(
 
-    const q = query(
-
-        collection(
-            db,
-            "produits"
-        ),
-
-        where(
-
-            "userId",
-            "==",
-            auth.currentUser.uid
-
-        )
-
-    );
-
-
-
-    const snapshot =
-    await getDocs(q);
-
-
-
-    snapshot.forEach((docSnap)=>{
-
-
-        const data =
-        docSnap.data();
-
-
-
-        produits.push({
-
-            id:
-            docSnap.id,
-
-
-            ...data,
-
-
-            stockTotal:
-            nombreValide(
-                data.stockTotal
+            collection(
+                db,
+                "produits"
             ),
 
+            where(
 
-            benefice:
-            nombreValide(
-                data.benefice
-            ),
+                "userId",
 
+                "==",
 
-            prixRevente:
-            nombreValide(
-                data.prixRevente
-            ),
+                auth.currentUser.uid
 
-
-            prixUnitaire:
-            nombreValide(
-                data.prixUnitaire
             )
+
+        );
+
+
+
+        const snapshot =
+        await getDocs(q);
+
+
+
+        produits = [];
+
+
+
+        snapshot.forEach((docSnap)=>{
+
+
+            produits.push({
+
+                id:
+                docSnap.id,
+
+
+                ...docSnap.data()
+
+            });
 
 
         });
 
 
-    });
+
+        return produits;
 
 
+    }
 
-    return produits;
+
+    catch(error){
+
+
+        console.error(
+
+            "Erreur chargement produits:",
+
+            error
+
+        );
+
+
+        return [];
+
+    }
 
 
 }
+
+
+
+
+
 // ===============================
-// AJOUT / MODIFICATION PRODUIT
+// AJOUT / MODIFICATION
 // ===============================
 
 
 export async function ajouterProduit(
+
     utilisateurConnecte,
-    produit
+
+    donnees
+
 ){
 
 
-    if(!utilisateurValide(auth, utilisateurConnecte))
+    if(
+        !utilisateurValide(
+            auth,
+            utilisateurConnecte
+        )
+    )
+
         return false;
 
 
@@ -216,20 +307,61 @@ export async function ajouterProduit(
     try{
 
 
+        const produit =
+        creerProduit(donnees);
+
+
+
         if(produitModification){
+
+
+
+            const reference =
+
+            doc(
+
+                db,
+
+                "produits",
+
+                produitModification
+
+            );
+
+
+
+            const ancien =
+            await getDoc(reference);
+
+
+
+            if(
+                !ancien.exists()
+                ||
+                ancien.data().userId
+                !==
+                auth.currentUser.uid
+            )
+
+                return false;
+
 
 
             await updateDoc(
 
-                doc(
-                    db,
-                    "produits",
-                    produitModification
-                ),
+                reference,
 
-                produit
+                {
+
+                    ...produit,
+
+                    dateModification:
+                    serverTimestamp()
+
+                }
 
             );
+
 
 
             produitModification = null;
@@ -248,7 +380,6 @@ export async function ajouterProduit(
                 ),
 
                 {
-
 
                     ...produit,
 
@@ -301,17 +432,26 @@ export async function ajouterProduit(
 
 
 // ===============================
-// SUPPRIMER PRODUIT
+// SUPPRESSION
 // ===============================
 
 
 export async function supprimerProduit(
+
     utilisateurConnecte,
+
     id
+
 ){
 
 
-    if(!utilisateurValide(auth, utilisateurConnecte))
+    if(
+        !utilisateurValide(
+            auth,
+            utilisateurConnecte
+        )
+    )
+
         return false;
 
 
@@ -319,19 +459,38 @@ export async function supprimerProduit(
     try{
 
 
-        await deleteDoc(
+        const reference =
 
-            doc(
+        doc(
 
-                db,
+            db,
 
-                "produits",
+            "produits",
 
-                id
-
-            )
+            id
 
         );
+
+
+
+        const produit =
+        await getDoc(reference);
+
+
+
+        if(
+            !produit.exists()
+            ||
+            produit.data().userId
+            !==
+            auth.currentUser.uid
+        )
+
+            return false;
+
+
+
+        await deleteDoc(reference);
 
 
 
@@ -366,7 +525,7 @@ export async function supprimerProduit(
 
 
 // ===============================
-// MODIFIER PRODUIT
+// MODIFICATION
 // ===============================
 
 
@@ -377,7 +536,7 @@ export function modifierProduit(id){
 
     produits.find(
 
-        p => p.id === id
+        p=>p.id === id
 
     );
 
@@ -389,35 +548,28 @@ export function modifierProduit(id){
 
 
 
-
     document.getElementById("nom").value =
-
     produit.nom || "";
 
 
 
     document.getElementById("prixGros").value =
-
     produit.prixGros || "";
 
 
 
     document.getElementById("nombreCartons").value =
-
     produit.nombreCartons || "";
 
 
 
     document.getElementById("produitsParCarton").value =
-
     produit.produitsParCarton || "";
 
 
 
     document.getElementById("prixRevente").value =
-
     produit.prixRevente || "";
-
 
 
 
@@ -435,7 +587,7 @@ export function modifierProduit(id){
 
 
 // ===============================
-// ANNULER MODIFICATION
+// ANNULER
 // ===============================
 
 
@@ -445,17 +597,21 @@ export function annulerModification(){
     produitModification = null;
 
 
-        }
+}
+
+
+
+
+
 // ===============================
-// VIDER CHAMPS
+// VIDER FORMULAIRE
 // ===============================
 
 
 export function viderChamps(){
 
 
-    const champs = [
-
+    [
 
         "nom",
 
@@ -467,12 +623,9 @@ export function viderChamps(){
 
         "prixRevente"
 
+    ]
 
-    ];
-
-
-
-    champs.forEach((id)=>{
+    .forEach((id)=>{
 
 
         const element =
@@ -483,11 +636,10 @@ export function viderChamps(){
 
         if(element)
 
-
             element.value = "";
 
 
     });
 
 
-}
+        }
