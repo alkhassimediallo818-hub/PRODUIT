@@ -1,135 +1,307 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+// ===============================
+// FIREBASE CONFIGURATION
+// ===============================
+
 
 import {
-getAuth,
-GoogleAuthProvider,
-signInWithPopup,
-signOut,
-onAuthStateChanged
+    initializeApp
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+
+import {
+    getAuth,
+    GoogleAuthProvider,
+    signInWithPopup,
+    signOut,
+    onAuthStateChanged
+
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
+
 import {
-getFirestore
+    getFirestore
+
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
+
+
+
+// ===============================
+// CONFIG FIREBASE
+// ===============================
+
+
 const firebaseConfig = {
-apiKey: "AIzaSyBcJ8ghcBNxJ-VJNksHfUffDuM5ZzwZTXw",
-authDomain: "qassimedv.firebaseapp.com",
-projectId: "qassimedv",
-storageBucket: "qassimedv.firebasestorage.app",
-messagingSenderId: "908242149044",
-appId: "1:908242149044:web:ec03eb653461152645c1e1"
+
+
+    apiKey:
+    "AIzaSyBcJ8ghcBNxJ-VJNksHfUffDuM5ZzwZTXw",
+
+
+    authDomain:
+    "qassimedv.firebaseapp.com",
+
+
+    projectId:
+    "qassimedv",
+
+
+    storageBucket:
+    "qassimedv.firebasestorage.app",
+
+
+    messagingSenderId:
+    "908242149044",
+
+
+    appId:
+    "1:908242149044:web:ec03eb653461152645c1e1"
+
+
 };
 
-const app = initializeApp(firebaseConfig);
 
-export const db = getFirestore(app);
 
-export const auth = getAuth(app);
 
-export const provider = new GoogleAuthProvider();
+
+// ===============================
+// INITIALISATION
+// ===============================
+
+
+const app =
+
+initializeApp(firebaseConfig);
+
+
+
+
+
+// ===============================
+// SERVICES FIREBASE
+// ===============================
+
+
+export const db =
+
+getFirestore(app);
+
+
+
+export const auth =
+
+getAuth(app);
+
+
+
+export const provider =
+
+new GoogleAuthProvider();
+
+
+
+
+
+// ===============================
+// EXPORTS FIREBASE
+// ===============================
+
 
 export {
-signInWithPopup,
-signOut,
-onAuthStateChanged
+
+    signInWithPopup,
+
+    signOut,
+
+    onAuthStateChanged
+
 };
+// ===============================
+// CONNEXION GOOGLE
+// ===============================
 
-window.connexionGoogle = async function () {
 
-try {  
+export async function connexionGoogle(){
 
-    if (auth.currentUser) {  
 
-        alert(  
-            "Vous êtes déjà connecté : " +  
-            auth.currentUser.displayName  
-        );  
+    try{
 
-        return;  
-    }  
 
-    const result =  
-        await signInWithPopup(auth, provider);  
+        if(auth.currentUser){
 
-    const user = result.user;  
 
-    const info =  
-        document.getElementById("userInfo");  
+            alert(
 
-    if (info) {  
+                "Vous êtes déjà connecté : " +
 
-        info.innerHTML =  
-            "👤 " + user.displayName;  
+                auth.currentUser.displayName
 
-    }  
+            );
 
-    alert(  
-        "Connexion réussie : " +  
-        user.displayName  
-    );  
 
-}  
+            return auth.currentUser;
 
-catch (error) {  
 
-    console.error(error);  
+        }
 
-    alert(error.message);  
+
+
+        const result =
+
+        await signInWithPopup(
+
+            auth,
+
+            provider
+
+        );
+
+
+
+        const user =
+
+        result.user;
+
+
+
+        const info =
+
+        document.getElementById(
+
+            "userInfo"
+
+        );
+
+
+
+        if(info){
+
+
+            info.innerHTML =
+
+            "👤 " +
+
+            user.displayName;
+
+
+        }
+
+
+
+        alert(
+
+            "Connexion réussie : " +
+
+            user.displayName
+
+        );
+
+
+
+        return user;
+
+
+    }
+
+
+    catch(error){
+
+
+        console.error(
+
+            "Erreur connexion:",
+
+            error
+
+        );
+
+
+        alert(
+
+            error.message
+
+        );
+
+
+        return null;
+
+
+    }
+
 
 }
 
-};
 
-window.deconnexionGoogle = async function () {
 
-try {  
 
-    await signOut(auth);  
 
-    const info =  
-        document.getElementById("userInfo");  
+// ===============================
+// DECONNEXION GOOGLE
+// ===============================
 
-    if (info) {  
 
-        info.innerHTML =  
-            "Non connecté";  
+export async function deconnexionGoogle(){
 
-    }  
 
-    alert("Déconnexion réussie");  
+    try{
 
-}  
 
-catch (error) {  
+        await signOut(auth);
 
-    console.error(error);  
 
-    alert(error.message);  
 
-}
+        const info =
 
-};
+        document.getElementById(
 
-onAuthStateChanged(auth, (user) => {
+            "userInfo"
 
-const info =  
-    document.getElementById("userInfo");  
+        );
 
-if (!info) return;  
 
-if (user) {  
 
-    info.innerHTML =  
-        "👤 " + user.displayName;  
+        if(info){
 
-}  
 
-else {  
+            info.innerHTML =
 
-    info.innerHTML =  
-        "Non connecté";  
+            "Non connecté";
 
-}
 
-});
+        }
+
+
+
+        alert(
+
+            "Déconnexion réussie"
+
+        );
+
+
+    }
+
+
+    catch(error){
+
+
+        console.error(
+
+            "Erreur déconnexion:",
+
+            error
+
+        );
+
+
+        alert(
+
+            error.message
+
+        );
+
+
+    }
+
+
+    }
