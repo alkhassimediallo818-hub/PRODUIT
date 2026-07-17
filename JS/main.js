@@ -211,11 +211,118 @@ window.viderHistorique = ()=>{
 window.modifierProduit = modifierProduit;
 
 
-window.ajouterProduit = ()=>{
+window.ajouterProduit = async ()=>{
 
-    ajouterProduit(
-        utilisateurConnecte
+
+    const nom =
+    document.getElementById("nom")?.value;
+
+
+    const prixGros =
+    Number(
+        document.getElementById("prixGros")?.value
     );
+
+
+    const cartons =
+    Number(
+        document.getElementById("nombreCartons")?.value
+    );
+
+
+    const parCarton =
+    Number(
+        document.getElementById("produitsParCarton")?.value
+    );
+
+
+    const prixRevente =
+    Number(
+        document.getElementById("prixRevente")?.value
+    );
+
+
+
+    const stockTotal =
+    cartons * parCarton;
+
+
+
+    const prixTotalStock =
+    prixGros * cartons;
+
+
+
+    const prixUnitaire =
+    prixGros / parCarton;
+
+
+
+    const benefice =
+    (prixRevente * stockTotal)
+    -
+    prixTotalStock;
+
+
+
+    const produit = {
+
+
+        nom,
+
+        prixGros,
+
+        nombreCartons: cartons,
+
+        produitsParCarton: parCarton,
+
+        prixTotalStock,
+
+        stockTotal,
+
+        prixUnitaire,
+
+        prixRevente,
+
+        benefice
+
+
+    };
+
+
+
+    const resultat =
+
+    await ajouterProduit(
+
+        utilisateurConnecte,
+
+        produit
+
+    );
+
+
+
+    if(resultat){
+
+
+        produits =
+        await chargerProduits(
+            utilisateurConnecte
+        );
+
+
+        mettreAJourResume(
+            produits,
+            ventesGlobales
+        );
+
+
+        viderChamps();
+
+
+    }
+
 
 };
 
