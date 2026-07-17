@@ -63,3 +63,77 @@ function utilisateurEtat(){
     return utilisateurConnecte;
 
 }
+// ===============================
+// AUTHENTIFICATION
+// ===============================
+
+onAuthStateChanged(
+
+    auth,
+
+    async(user)=>{
+
+
+        if(user){
+
+
+            utilisateurConnecte = true;
+
+
+            produits = await chargerProduits(
+                utilisateurConnecte
+            );
+
+
+            ventesGlobales = await chargerVentes(
+                utilisateurConnecte
+            );
+
+
+            await chargerHistorique(
+                utilisateurConnecte
+            );
+
+
+
+            mettreAJourResume(
+                produits,
+                ventesGlobales
+            );
+
+
+            calculerStockRestant(
+                produits
+            );
+
+
+            console.log(
+                "Utilisateur connecté"
+            );
+
+
+        }
+
+        else{
+
+
+            utilisateurConnecte = false;
+
+
+            produits = [];
+
+            ventesGlobales = [];
+
+
+
+            console.log(
+                "Utilisateur déconnecté"
+            );
+
+
+        }
+
+
+    }
+
+);
