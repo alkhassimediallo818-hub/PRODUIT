@@ -11,6 +11,27 @@ import {
 
 
 // ===============================
+// OUTIL AFFICHAGE SECURISE
+// ===============================
+
+
+function afficherValeur(id, valeur){
+
+    const element = document.getElementById(id);
+
+    if(element){
+
+        element.textContent = valeur;
+
+    }
+
+}
+
+
+
+
+
+// ===============================
 // RESUME GENERAL
 // ===============================
 
@@ -21,16 +42,21 @@ export function mettreAJourResume(
 ){
 
 
-    let stock = 0;
+    let stockTotal = 0;
 
     let stockFaible = 0;
 
 
 
-    (produits || []).forEach((produit)=>{
+    if(!Array.isArray(produits))
+        produits = [];
 
 
-        const valeur =
+
+    produits.forEach((produit)=>{
+
+
+        const stock =
 
         nombreValide(
             produit.stockTotal
@@ -38,67 +64,59 @@ export function mettreAJourResume(
 
 
 
-        stock += valeur;
+        stockTotal += stock;
 
 
 
-        if(valeur <= 10)
+        if(stock <= 10){
 
             stockFaible++;
 
+        }
+
 
     });
 
 
 
 
+    afficherValeur(
 
-    const valeurs = {
+        "resumeProduits",
 
+        produits.length
 
-        resumeProduits:
-
-        produits.length,
-
-
-
-        resumeStock:
-
-        stock,
+    );
 
 
 
-        stockFaible:
+    afficherValeur(
+
+        "resumeStock",
+
+        stockTotal
+
+    );
+
+
+
+    afficherValeur(
+
+        "stockRestant",
+
+        stockTotal
+
+    );
+
+
+
+    afficherValeur(
+
+        "stockFaible",
 
         stockFaible
 
-
-    };
-
-
-
-
-
-    Object.keys(valeurs)
-
-    .forEach((id)=>{
-
-
-        const element =
-
-        document.getElementById(id);
-
-
-
-        if(element)
-
-            element.textContent =
-
-            valeurs[id];
-
-
-    });
-
+    );
 
 
 
@@ -116,17 +134,20 @@ export function mettreAJourResume(
 
 
 
+
 // ===============================
-// RESUME VENTES
+// RESUME DES VENTES
 // ===============================
 
 
 export function calculerResumeVentes(
+
     ventesGlobales = []
+
 ){
 
 
-    let ca = 0;
+    let chiffreAffaires = 0;
 
     let benefice = 0;
 
@@ -134,11 +155,17 @@ export function calculerResumeVentes(
 
 
 
+    if(!Array.isArray(ventesGlobales))
 
-    (ventesGlobales || []).forEach((vente)=>{
+        ventesGlobales = [];
 
 
-        ca +=
+
+
+    ventesGlobales.forEach((vente)=>{
+
+
+        chiffreAffaires +=
 
         nombreValide(
 
@@ -173,64 +200,74 @@ export function calculerResumeVentes(
 
 
 
-    const elements = {
 
+    afficherValeur(
 
-        resumeVentes:
+        "resumeVentes",
 
-        unites,
+        unites
 
-
-
-        resumeCA:
-
-        ca + " FCFA",
+    );
 
 
 
-        resumeBenefice:
+    afficherValeur(
 
-        benefice + " FCFA",
+        "resumeCA",
 
+        chiffreAffaires + " FCFA"
 
-
-        unitesVendues:
-
-        unites,
+    );
 
 
 
-        nbTransactions:
+    afficherValeur(
+
+        "resumeBenefice",
+
+        benefice + " FCFA"
+
+    );
+
+
+
+    afficherValeur(
+
+        "chiffreAffaires",
+
+        chiffreAffaires + " FCFA"
+
+    );
+
+
+
+    afficherValeur(
+
+        "beneficeVentes",
+
+        benefice + " FCFA"
+
+    );
+
+
+
+    afficherValeur(
+
+        "unitesVendues",
+
+        unites
+
+    );
+
+
+
+    afficherValeur(
+
+        "nbTransactions",
 
         ventesGlobales.length
 
-
-    };
-
-
-
-
-
-    Object.keys(elements)
-
-    .forEach((id)=>{
-
-
-        const element =
-
-        document.getElementById(id);
-
-
-
-        if(element)
-
-            element.textContent =
-
-            elements[id];
-
-
-    });
-
+    );
 
 
 
@@ -243,13 +280,22 @@ export function calculerResumeVentes(
 
 
 }
+
+
+
+
+
+
+
 // ===============================
 // PRODUIT VEDETTE
 // ===============================
 
 
 export function afficherProduitVedette(
+
     ventesGlobales = []
+
 ){
 
 
@@ -257,7 +303,15 @@ export function afficherProduitVedette(
 
 
 
-    (ventesGlobales || []).forEach((vente)=>{
+    if(!Array.isArray(ventesGlobales))
+
+        ventesGlobales = [];
+
+
+
+
+
+    ventesGlobales.forEach((vente)=>{
 
 
         const nom =
@@ -268,11 +322,7 @@ export function afficherProduitVedette(
 
 
 
-        compteur[nom] =
-
-        (compteur[nom] || 0)
-
-        +
+        const quantite =
 
         nombreValide(
 
@@ -281,20 +331,25 @@ export function afficherProduitVedette(
         );
 
 
+
+        compteur[nom] =
+
+        (compteur[nom] || 0)
+
+        +
+
+        quantite;
+
+
     });
 
 
 
 
 
-    let meilleur =
-
-    "Aucun";
-
-
+    let meilleur = "Aucun";
 
     let maximum = 0;
-
 
 
 
@@ -327,21 +382,13 @@ export function afficherProduitVedette(
 
 
 
-    const element =
+    afficherValeur(
 
-    document.getElementById(
+        "produitVedette",
 
-        "produitVedette"
+        meilleur
 
     );
-
-
-
-    if(element)
-
-        element.textContent =
-
-        meilleur;
 
 
 }
@@ -350,13 +397,17 @@ export function afficherProduitVedette(
 
 
 
+
+
 // ===============================
-// STOCK RESTANT
+// CALCUL STOCK RESTANT
 // ===============================
 
 
 export function calculerStockRestant(
+
     produits = []
+
 ){
 
 
@@ -364,8 +415,15 @@ export function calculerStockRestant(
 
 
 
+    if(!Array.isArray(produits))
 
-    (produits || []).forEach((produit)=>{
+        produits = [];
+
+
+
+
+
+    produits.forEach((produit)=>{
 
 
         total +=
@@ -383,21 +441,48 @@ export function calculerStockRestant(
 
 
 
-    const element =
+    afficherValeur(
 
-    document.getElementById(
+        "stockRestant",
 
-        "stockRestant"
+        total
 
     );
 
 
 
-    if(element)
+    return total;
 
-        element.textContent =
 
-        total;
+}
+
+
+
+
+
+
+
+// ===============================
+// EXPORT GLOBAL OPTIONNEL
+// ===============================
+
+
+export function actualiserDashboard(
+
+    produits = [],
+
+    ventes = []
+
+){
+
+
+    mettreAJourResume(
+
+        produits,
+
+        ventes
+
+    );
 
 
 }
