@@ -97,3 +97,93 @@ export async function chargerVentes(utilisateurConnecte){
     return ventesGlobales;
 
 }
+// ===============================
+// ENREGISTRER VENTE
+// ===============================
+
+export async function enregistrerVente(
+    utilisateurConnecte,
+    produit,
+    quantite,
+    benefice
+){
+
+
+    if(!utilisateurValide(auth, utilisateurConnecte))
+        return false;
+
+
+
+    try{
+
+
+        await addDoc(
+
+            collection(db,"ventes"),
+
+            {
+
+                userId:
+                auth.currentUser.uid,
+
+
+                produit:
+                nettoyerTexte(produit.nom)
+                ||
+                "Produit",
+
+
+                quantiteVendue:
+                nombreValide(quantite),
+
+
+                prixVente:
+                nombreValide(produit.prixRevente),
+
+
+                montantTotal:
+
+                nombreValide(produit.prixRevente)
+                *
+                nombreValide(quantite),
+
+
+                benefice:
+                nombreValide(benefice),
+
+
+                statut:
+                "validée",
+
+
+                date:
+                serverTimestamp()
+
+            }
+
+        );
+
+
+        return true;
+
+
+    }
+
+
+    catch(error){
+
+
+        console.error(
+            "Erreur enregistrement vente:",
+            error
+        );
+
+
+        return false;
+
+
+    }
+
+
+}
+
