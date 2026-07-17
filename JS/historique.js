@@ -76,3 +76,68 @@ export async function enregistrerHistorique(
 
 
 }
+// ===============================
+// CHARGER HISTORIQUE
+// ===============================
+
+export async function chargerHistorique(utilisateurConnecte){
+
+
+    if(!utilisateurValide(auth, utilisateurConnecte))
+        return;
+
+
+
+    const q = query(
+
+        collection(db,"historique"),
+
+        where(
+
+            "userId",
+
+            "==",
+
+            auth.currentUser.uid
+
+        )
+
+    );
+
+
+
+    const snapshot =
+    await getDocs(q);
+
+
+
+    const historique = [];
+
+
+
+    snapshot.forEach((docSnap)=>{
+
+
+        historique.push({
+
+            id:
+            docSnap.id,
+
+
+            ...docSnap.data()
+
+        });
+
+
+    });
+
+
+
+    afficherHistorique(
+        historique
+    );
+
+
+    return historique;
+
+}
