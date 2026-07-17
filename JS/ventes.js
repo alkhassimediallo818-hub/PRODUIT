@@ -454,3 +454,29 @@ export async function confirmerVente(
 
 
 }
+// ===============================
+// FERMER FENETRE VENTE
+// ===============================
+
+export function fermerVente(){
+
+
+    const modal =
+
+    document.getElementById(
+        "modalVente"
+    );
+
+
+
+    if(modal)
+
+        modal.style.display =
+        "none";
+
+
+
+    produitVenteActuel = null;
+
+
+}
