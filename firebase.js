@@ -8,19 +8,19 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
 
+
 import {
     getAuth,
     GoogleAuthProvider,
     signInWithPopup,
     signOut,
     onAuthStateChanged
-
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
 
 
 import {
     getFirestore
-
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 
@@ -33,33 +33,25 @@ import {
 
 const firebaseConfig = {
 
-
     apiKey:
     "AIzaSyBcJ8ghcBNxJ-VJNksHfUffDuM5ZzwZTXw",
-
 
     authDomain:
     "qassimedv.firebaseapp.com",
 
-
     projectId:
     "qassimedv",
-
 
     storageBucket:
     "qassimedv.firebasestorage.app",
 
-
     messagingSenderId:
     "908242149044",
-
 
     appId:
     "1:908242149044:web:ec03eb653461152645c1e1"
 
-
 };
-
 
 
 
@@ -69,10 +61,9 @@ const firebaseConfig = {
 // ===============================
 
 
-const app =
-
-initializeApp(firebaseConfig);
-
+const app = initializeApp(
+    firebaseConfig
+);
 
 
 
@@ -83,21 +74,17 @@ initializeApp(firebaseConfig);
 
 
 export const db =
-
 getFirestore(app);
 
 
 
 export const auth =
-
 getAuth(app);
 
 
 
 export const provider =
-
 new GoogleAuthProvider();
-
 
 
 
@@ -116,6 +103,10 @@ export {
     onAuthStateChanged
 
 };
+
+
+
+
 // ===============================
 // CONNEXION GOOGLE
 // ===============================
@@ -130,15 +121,6 @@ export async function connexionGoogle(){
         if(auth.currentUser){
 
 
-            alert(
-
-                "Vous êtes déjà connecté : " +
-
-                auth.currentUser.displayName
-
-            );
-
-
             return auth.currentUser;
 
 
@@ -146,7 +128,7 @@ export async function connexionGoogle(){
 
 
 
-        const result =
+        const resultat =
 
         await signInWithPopup(
 
@@ -158,47 +140,7 @@ export async function connexionGoogle(){
 
 
 
-        const user =
-
-        result.user;
-
-
-
-        const info =
-
-        document.getElementById(
-
-            "userInfo"
-
-        );
-
-
-
-        if(info){
-
-
-            info.innerHTML =
-
-            "👤 " +
-
-            user.displayName;
-
-
-        }
-
-
-
-        alert(
-
-            "Connexion réussie : " +
-
-            user.displayName
-
-        );
-
-
-
-        return user;
+        return resultat.user;
 
 
     }
@@ -209,28 +151,20 @@ export async function connexionGoogle(){
 
         console.error(
 
-            "Erreur connexion:",
+            "Erreur connexion Google:",
 
             error
 
         );
 
 
-        alert(
-
-            error.message
-
-        );
-
-
-        return null;
+        throw error;
 
 
     }
 
 
 }
-
 
 
 
@@ -250,35 +184,6 @@ export async function deconnexionGoogle(){
 
 
 
-        const info =
-
-        document.getElementById(
-
-            "userInfo"
-
-        );
-
-
-
-        if(info){
-
-
-            info.innerHTML =
-
-            "Non connecté";
-
-
-        }
-
-
-
-        alert(
-
-            "Déconnexion réussie"
-
-        );
-
-
     }
 
 
@@ -294,14 +199,10 @@ export async function deconnexionGoogle(){
         );
 
 
-        alert(
-
-            error.message
-
-        );
+        throw error;
 
 
     }
 
 
-    }
+}
