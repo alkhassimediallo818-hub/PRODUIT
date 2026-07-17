@@ -218,3 +218,79 @@ export function afficherHistorique(historique){
 
 
                        }
+// ===============================
+// VIDER HISTORIQUE
+// ===============================
+
+export async function viderHistorique(utilisateurConnecte){
+
+
+    if(!utilisateurValide(auth, utilisateurConnecte))
+        return;
+
+
+
+    const confirmation = confirm(
+        "Supprimer tout l'historique ?"
+    );
+
+
+
+    if(!confirmation)
+        return;
+
+
+
+    const q = query(
+
+        collection(db,"historique"),
+
+        where(
+
+            "userId",
+
+            "==",
+
+            auth.currentUser.uid
+
+        )
+
+    );
+
+
+
+    const snapshot =
+    await getDocs(q);
+
+
+
+    for(
+        const element of snapshot.docs
+    ){
+
+
+        await deleteDoc(
+
+            doc(
+
+                db,
+
+                "historique",
+
+                element.id
+
+            )
+
+        );
+
+
+    }
+
+
+
+    await chargerHistorique(
+        utilisateurConnecte
+    );
+
+
+}
