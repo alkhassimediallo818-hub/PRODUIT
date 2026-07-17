@@ -33,6 +33,7 @@ import {
 // ENREGISTRER HISTORIQUE
 // ===============================
 
+
 export async function enregistrerHistorique(
     utilisateurConnecte,
     type,
@@ -41,111 +42,204 @@ export async function enregistrerHistorique(
 
 
     if(!utilisateurValide(auth, utilisateurConnecte))
-        return;
+
+        return false;
 
 
 
-    await addDoc(
-
-        collection(db,"historique"),
-
-        {
-
-            userId:
-            auth.currentUser.uid,
+    try{
 
 
-            type:
-            nettoyerTexte(type)
-            ||
-            "action",
+        await addDoc(
+
+            collection(
+                db,
+                "historique"
+            ),
 
 
-            produit:
-            nettoyerTexte(produit)
-            ||
-            "Inconnu",
+            {
 
 
-            date:
-            serverTimestamp()
+                userId:
 
-        }
+                auth.currentUser.uid,
 
-    );
+
+
+                type:
+
+                nettoyerTexte(type)
+
+                ||
+
+                "action",
+
+
+
+                produit:
+
+                nettoyerTexte(produit)
+
+                ||
+
+                "Inconnu",
+
+
+
+                date:
+
+                serverTimestamp()
+
+
+            }
+
+
+        );
+
+
+
+        return true;
+
+
+    }
+
+
+    catch(error){
+
+
+        console.error(
+
+            "Erreur historique:",
+
+            error
+
+        );
+
+
+        return false;
+
+
+    }
 
 
 }
+
+
+
+
+
 // ===============================
 // CHARGER HISTORIQUE
 // ===============================
 
-export async function chargerHistorique(utilisateurConnecte){
+
+export async function chargerHistorique(
+    utilisateurConnecte
+){
 
 
     if(!utilisateurValide(auth, utilisateurConnecte))
-        return;
+
+        return [];
 
 
 
-    const q = query(
-
-        collection(db,"historique"),
-
-        where(
-
-            "userId",
-
-            "==",
-
-            auth.currentUser.uid
-
-        )
-
-    );
+    try{
 
 
+        const q = query(
 
-    const snapshot =
-    await getDocs(q);
+            collection(
+                db,
+                "historique"
+            ),
 
 
+            where(
 
-    const historique = [];
+                "userId",
+
+                "==",
+
+                auth.currentUser.uid
+
+            )
+
+        );
 
 
 
-    snapshot.forEach((docSnap)=>{
+        const snapshot =
+
+        await getDocs(q);
 
 
-        historique.push({
 
-            id:
-            docSnap.id,
+        const historique = [];
 
 
-            ...docSnap.data()
+
+        snapshot.forEach((docSnap)=>{
+
+
+            historique.push({
+
+
+                id:
+
+                docSnap.id,
+
+
+                ...docSnap.data()
+
+
+            });
+
 
         });
 
 
-    });
+
+        afficherHistorique(
+            historique
+        );
 
 
 
-    afficherHistorique(
-        historique
-    );
+        return historique;
 
 
-    return historique;
+    }
+
+
+    catch(error){
+
+
+        console.error(
+
+            "Erreur chargement historique:",
+
+            error
+
+        );
+
+
+        return [];
+
+
+    }
+
 
 }
 // ===============================
 // AFFICHER HISTORIQUE
 // ===============================
 
-export function afficherHistorique(historique){
+
+export function afficherHistorique(
+    historique
+){
 
 
     const tableau =
@@ -157,6 +251,7 @@ export function afficherHistorique(historique){
 
 
     if(!tableau)
+
         return;
 
 
@@ -177,6 +272,7 @@ export function afficherHistorique(historique){
 
 
         let date =
+
         "Date inconnue";
 
 
@@ -189,11 +285,15 @@ export function afficherHistorique(historique){
 
         ){
 
+
             date =
 
             action.date
+
             .toDate()
+
             .toLocaleString();
+
 
         }
 
@@ -201,96 +301,149 @@ export function afficherHistorique(historique){
 
         ligne.innerHTML = `
 
+
         <td>${action.type || "Action"}</td>
+
 
         <td>${action.produit || "Produit"}</td>
 
+
         <td>${date}</td>
+
 
         `;
 
 
 
-        tableau.appendChild(ligne);
+        tableau.appendChild(
+            ligne
+        );
 
 
     });
 
 
-                       }
+}
+
+
+
+
+
 // ===============================
 // VIDER HISTORIQUE
 // ===============================
 
-export async function viderHistorique(utilisateurConnecte){
+
+export async function viderHistorique(
+    utilisateurConnecte
+){
 
 
     if(!utilisateurValide(auth, utilisateurConnecte))
-        return;
+
+        return false;
 
 
 
     const confirmation = confirm(
+
         "Supprimer tout l'historique ?"
+
     );
 
 
 
     if(!confirmation)
-        return;
+
+        return false;
 
 
 
-    const q = query(
-
-        collection(db,"historique"),
-
-        where(
-
-            "userId",
-
-            "==",
-
-            auth.currentUser.uid
-
-        )
-
-    );
+    try{
 
 
+        const q = query(
 
-    const snapshot =
-    await getDocs(q);
-
-
-
-    for(
-        const element of snapshot.docs
-    ){
-
-
-        await deleteDoc(
-
-            doc(
-
+            collection(
                 db,
+                "historique"
+            ),
 
-                "historique",
 
-                element.id
+            where(
+
+                "userId",
+
+                "==",
+
+                auth.currentUser.uid
 
             )
 
         );
 
 
+
+        const snapshot =
+
+        await getDocs(q);
+
+
+
+        for(
+            const element of snapshot.docs
+        ){
+
+
+            await deleteDoc(
+
+                doc(
+
+                    db,
+
+                    "historique",
+
+                    element.id
+
+                )
+
+            );
+
+
+        }
+
+
+
+        await chargerHistorique(
+
+            utilisateurConnecte
+
+        );
+
+
+
+        return true;
+
+
     }
 
 
+    catch(error){
 
-    await chargerHistorique(
-        utilisateurConnecte
-    );
+
+        console.error(
+
+            "Erreur suppression historique:",
+
+            error
+
+        );
+
+
+        return false;
+
+
+    }
 
 
 }
