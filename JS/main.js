@@ -42,3 +42,15 @@ import {
     mettreAJourResume,
     calculerStockRestant
 } from "./dashboard.js";
+// ===============================
+// VARIABLES GLOBALES
+// ===============================
+
+
+let utilisateurConnecte = false;
+
+
+let produits = [];
+
+
+let ventesGlobales = [];
