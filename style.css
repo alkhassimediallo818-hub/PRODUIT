@@ -1,124 +1,423 @@
+/* ===============================
+   RESET GENERAL
+=============================== */
+
 *{
     margin:0;
     padding:0;
     box-sizing:border-box;
-    font-family:Arial,sans-serif;
+    font-family:Arial, sans-serif;
 }
+
+
 
 body{
+
     background:#f4f6f9;
+
     padding:20px;
+
+    color:#2c3e50;
+
 }
+
+
 
 .container{
+
     max-width:1200px;
+
     margin:auto;
+
 }
+
+
+
+/* ===============================
+   TITRE
+=============================== */
+
 
 h1{
+
     text-align:center;
+
     margin-bottom:25px;
-    color:#2c3e50;
+
 }
 
-.formulaire{
+
+
+/* ===============================
+   UTILISATEUR
+=============================== */
+
+
+#userInfo{
+
     background:white;
-    padding:20px;
-    border-radius:12px;
-    box-shadow:0 3px 10px rgba(0,0,0,0.1);
-    margin-bottom:20px;
 
-    display:grid;
-    gap:10px;
-}
-
-input{
     padding:12px;
-    border:1px solid #ccc;
-    border-radius:8px;
+
+    border-radius:10px;
+
+    text-align:center;
+
+    margin-bottom:15px;
+
+    box-shadow:0 3px 10px rgba(0,0,0,0.1);
+
 }
+
+
+
+/* ===============================
+   BOUTONS
+=============================== */
+
 
 button{
+
     padding:12px;
+
     border:none;
+
     border-radius:8px;
+
     background:#27ae60;
+
     color:white;
+
     font-weight:bold;
+
     cursor:pointer;
+
+    transition:.2s;
+
 }
+
+
 
 button:hover{
-    opacity:0.9;
+
+    opacity:.85;
+
 }
 
-.stats{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:15px;
-    margin-bottom:20px;
+
+
+button:nth-child(2){
+
+    background:#34495e;
+
 }
 
-.stats div{
+
+
+/* ===============================
+   FORMULAIRE
+=============================== */
+
+
+.formulaire{
+
     background:white;
+
     padding:20px;
-    text-align:center;
+
     border-radius:12px;
-    box-shadow:0 3px 10px rgba(0,0,0,0.1);
+
+    display:grid;
+
+    gap:10px;
+
+    margin:20px 0;
+
+    box-shadow:0 3px 10px rgba(0,0,0,.1);
+
 }
 
-.stats span{
-    display:block;
-    margin-top:10px;
-    font-size:24px;
-    font-weight:bold;
+
+
+input{
+
+    padding:12px;
+
+    border:1px solid #ccc;
+
+    border-radius:8px;
+
 }
+
+
+
+/* ===============================
+   DASHBOARD
+=============================== */
+
+
+.dashboard{
+
+    display:grid;
+
+    grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+
+    gap:15px;
+
+    margin-bottom:25px;
+
+}
+
+
+
+.card{
+
+    background:white;
+
+    padding:20px;
+
+    border-radius:12px;
+
+    text-align:center;
+
+    box-shadow:0 3px 10px rgba(0,0,0,.1);
+
+}
+
+
+
+.card h3{
+
+    margin-bottom:10px;
+
+}
+
+
+
+.card span{
+
+    font-size:22px;
+
+    font-weight:bold;
+
+}
+
+
+
+/* ===============================
+   GRAPHIQUE
+=============================== */
+
+
+.graphique{
+
+    grid-column:1/-1;
+
+}
+
+
+
+canvas{
+
+    max-height:300px;
+
+}
+
+
+
+/* ===============================
+   TABLEAUX
+=============================== */
+
 
 table{
+
     width:100%;
+
     background:white;
+
     border-collapse:collapse;
+
+    margin-bottom:25px;
+
     border-radius:12px;
+
     overflow:hidden;
-    box-shadow:0 3px 10px rgba(0,0,0,0.1);
+
+    box-shadow:0 3px 10px rgba(0,0,0,.1);
+
 }
+
+
 
 th{
+
     background:#34495e;
+
     color:white;
+
     padding:12px;
+
 }
+
+
 
 td{
+
     padding:12px;
+
     text-align:center;
+
     border-bottom:1px solid #ddd;
+
 }
 
-.supprimer{
-    background:#e74c3c;
-    padding:8px 12px;
+
+
+/* ===============================
+   HISTORIQUE
+=============================== */
+
+
+.historique{
+
+    margin-top:25px;
+
 }
+
+
+
+.historique h2{
+
+    margin-bottom:15px;
+
+}
+
+
+
+/* ===============================
+   MODAL VENTE
+=============================== */
+
+
+.modal{
+
+    position:fixed;
+
+    top:0;
+
+    left:0;
+
+    width:100%;
+
+    height:100%;
+
+    background:rgba(0,0,0,.5);
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+}
+
+
+
+.modal-content{
+
+    background:white;
+
+    padding:25px;
+
+    border-radius:12px;
+
+    width:90%;
+
+    max-width:400px;
+
+    text-align:center;
+
+}
+
+
+
+.modal-actions{
+
+    display:flex;
+
+    gap:10px;
+
+    margin-top:15px;
+
+}
+
+
+
+.modal-actions button:last-child{
+
+    background:#e74c3c;
+
+}
+
+
+
+/* ===============================
+   COULEURS BENEFICES
+=============================== */
+
 
 .benefice{
+
     color:green;
+
     font-weight:bold;
+
 }
 
+
+
 .perte{
+
     color:red;
+
     font-weight:bold;
+
 }
+
+
+
+/* ===============================
+   MOBILE
+=============================== */
+
 
 @media(max-width:768px){
 
-table{
-    display:block;
-    overflow-x:auto;
-}
 
-.stats{
-    grid-template-columns:1fr;
-}
+    body{
+
+        padding:10px;
+
+    }
+
+
+
+    table{
+
+        display:block;
+
+        overflow-x:auto;
+
+    }
+
+
+
+    .modal-actions{
+
+        flex-direction:column;
+
+    }
+
 
 }
