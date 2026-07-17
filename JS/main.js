@@ -289,20 +289,13 @@ modifierProduit;
 
 window.ajouterProduit = async ()=>{
 
+    alert("Bouton détecté");
 
     const nom =
-
     document.getElementById("nom")?.value;
 
-
-
-    const prixGros =
-
-    Number(
-
-        document.getElementById("prixGros")?.value
-
-    );
+    ...
+}
 
 
 
