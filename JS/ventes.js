@@ -42,64 +42,110 @@ export function getVentes(){
     return ventesGlobales;
 
 }
+
+
+
+
+
 // ===============================
 // CHARGER VENTES
 // ===============================
 
-export async function chargerVentes(utilisateurConnecte){
+
+export async function chargerVentes(
+    utilisateurConnecte
+){
 
 
     if(!utilisateurValide(auth, utilisateurConnecte))
-        return;
+
+        return [];
 
 
 
-    const q = query(
-
-        collection(db,"ventes"),
-
-        where(
-            "userId",
-            "==",
-            auth.currentUser.uid
-        )
-
-    );
+    try{
 
 
+        const q = query(
 
-    const snapshot =
-    await getDocs(q);
-
-
-
-    ventesGlobales = [];
-
+            collection(
+                db,
+                "ventes"
+            ),
 
 
-    snapshot.forEach((docSnap)=>{
+            where(
+
+                "userId",
+
+                "==",
+
+                auth.currentUser.uid
+
+            )
+
+        );
 
 
-        ventesGlobales.push({
 
-            id:
-            docSnap.id,
+        const snapshot =
 
-            ...docSnap.data()
+        await getDocs(q);
+
+
+
+        ventesGlobales = [];
+
+
+
+        snapshot.forEach((docSnap)=>{
+
+
+            ventesGlobales.push({
+
+                id:
+
+                docSnap.id,
+
+
+                ...docSnap.data()
+
+
+            });
+
 
         });
 
 
-    });
+
+        return ventesGlobales;
 
 
+    }
 
-    return ventesGlobales;
+
+    catch(error){
+
+
+        console.error(
+
+            "Erreur chargement ventes:",
+
+            error
+
+        );
+
+
+        return [];
+
+    }
+
 
 }
 // ===============================
 // ENREGISTRER VENTE
 // ===============================
+
 
 export async function enregistrerVente(
     utilisateurConnecte,
@@ -110,6 +156,7 @@ export async function enregistrerVente(
 
 
     if(!utilisateurValide(auth, utilisateurConnecte))
+
         return false;
 
 
@@ -119,49 +166,83 @@ export async function enregistrerVente(
 
         await addDoc(
 
-            collection(db,"ventes"),
+            collection(
+                db,
+                "ventes"
+            ),
+
 
             {
 
+
                 userId:
+
                 auth.currentUser.uid,
 
 
+
                 produit:
-                nettoyerTexte(produit.nom)
+
+                nettoyerTexte(
+                    produit.nom
+                )
                 ||
                 "Produit",
 
 
+
                 quantiteVendue:
-                nombreValide(quantite),
+
+                nombreValide(
+                    quantite
+                ),
+
 
 
                 prixVente:
-                nombreValide(produit.prixRevente),
+
+                nombreValide(
+                    produit.prixRevente
+                ),
+
 
 
                 montantTotal:
 
-                nombreValide(produit.prixRevente)
+                nombreValide(
+                    produit.prixRevente
+                )
                 *
-                nombreValide(quantite),
+                nombreValide(
+                    quantite
+                ),
+
 
 
                 benefice:
-                nombreValide(benefice),
+
+                nombreValide(
+                    benefice
+                ),
+
 
 
                 statut:
+
                 "validée",
 
 
+
                 date:
+
                 serverTimestamp()
+
 
             }
 
+
         );
+
 
 
         return true;
@@ -174,8 +255,11 @@ export async function enregistrerVente(
 
 
         console.error(
+
             "Erreur enregistrement vente:",
+
             error
+
         );
 
 
@@ -186,28 +270,39 @@ export async function enregistrerVente(
 
 
 }
+
+
+
+
+
 // ===============================
 // OUVRIR FENETRE VENTE
 // ===============================
 
-export function vendreProduit(id, produits){
+
+export function vendreProduit(
+    id,
+    produits
+){
 
 
     const produit =
 
     produits.find(
+
         p => p.id === id
+
     );
 
 
 
     if(!produit)
-        return;
+
+        return false;
 
 
 
-    produitVenteActuel =
-    produit;
+    produitVenteActuel = produit;
 
 
 
@@ -222,6 +317,7 @@ export function vendreProduit(id, produits){
     if(nom)
 
         nom.textContent =
+
         "Produit : "
         +
         produit.nom;
@@ -253,7 +349,12 @@ export function vendreProduit(id, produits){
     if(modal)
 
         modal.style.display =
+
         "block";
+
+
+
+    return true;
 
 
 }
@@ -261,25 +362,30 @@ export function vendreProduit(id, produits){
 // CONFIRMER VENTE
 // ===============================
 
+
 export async function confirmerVente(
-    utilisateurConnecte,
-    chargerProduits,
-    chargerVentes
+    utilisateurConnecte
 ){
 
 
     if(traitementVente)
-        return;
+
+        return false;
 
 
 
     if(!produitVenteActuel){
 
+
         alert(
+
             "Aucun produit sélectionné"
+
         );
 
-        return;
+
+        return false;
+
 
     }
 
@@ -303,11 +409,16 @@ export async function confirmerVente(
 
     if(quantite <= 0){
 
+
         alert(
+
             "Quantité invalide"
+
         );
 
-        return;
+
+        return false;
+
 
     }
 
@@ -323,11 +434,16 @@ export async function confirmerVente(
 
     if(quantite > stock){
 
+
         alert(
+
             "Stock insuffisant"
+
         );
 
-        return;
+
+        return false;
+
 
     }
 
@@ -347,6 +463,7 @@ export async function confirmerVente(
 
 
         const benefice =
+
 
         (
 
@@ -404,12 +521,17 @@ export async function confirmerVente(
 
             ),
 
+
             {
 
+
                 stockTotal:
+
                 nouveauStock
 
+
             }
+
 
         );
 
@@ -419,9 +541,7 @@ export async function confirmerVente(
 
 
 
-        await chargerProduits();
-
-        await chargerVentes();
+        return true;
 
 
     }
@@ -431,14 +551,22 @@ export async function confirmerVente(
 
 
         console.error(
+
             "Erreur vente:",
+
             error
+
         );
 
 
         alert(
+
             "Erreur pendant la vente"
+
         );
+
+
+        return false;
 
 
     }
@@ -454,9 +582,15 @@ export async function confirmerVente(
 
 
 }
+
+
+
+
+
 // ===============================
 // FERMER FENETRE VENTE
 // ===============================
+
 
 export function fermerVente(){
 
@@ -472,6 +606,7 @@ export function fermerVente(){
     if(modal)
 
         modal.style.display =
+
         "none";
 
 
