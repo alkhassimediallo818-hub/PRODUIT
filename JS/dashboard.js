@@ -11,13 +11,15 @@ import {
 
 
 // ===============================
-// OUTIL AFFICHAGE SECURISE
+// OUTILS AFFICHAGE
 // ===============================
 
 
 function afficherValeur(id, valeur){
 
-    const element = document.getElementById(id);
+    const element =
+    document.getElementById(id);
+
 
     if(element){
 
@@ -31,51 +33,121 @@ function afficherValeur(id, valeur){
 
 
 
+function formatFCFA(nombre){
+
+    return (
+        nombreValide(nombre)
+        .toLocaleString("fr-FR")
+        +
+        " FCFA"
+    );
+
+}
+
+
+
+
+
 // ===============================
-// RESUME GENERAL
+// RESUME COMPLET
 // ===============================
 
 
 export function mettreAJourResume(
+
     produits = [],
+
     ventesGlobales = []
+
 ){
 
 
-    let stockTotal = 0;
+    let stock = 0;
 
     let stockFaible = 0;
 
-
-
-    if(!Array.isArray(produits))
-        produits = [];
+    let beneficeStock = 0;
 
 
 
     produits.forEach((produit)=>{
 
 
-        const stock =
+        const stockProduit =
 
         nombreValide(
+
             produit.stockTotal
+
         );
 
 
 
-        stockTotal += stock;
+        stock += stockProduit;
 
 
 
-        if(stock <= 10){
+        if(stockProduit <= 10)
 
             stockFaible++;
 
-        }
+
+
+        beneficeStock +=
+
+        nombreValide(
+
+            produit.benefice
+
+        );
 
 
     });
+
+
+
+
+
+    afficherValeur(
+
+        "nbProduits",
+
+        produits.length
+
+    );
+
+
+
+    afficherValeur(
+
+        "beneficeTotal",
+
+        formatFCFA(
+            beneficeStock
+        )
+
+    );
+
+
+
+    afficherValeur(
+
+        "stockRestant",
+
+        stock
+
+    );
+
+
+
+    afficherValeur(
+
+        "stockFaible",
+
+        stockFaible
+
+    );
+
 
 
 
@@ -94,30 +166,9 @@ export function mettreAJourResume(
 
         "resumeStock",
 
-        stockTotal
+        stock
 
     );
-
-
-
-    afficherValeur(
-
-        "stockRestant",
-
-        stockTotal
-
-    );
-
-
-
-    afficherValeur(
-
-        "stockFaible",
-
-        stockFaible
-
-    );
-
 
 
 
@@ -129,12 +180,6 @@ export function mettreAJourResume(
 
 
 }
-
-
-
-
-
-
 // ===============================
 // RESUME DES VENTES
 // ===============================
@@ -155,17 +200,20 @@ export function calculerResumeVentes(
 
 
 
-    if(!Array.isArray(ventesGlobales))
+    let ventesJour = 0;
 
-        ventesGlobales = [];
+    let ventesMois = 0;
 
+
+
+    const maintenant = new Date();
 
 
 
     ventesGlobales.forEach((vente)=>{
 
 
-        chiffreAffaires +=
+        const montant =
 
         nombreValide(
 
@@ -175,7 +223,7 @@ export function calculerResumeVentes(
 
 
 
-        benefice +=
+        const gain =
 
         nombreValide(
 
@@ -185,7 +233,7 @@ export function calculerResumeVentes(
 
 
 
-        unites +=
+        const quantite =
 
         nombreValide(
 
@@ -194,40 +242,94 @@ export function calculerResumeVentes(
         );
 
 
+
+        chiffreAffaires += montant;
+
+        benefice += gain;
+
+        unites += quantite;
+
+
+
+
+        if(
+
+            vente.date &&
+
+            typeof vente.date.toDate === "function"
+
+        ){
+
+
+            const dateVente =
+
+            vente.date.toDate();
+
+
+
+            if(
+
+                dateVente.getDate()
+
+                ===
+
+                maintenant.getDate()
+
+                &&
+
+                dateVente.getMonth()
+
+                ===
+
+                maintenant.getMonth()
+
+                &&
+
+                dateVente.getFullYear()
+
+                ===
+
+                maintenant.getFullYear()
+
+            ){
+
+                ventesJour += montant;
+
+            }
+
+
+
+
+
+            if(
+
+                dateVente.getMonth()
+
+                ===
+
+                maintenant.getMonth()
+
+                &&
+
+                dateVente.getFullYear()
+
+                ===
+
+                maintenant.getFullYear()
+
+            ){
+
+                ventesMois += montant;
+
+            }
+
+
+        }
+
+
     });
 
 
-
-
-
-
-    afficherValeur(
-
-        "resumeVentes",
-
-        unites
-
-    );
-
-
-
-    afficherValeur(
-
-        "resumeCA",
-
-        chiffreAffaires + " FCFA"
-
-    );
-
-
-
-    afficherValeur(
-
-        "resumeBenefice",
-
-        benefice + " FCFA"
-
-    );
 
 
 
@@ -235,7 +337,7 @@ export function calculerResumeVentes(
 
         "chiffreAffaires",
 
-        chiffreAffaires + " FCFA"
+        formatFCFA(chiffreAffaires)
 
     );
 
@@ -245,7 +347,27 @@ export function calculerResumeVentes(
 
         "beneficeVentes",
 
-        benefice + " FCFA"
+        formatFCFA(benefice)
+
+    );
+
+
+
+    afficherValeur(
+
+        "ventesJour",
+
+        formatFCFA(ventesJour)
+
+    );
+
+
+
+    afficherValeur(
+
+        "ventesMois",
+
+        formatFCFA(ventesMois)
 
     );
 
@@ -272,6 +394,39 @@ export function calculerResumeVentes(
 
 
 
+
+    afficherValeur(
+
+        "resumeVentes",
+
+        unites
+
+    );
+
+
+
+    afficherValeur(
+
+        "resumeCA",
+
+        formatFCFA(chiffreAffaires)
+
+    );
+
+
+
+    afficherValeur(
+
+        "resumeBenefice",
+
+        formatFCFA(benefice)
+
+    );
+
+
+
+
+
     afficherProduitVedette(
 
         ventesGlobales
@@ -279,14 +434,7 @@ export function calculerResumeVentes(
     );
 
 
-}
-
-
-
-
-
-
-
+        }
 // ===============================
 // PRODUIT VEDETTE
 // ===============================
@@ -303,42 +451,38 @@ export function afficherProduitVedette(
 
 
 
-    if(!Array.isArray(ventesGlobales))
-
-        ventesGlobales = [];
-
-
-
-
-
     ventesGlobales.forEach((vente)=>{
 
 
         const nom =
 
-        vente.produit ||
+        vente.produit
+
+        ||
 
         "Produit";
 
 
 
-        const quantite =
+        compteur[nom] =
+
+        (
+
+            compteur[nom]
+
+            ||
+
+            0
+
+        )
+
+        +
 
         nombreValide(
 
             vente.quantiteVendue
 
         );
-
-
-
-        compteur[nom] =
-
-        (compteur[nom] || 0)
-
-        +
-
-        quantite;
 
 
     });
@@ -353,13 +497,20 @@ export function afficherProduitVedette(
 
 
 
-
     Object.keys(compteur)
 
     .forEach((nom)=>{
 
 
-        if(compteur[nom] > maximum){
+        if(
+
+            compteur[nom]
+
+            >
+
+            maximum
+
+        ){
 
 
             maximum =
@@ -397,10 +548,8 @@ export function afficherProduitVedette(
 
 
 
-
-
 // ===============================
-// CALCUL STOCK RESTANT
+// CALCUL STOCK SIMPLE
 // ===============================
 
 
@@ -412,14 +561,6 @@ export function calculerStockRestant(
 
 
     let total = 0;
-
-
-
-    if(!Array.isArray(produits))
-
-        produits = [];
-
-
 
 
 
@@ -440,7 +581,6 @@ export function calculerStockRestant(
 
 
 
-
     afficherValeur(
 
         "stockRestant",
@@ -450,8 +590,77 @@ export function calculerStockRestant(
     );
 
 
+}
 
-    return total;
+
+
+
+
+// ===============================
+// NETTOYAGE DASHBOARD
+// ===============================
+
+
+export function viderDashboard(){
+
+
+    const valeurs = {
+
+
+        "nbProduits":0,
+
+        "beneficeTotal":"0 FCFA",
+
+        "chiffreAffaires":"0 FCFA",
+
+        "beneficeVentes":"0 FCFA",
+
+        "stockRestant":0,
+
+        "ventesJour":"0 FCFA",
+
+        "ventesMois":"0 FCFA",
+
+        "produitVedette":"Aucun",
+
+        "unitesVendues":0,
+
+        "nbTransactions":0,
+
+        "stockFaible":0,
+
+        "resumeProduits":0,
+
+        "resumeStock":0,
+
+        "resumeVentes":0,
+
+        "resumeCA":"0 FCFA",
+
+        "resumeBenefice":"0 FCFA"
+
+
+    };
+
+
+
+
+
+    Object.keys(valeurs)
+
+    .forEach((id)=>{
+
+
+        afficherValeur(
+
+            id,
+
+            valeurs[id]
+
+        );
+
+
+    });
 
 
 }
@@ -460,27 +669,153 @@ export function calculerStockRestant(
 
 
 
-
-
 // ===============================
-// EXPORT GLOBAL OPTIONNEL
+// GRAPHIQUE VENTES
 // ===============================
 
 
-export function actualiserDashboard(
+export function preparerGraphique(
 
-    produits = [],
-
-    ventes = []
+    ventesGlobales = []
 
 ){
 
 
-    mettreAJourResume(
+    const canvas =
 
-        produits,
+    document.getElementById(
 
-        ventes
+        "graphiqueVentes"
+
+    );
+
+
+
+    if(
+
+        !canvas
+
+        ||
+
+        typeof Chart === "undefined"
+
+    )
+
+        return;
+
+
+
+    const donnees = {};
+
+
+
+    ventesGlobales.forEach((vente)=>{
+
+
+        let date = "Inconnu";
+
+
+
+        if(
+
+            vente.date
+
+            &&
+
+            typeof vente.date.toDate === "function"
+
+        ){
+
+
+            date =
+
+            vente.date
+
+            .toDate()
+
+            .toLocaleDateString();
+
+
+        }
+
+
+
+        donnees[date] =
+
+        (
+
+            donnees[date]
+
+            ||
+
+            0
+
+        )
+
+        +
+
+        nombreValide(
+
+            vente.montantTotal
+
+        );
+
+
+    });
+
+
+
+
+
+    new Chart(
+
+        canvas,
+
+        {
+
+
+            type:"line",
+
+
+            data:{
+
+
+                labels:
+
+                Object.keys(donnees),
+
+
+
+                datasets:[{
+
+
+                    label:
+
+                    "Ventes",
+
+
+
+                    data:
+
+                    Object.values(donnees)
+
+
+                }]
+
+
+            },
+
+
+            options:{
+
+
+                responsive:true
+
+
+            }
+
+
+        }
 
     );
 
