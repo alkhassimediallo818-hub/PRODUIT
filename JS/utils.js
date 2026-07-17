@@ -15,19 +15,22 @@ export function utilisateurValide(
 ){
 
 
-    return (
+    return Boolean(
 
-        utilisateurConnecte === true &&
+        utilisateurConnecte === true
 
-        auth &&
+        &&
 
-        auth.currentUser !== null
+        auth
+
+        &&
+
+        auth.currentUser
 
     );
 
 
 }
-
 
 
 
@@ -42,7 +45,9 @@ export function nettoyerTexte(
 ){
 
 
-    if(typeof texte !== "string")
+    if(
+        typeof texte !== "string"
+    )
 
         return "";
 
@@ -57,8 +62,8 @@ export function nettoyerTexte(
         .replace(/\s+/g," ");
 
 
-}
 
+}
 
 
 
@@ -74,16 +79,98 @@ export function nombreValide(
 
 
     const nombre =
-
     Number(valeur);
 
 
 
-    return Number.isFinite(nombre)
+    if(
+        Number.isFinite(nombre)
+    )
 
+        return nombre;
+
+
+
+    return 0;
+
+
+}
+
+
+
+
+// ===============================
+// VALIDATION POSITIVE
+// ===============================
+
+
+export function nombrePositif(
+    valeur
+){
+
+
+    const nombre =
+    nombreValide(valeur);
+
+
+
+    return nombre > 0
         ? nombre
-
         : 0;
+
+
+}
+
+
+
+
+// ===============================
+// VERIFICATION TEXTE VIDE
+// ===============================
+
+
+export function texteValide(
+    texte
+){
+
+
+    return (
+
+        typeof texte === "string"
+
+        &&
+
+        texte.trim().length > 0
+
+    );
+
+
+}
+
+
+
+
+// ===============================
+// FORMAT ARGENT
+// ===============================
+
+
+export function formaterArgent(
+    montant
+){
+
+
+    return (
+
+        nombreValide(montant)
+
+        .toLocaleString("fr-FR")
+
+        +
+
+        " FCFA"
+
+    );
 
 
 }
