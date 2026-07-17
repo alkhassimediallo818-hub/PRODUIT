@@ -12,6 +12,8 @@ import {
     onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
+
+
 import {
     chargerProduits,
     ajouterProduit,
@@ -20,7 +22,10 @@ import {
     viderChamps,
     estEnModification,
     annulerModification
+
 } from "./produits.js";
+
+
 
 import {
     chargerVentes,
@@ -75,6 +80,10 @@ function utilisateurEtat(){
     return utilisateurConnecte;
 
 }
+
+
+
+
 // ===============================
 // AUTHENTIFICATION
 // ===============================
@@ -149,7 +158,6 @@ onAuthStateChanged(
 
         }
 
-
         else{
 
 
@@ -180,11 +188,9 @@ onAuthStateChanged(
 
 
 
-
 // ===============================
 // CONNEXION HTML
 // ===============================
-
 
 
 window.vendreProduit = (id)=>{
@@ -200,9 +206,9 @@ window.vendreProduit = (id)=>{
 
 
 };
-
-
-
+// ===============================
+// CONFIRMATION VENTE
+// ===============================
 
 
 window.confirmerVente = async ()=>{
@@ -211,7 +217,9 @@ window.confirmerVente = async ()=>{
     const resultat =
 
     await confirmerVente(
+
         utilisateurConnecte
+
     );
 
 
@@ -222,7 +230,9 @@ window.confirmerVente = async ()=>{
         produits =
 
         await chargerProduits(
+
             utilisateurConnecte
+
         );
 
 
@@ -230,19 +240,27 @@ window.confirmerVente = async ()=>{
         ventesGlobales =
 
         await chargerVentes(
+
             utilisateurConnecte
+
         );
 
 
 
         mettreAJourResume(
+
             produits,
+
             ventesGlobales
+
         );
 
 
+
         calculerStockRestant(
+
             produits
+
         );
 
 
@@ -255,12 +273,22 @@ window.confirmerVente = async ()=>{
 
 
 
+// ===============================
+// FERMER VENTE
+// ===============================
+
+
 window.fermerVente =
 
 fermerVente;
 
 
 
+
+
+// ===============================
+// HISTORIQUE
+// ===============================
 
 
 window.viderHistorique = ()=>{
@@ -279,6 +307,11 @@ window.viderHistorique = ()=>{
 
 
 
+// ===============================
+// MODIFICATION PRODUIT
+// ===============================
+
+
 window.modifierProduit =
 
 modifierProduit;
@@ -287,15 +320,31 @@ modifierProduit;
 
 
 
+// ===============================
+// AJOUT / MODIFICATION PRODUIT
+// ===============================
+
+
 window.ajouterProduit = async ()=>{
 
-    alert("Bouton détecté");
 
     const nom =
-    document.getElementById("nom")?.value;
 
-    ...
-}
+    document.getElementById("nom")?.value
+
+    ||
+
+    "";
+
+
+
+    const prixGros =
+
+    Number(
+
+        document.getElementById("prixGros")?.value
+
+    );
 
 
 
@@ -329,9 +378,43 @@ window.ajouterProduit = async ()=>{
 
 
 
+
+
+    if(
+
+        !nom ||
+
+        prixGros <= 0 ||
+
+        cartons <= 0 ||
+
+        parCarton <= 0 ||
+
+        prixRevente <= 0
+
+    ){
+
+
+        alert(
+
+            "Veuillez remplir tous les champs correctement"
+
+        );
+
+
+        return;
+
+
+    }
+
+
+
+
+
     const stockTotal =
 
     cartons * parCarton;
+
 
 
 
@@ -341,9 +424,11 @@ window.ajouterProduit = async ()=>{
 
 
 
+
     const prixUnitaire =
 
-    prixGros / parCarton;
+    prixGros / stockTotal;
+
 
 
 
@@ -354,6 +439,8 @@ window.ajouterProduit = async ()=>{
     -
 
     prixTotalStock;
+
+
 
 
 
@@ -392,29 +479,6 @@ window.ajouterProduit = async ()=>{
 
 
     };
-    if(estEnModification()){
-
-
-        console.log(
-
-            "Mode modification"
-
-        );
-
-
-    }
-
-    else{
-
-
-        console.log(
-
-            "Mode ajout"
-
-        );
-
-
-    }
 
 
 
@@ -437,6 +501,67 @@ window.ajouterProduit = async ()=>{
     if(resultat){
 
 
+        produits =
+
+        await chargerProduits(
+
+            utilisateurConnecte
+
+        );
+
+
+
+        mettreAJourResume(
+
+            produits,
+
+            ventesGlobales
+
+        );
+
+
+
+        calculerStockRestant(
+
+            produits
+
+        );
+
+
+
+        viderChamps();
+
+
+
+        annulerModification();
+
+
+    }
+
+
+};
+// ===============================
+// SUPPRESSION PRODUIT
+// ===============================
+
+
+window.supprimerProduit = async (id)=>{
+
+
+    const resultat =
+
+    await supprimerProduit(
+
+        utilisateurConnecte,
+
+        id
+
+    );
+
+
+
+    if(resultat){
+
 
         produits =
 
@@ -458,34 +583,62 @@ window.ajouterProduit = async ()=>{
 
 
 
-        viderChamps();
+        calculerStockRestant(
 
+            produits
 
-
-        annulerModification();
+        );
 
 
     }
 
 
+};
+
+
+
+
+// ===============================
+// ANNULATION MODIFICATION
+// ===============================
+
+
+window.annulerModification = ()=>{
+
+
+    annulerModification();
+
+
+
+    viderChamps();
+
 
 };
 
 
 
 
+// ===============================
+// PROTECTION ERREURS GLOBALES
+// ===============================
 
 
-window.supprimerProduit = (id)=>{
+window.addEventListener(
+
+    "error",
+
+    (event)=>{
 
 
-    supprimerProduit(
+        console.error(
 
-        utilisateurConnecte,
+            "Erreur application:",
 
-        id
+            event.error
 
-    );
+        );
 
 
-};
+    }
+
+);
