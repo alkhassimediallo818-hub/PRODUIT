@@ -209,55 +209,48 @@ window.vendreProduit = (id)=>{
 
 
 
-window.confirmerVente = ()=>{
+window.confirmerVente = async ()=>{
 
 
-    confirmerVente(
+    const resultat =
 
-        utilisateurConnecte,
-
-
-        async()=>{
-
-
-            produits =
-
-            await chargerProduits(
-
-                utilisateurConnecte
-
-            );
-
-
-
-            mettreAJourResume(
-
-                produits,
-
-                ventesGlobales
-
-            );
-
-
-        },
-
-
-        async()=>{
-
-
-            ventesGlobales =
-
-            await chargerVentes(
-
-                utilisateurConnecte
-
-            );
-
-
-        }
-
-
+    await confirmerVente(
+        utilisateurConnecte
     );
+
+
+
+    if(resultat){
+
+
+        produits =
+
+        await chargerProduits(
+            utilisateurConnecte
+        );
+
+
+
+        ventesGlobales =
+
+        await chargerVentes(
+            utilisateurConnecte
+        );
+
+
+
+        mettreAJourResume(
+            produits,
+            ventesGlobales
+        );
+
+
+        calculerStockRestant(
+            produits
+        );
+
+
+    }
 
 
 };
