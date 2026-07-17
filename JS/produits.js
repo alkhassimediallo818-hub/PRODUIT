@@ -33,7 +33,55 @@ import {
 let produits = [];
 
 let produitModification = null;
+function creerProduit(
+    nom,
+    prixGros,
+    cartons,
+    parCarton,
+    prixRevente
+){
 
+    const stockTotal =
+    cartons * parCarton;
+
+
+    const prixTotalStock =
+    prixGros * cartons;
+
+
+    const prixUnitaire =
+    prixGros / parCarton;
+
+
+    const benefice =
+    (prixRevente * stockTotal)
+    -
+    prixTotalStock;
+
+
+    return {
+
+        nom,
+
+        prixGros,
+
+        nombreCartons: cartons,
+
+        produitsParCarton: parCarton,
+
+        prixTotalStock,
+
+        stockTotal,
+
+        prixUnitaire,
+
+        prixRevente,
+
+        benefice
+
+    };
+
+}
 
 
 export function getProduits(){
