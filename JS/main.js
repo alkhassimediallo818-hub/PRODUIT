@@ -82,6 +82,9 @@ import {
 
 } from "./dashboard.js";
 
+console.log("MAIN JS CHARGE");
+console.log("connexionGoogle export firebase:", typeof lancerConnexionGoogle);
+
 
 
 
