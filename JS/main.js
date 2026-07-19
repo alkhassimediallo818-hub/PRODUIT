@@ -7,9 +7,9 @@ import {
 
     auth,
 
-    connexionGoogle as lancerConnexion,
+    connexionGoogle as lancerConnexionGoogle,
 
-    deconnexionGoogle as lancerDeconnexion
+    deconnexionGoogle as lancerDeconnexionGoogle
 
 } from "./firebase.js";
 
@@ -35,7 +35,7 @@ import {
 
     viderChamps,
 
-    annulerModification
+    annulerModification as resetModification
 
 } from "./produits.js";
 
@@ -97,6 +97,33 @@ let ventesGlobales = [];
 
 
 
+
+// ===============================
+// VERIFICATION FIREBASE
+// ===============================
+
+
+if(typeof lancerConnexionGoogle !== "function"){
+
+    console.error(
+        "Erreur : connexionGoogle absente dans firebase.js"
+    );
+
+}
+
+
+if(typeof lancerDeconnexionGoogle !== "function"){
+
+    console.error(
+        "Erreur : deconnexionGoogle absente dans firebase.js"
+    );
+
+}
+
+
+
+
+
 // ===============================
 // CONNEXION GOOGLE
 // ===============================
@@ -104,24 +131,43 @@ let ventesGlobales = [];
 
 window.connexionGoogle = async function(){
 
-    alert("Test bouton");
 
     try{
 
-        await lancerConnexion();
+
+        console.log(
+            "Tentative connexion Google..."
+        );
+
+
+        await lancerConnexionGoogle();
+
+
 
     }
+
 
     catch(error){
 
+
         console.error(
+
             "Erreur connexion Google:",
+
             error
+
         );
 
-        alert(error.message);
+
+        alert(
+
+            error.message
+
+        );
+
 
     }
+
 
 };
 
@@ -140,7 +186,8 @@ window.deconnexionGoogle = async function(){
     try{
 
 
-        await lancerDeconnexion();
+        await lancerDeconnexionGoogle();
+
 
 
     }
@@ -162,11 +209,6 @@ window.deconnexionGoogle = async function(){
 
 
 };
-
-
-
-
-
 // ===============================
 // SURVEILLANCE AUTH FIREBASE
 // ===============================
@@ -186,6 +228,16 @@ onAuthStateChanged(
 
 
                 utilisateurConnecte = true;
+
+
+
+                console.log(
+
+                    "Utilisateur connecté:",
+
+                    user.email
+
+                );
 
 
 
@@ -242,16 +294,6 @@ onAuthStateChanged(
                 );
 
 
-
-                console.log(
-
-                    "Session active:",
-
-                    user.email
-
-                );
-
-
             }
 
             else{
@@ -266,13 +308,20 @@ onAuthStateChanged(
                 ventesGlobales = [];
 
 
-                viderDashboard();
+
+                if(typeof viderDashboard === "function"){
+
+
+                    viderDashboard();
+
+
+                }
 
 
 
                 console.log(
 
-                    "Aucune session"
+                    "Aucune session active"
 
                 );
 
@@ -288,7 +337,7 @@ onAuthStateChanged(
 
             console.error(
 
-                "Erreur initialisation:",
+                "Erreur chargement session:",
 
                 error
 
@@ -301,6 +350,13 @@ onAuthStateChanged(
     }
 
 );
+
+
+
+
+
+
+
 // ===============================
 // GESTION VENTE
 // ===============================
@@ -336,6 +392,7 @@ window.vendreProduit = function(id){
 
 
 };
+
 
 
 
@@ -398,7 +455,6 @@ window.confirmerVente = async function(){
             utilisateurConnecte
 
         ) || [];
-
 
 
 
@@ -499,16 +555,13 @@ window.ajouterProduit = async function(){
 
 
 
-
         const donnees = {
 
 
             nom:
 
             document
-
             .getElementById("nom")
-
             ?.value,
 
 
@@ -518,9 +571,7 @@ window.ajouterProduit = async function(){
             Number(
 
                 document
-
                 .getElementById("prixGros")
-
                 ?.value
 
             ),
@@ -532,9 +583,7 @@ window.ajouterProduit = async function(){
             Number(
 
                 document
-
                 .getElementById("nombreCartons")
-
                 ?.value
 
             ),
@@ -546,9 +595,7 @@ window.ajouterProduit = async function(){
             Number(
 
                 document
-
                 .getElementById("produitsParCarton")
-
                 ?.value
 
             ),
@@ -560,17 +607,13 @@ window.ajouterProduit = async function(){
             Number(
 
                 document
-
                 .getElementById("prixRevente")
-
                 ?.value
 
             )
 
 
         };
-
-
 
 
 
@@ -603,8 +646,6 @@ window.ajouterProduit = async function(){
 
 
 
-
-
         mettreAJourResume(
 
             produits,
@@ -626,8 +667,7 @@ window.ajouterProduit = async function(){
         viderChamps();
 
 
-
-        annulerModification();
+        resetModification();
 
 
 
@@ -664,11 +704,6 @@ window.ajouterProduit = async function(){
 
 
 };
-
-
-
-
-
 // ===============================
 // MODIFIER PRODUIT
 // ===============================
@@ -677,18 +712,39 @@ window.ajouterProduit = async function(){
 window.modifierProduit = function(id){
 
 
-    const resultat =
-
-    modifierProduit(id);
+    try{
 
 
+        const resultat =
 
-    if(!resultat){
+        modifierProduit(id);
 
 
-        alert(
 
-            "Produit introuvable"
+        if(!resultat){
+
+
+            alert(
+
+                "Produit introuvable"
+
+            );
+
+
+        }
+
+
+    }
+
+
+    catch(error){
+
+
+        console.error(
+
+            "Erreur modification:",
+
+            error
 
         );
 
@@ -713,10 +769,20 @@ window.supprimerProduit = async function(id){
     try{
 
 
-        if(!utilisateurConnecte)
+        if(!utilisateurConnecte){
+
+
+            alert(
+
+                "Connectez-vous d'abord"
+
+            );
+
 
             return;
 
+
+        }
 
 
 
@@ -738,7 +804,6 @@ window.supprimerProduit = async function(id){
 
 
 
-
         produits =
 
         await chargerProduits(
@@ -746,7 +811,6 @@ window.supprimerProduit = async function(id){
             utilisateurConnecte
 
         ) || [];
-
 
 
 
@@ -786,6 +850,11 @@ window.supprimerProduit = async function(id){
 
 
 };
+
+
+
+
+
 // ===============================
 // HISTORIQUE
 // ===============================
@@ -853,7 +922,7 @@ window.viderHistorique = async function(){
 window.annulerModification = function(){
 
 
-    annulerModification();
+    resetModification();
 
 
     viderChamps();
@@ -866,7 +935,7 @@ window.annulerModification = function(){
 
 
 // ===============================
-// RAFRAICHISSEMENT AUTOMATIQUE
+// ACTUALISATION DONNEES
 // ===============================
 
 
@@ -998,7 +1067,7 @@ window.addEventListener(
 
 
 // ===============================
-// VERIFICATION SESSION
+// SYNCHRONISATION AUTOMATIQUE
 // ===============================
 
 
