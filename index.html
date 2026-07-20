@@ -18,10 +18,32 @@
 
 <div class="container">
 
-<div id="userInfo">Non connecté</div>
+<div id="userInfo">
+    Non connecté
+</div>
 
-<button onclick="connexionGoogle()">Connexion Google</button>
-<button onclick="deconnexionGoogle()">Déconnexion</button>
+
+<div id="authButtons">
+
+    <button 
+    id="btnConnexion"
+    onclick="connexionGoogle()">
+
+        Connexion Google
+
+    </button>
+
+
+    <button 
+    id="btnDeconnexion"
+    onclick="deconnexionGoogle()"
+    style="display:none;">
+
+        Déconnexion
+
+    </button>
+
+</div>
 
 <!-- FORMULAIRE PRODUIT -->
 <div class="formulaire">
