@@ -1,12 +1,12 @@
 // ===============================
-// VENTES
+// VENTES - VERSION RENFORCEE
 // ===============================
 
 
 import {
     db,
     auth
-} from "./firebase.js";
+} from "../firebase.js";
 
 
 
@@ -20,7 +20,8 @@ import {
     where,
     serverTimestamp,
     updateDoc,
-    getDoc
+    getDoc,
+    runTransaction
 
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
@@ -44,11 +45,10 @@ import {
 
 let ventesGlobales = [];
 
-
 let produitVenteActuel = null;
 
-
 let traitementVente = false;
+
 
 
 
@@ -67,6 +67,99 @@ export function getVentes(){
 
 
 
+
+
+// ===============================
+// VERIFICATION SECURITE
+// ===============================
+
+
+function verifierUtilisateur(utilisateurConnecte){
+
+
+    return utilisateurValide(
+
+        auth,
+
+        utilisateurConnecte
+
+    );
+
+
+}
+
+
+
+
+
+function nettoyerVente(vente){
+
+
+    return {
+
+
+        id:
+        vente.id,
+
+
+        produit:
+        nettoyerTexte(
+            vente.produit
+        )
+        ||
+        "Produit",
+
+
+
+        quantiteVendue:
+        nombreValide(
+            vente.quantiteVendue
+        ),
+
+
+
+        prixVente:
+        nombreValide(
+            vente.prixVente
+        ),
+
+
+
+        montantTotal:
+        nombreValide(
+            vente.montantTotal
+        ),
+
+
+
+        benefice:
+        nombreValide(
+            vente.benefice
+        ),
+
+
+
+        statut:
+        vente.statut
+        ||
+        "validée",
+
+
+
+        date:
+        vente.date || null
+
+
+    };
+
+
+}
+
+
+
+
+
+
 // ===============================
 // CHARGER LES VENTES
 // ===============================
@@ -80,18 +173,12 @@ export async function chargerVentes(
 
 
     if(
-
-        !utilisateurValide(
-
-            auth,
-
+        !verifierUtilisateur(
             utilisateurConnecte
-
         )
-
     )
 
-    return [];
+        return [];
 
 
 
@@ -100,7 +187,6 @@ export async function chargerVentes(
 
         const q = query(
 
-
             collection(
 
                 db,
@@ -108,7 +194,6 @@ export async function chargerVentes(
                 "ventes"
 
             ),
-
 
 
             where(
@@ -121,7 +206,6 @@ export async function chargerVentes(
 
             )
 
-
         );
 
 
@@ -132,23 +216,26 @@ export async function chargerVentes(
 
 
 
+
         ventesGlobales = [];
 
 
 
-        resultat.forEach((vente)=>{
+        resultat.forEach((docSnap)=>{
 
 
-            ventesGlobales.push({
+            ventesGlobales.push(
 
-                id:
+                nettoyerVente({
 
-                vente.id,
+                    id:
+                    docSnap.id,
 
+                    ...docSnap.data()
 
-                ...vente.data()
+                })
 
-            });
+            );
 
 
         });
@@ -156,6 +243,7 @@ export async function chargerVentes(
 
 
         return ventesGlobales;
+
 
 
     }
@@ -173,9 +261,7 @@ export async function chargerVentes(
         );
 
 
-
         ventesGlobales = [];
-
 
         return [];
 
@@ -184,6 +270,8 @@ export async function chargerVentes(
 
 
 }
+
+
 
 
 
@@ -208,9 +296,7 @@ export async function enregistrerVente(
 
     if(
 
-        !utilisateurValide(
-
-            auth,
+        !verifierUtilisateur(
 
             utilisateurConnecte
 
@@ -218,7 +304,22 @@ export async function enregistrerVente(
 
     )
 
-    return false;
+        return false;
+
+
+
+    if(
+
+        !produit
+
+        ||
+
+        typeof produit !== "object"
+
+    )
+
+        return false;
+
 
 
 
@@ -235,16 +336,6 @@ export async function enregistrerVente(
 
 
 
-        if(
-
-            quantiteFinale <= 0
-
-        )
-
-        return false;
-
-
-
         const prix =
 
         nombreValide(
@@ -252,6 +343,21 @@ export async function enregistrerVente(
             produit.prixRevente
 
         );
+
+
+
+        if(
+
+            quantiteFinale <= 0
+
+            ||
+
+            prix <= 0
+
+        )
+
+            return false;
+
 
 
 
@@ -278,6 +384,7 @@ export async function enregistrerVente(
 
 
 
+
             quantiteVendue:
 
             quantiteFinale,
@@ -292,7 +399,9 @@ export async function enregistrerVente(
 
             montantTotal:
 
-            prix *
+            prix
+
+            *
 
             quantiteFinale,
 
@@ -300,9 +409,15 @@ export async function enregistrerVente(
 
             benefice:
 
-            nombreValide(
+            Math.max(
 
-                benefice
+                0,
+
+                nombreValide(
+
+                    benefice
+
+                )
 
             ),
 
@@ -323,8 +438,6 @@ export async function enregistrerVente(
 
 
 
-        const ajout =
-
         await addDoc(
 
             collection(
@@ -341,21 +454,8 @@ export async function enregistrerVente(
 
 
 
-        ventesGlobales.push({
-
-            id:
-
-            ajout.id,
-
-
-            ...vente
-
-
-        });
-
-
-
         return true;
+
 
 
     }
@@ -379,9 +479,9 @@ export async function enregistrerVente(
     }
 
 
-    }
+}
 // ===============================
-// OUVRIR FENÊTRE DE VENTE
+// OUVRIR FENETRE DE VENTE
 // ===============================
 
 
@@ -389,9 +489,19 @@ export function vendreProduit(
 
     id,
 
-    produits
+    produits = []
 
 ){
+
+
+    if(
+
+        !Array.isArray(produits)
+
+    )
+
+        return false;
+
 
 
     const produit =
@@ -406,7 +516,7 @@ export function vendreProduit(
 
     if(!produit)
 
-    return false;
+        return false;
 
 
 
@@ -433,7 +543,15 @@ export function vendreProduit(
 
         +
 
-        produit.nom;
+        (
+
+            produit.nom
+
+            ||
+
+            "Produit"
+
+        );
 
 
     }
@@ -456,8 +574,6 @@ export function vendreProduit(
 
 
         champQuantite.value = "";
-
-        champQuantite.focus();
 
 
     }
@@ -497,8 +613,10 @@ export function vendreProduit(
 
 
 
+
 // ===============================
 // CONFIRMER UNE VENTE
+// VERSION TRANSACTION FIRESTORE
 // ===============================
 
 
@@ -511,15 +629,13 @@ export async function confirmerVente(
 
     if(traitementVente)
 
-    return false;
+        return false;
 
 
 
     if(
 
-        !utilisateurValide(
-
-            auth,
+        !verifierUtilisateur(
 
             utilisateurConnecte
 
@@ -527,7 +643,7 @@ export async function confirmerVente(
 
     )
 
-    return false;
+        return false;
 
 
 
@@ -548,8 +664,6 @@ export async function confirmerVente(
 
 
 
-
-
     try{
 
 
@@ -557,71 +671,7 @@ export async function confirmerVente(
 
 
 
-        const reference =
-
-        doc(
-
-            db,
-
-            "produits",
-
-            produitVenteActuel.id
-
-        );
-
-
-
-        const resultat =
-
-        await getDoc(reference);
-
-
-
-        if(
-
-            !resultat.exists()
-
-        )
-
-        throw new Error(
-
-            "Produit supprimé ou introuvable"
-
-        );
-
-
-
-
-
-        const produit =
-
-        resultat.data();
-
-
-
-
-
-        if(
-
-            produit.userId
-
-            !==
-
-            auth.currentUser.uid
-
-        )
-
-        throw new Error(
-
-            "Accès interdit"
-
-        );
-
-
-
-
-
-        const champ =
+        const quantiteElement =
 
         document.getElementById(
 
@@ -635,23 +685,9 @@ export async function confirmerVente(
 
         nombreValide(
 
-            champ?.value
+            quantiteElement?.value
 
         );
-
-
-
-
-
-        const stockActuel =
-
-        nombreValide(
-
-            produit.stockTotal
-
-        );
-
-
 
 
 
@@ -659,16 +695,12 @@ export async function confirmerVente(
 
             quantite <= 0
 
-            ||
-
-            quantite > stockActuel
-
         ){
 
 
             alert(
 
-                "Stock insuffisant ou quantité invalide"
+                "Quantité invalide"
 
             );
 
@@ -681,101 +713,303 @@ export async function confirmerVente(
 
 
 
+        const produitId =
 
-        const nouveauStock =
-
-        stockActuel
-
-        -
-
-        quantite;
+        produitVenteActuel.id;
 
 
 
+        const referenceProduit =
 
+        doc(
 
-        const beneficeUnitaire =
+            db,
 
-        nombreValide(
+            "produits",
 
-            produit.prixRevente
-
-        )
-
-        -
-
-        nombreValide(
-
-            produit.prixUnitaire
+            produitId
 
         );
 
 
 
 
-
-        const beneficeTotal =
-
-        beneficeUnitaire
-
-        *
-
-        quantite;
+        let ventePreparee = null;
 
 
 
+        await runTransaction(
 
+            db,
 
-        const vente =
-
-        await enregistrerVente(
-
-            utilisateurConnecte,
-
-            produit,
-
-            quantite,
-
-            beneficeTotal
-
-        );
+            async(transaction)=>{
 
 
 
+                const snapshot =
 
+                await transaction.get(
 
-        if(!vente)
+                    referenceProduit
 
-
-        throw new Error(
-
-            "Impossible d'enregistrer la vente"
-
-        );
+                );
 
 
 
+                if(
+
+                    !snapshot.exists()
+
+                )
+
+                throw new Error(
+
+                    "Produit introuvable"
+
+                );
 
 
-        await updateDoc(
 
-            reference,
+                const produit =
 
-            {
-
-
-                stockTotal:
-
-                nouveauStock,
+                snapshot.data();
 
 
 
-                derniereVente:
 
-                serverTimestamp()
+
+                if(
+
+                    produit.userId
+
+                    !==
+
+                    auth.currentUser.uid
+
+                )
+
+                throw new Error(
+
+                    "Accès refusé"
+
+                );
+
+
+
+
+
+                const stockActuel =
+
+                nombreValide(
+
+                    produit.stockTotal
+
+                );
+
+
+
+
+
+                if(
+
+                    quantite > stockActuel
+
+                )
+
+                throw new Error(
+
+                    "Stock insuffisant"
+
+                );
+
+
+
+
+
+                const nouveauStock =
+
+                stockActuel
+
+                -
+
+                quantite;
+
+
+
+
+
+                const prixRevente =
+
+                nombreValide(
+
+                    produit.prixRevente
+
+                );
+
+
+
+
+
+                const prixUnitaire =
+
+                nombreValide(
+
+                    produit.prixUnitaire
+
+                );
+
+
+
+
+
+                const benefice =
+
+
+                Math.max(
+
+                    0,
+
+                    (
+
+                        prixRevente
+
+                        -
+
+                        prixUnitaire
+
+                    )
+
+                    *
+
+                    quantite
+
+                );
+
+
+
+
+
+                ventePreparee = {
+
+
+                    userId:
+
+                    auth.currentUser.uid,
+
+
+
+                    produit:
+
+                    nettoyerTexte(
+
+                        produit.nom
+
+                    )
+
+                    ||
+
+                    "Produit",
+
+
+
+                    quantiteVendue:
+
+                    quantite,
+
+
+
+                    prixVente:
+
+                    prixRevente,
+
+
+
+                    montantTotal:
+
+                    prixRevente
+
+                    *
+
+                    quantite,
+
+
+
+                    benefice,
+
+
+
+                    statut:
+
+                    "validée",
+
+
+
+                    date:
+
+                    serverTimestamp()
+
+
+                };
+
+
+
+
+
+                transaction.update(
+
+                    referenceProduit,
+
+                    {
+
+
+                        stockTotal:
+
+                        nouveauStock,
+
+
+
+                        derniereVente:
+
+                        serverTimestamp()
+
+
+                    }
+
+                );
+
 
 
             }
+
+        );
+
+
+
+
+
+        if(!ventePreparee)
+
+        throw new Error(
+
+            "Vente impossible"
+
+        );
+
+
+
+
+
+        await addDoc(
+
+            collection(
+
+                db,
+
+                "ventes"
+
+            ),
+
+            ventePreparee
 
         );
 
@@ -788,6 +1022,7 @@ export async function confirmerVente(
 
 
         return true;
+
 
 
     }
@@ -805,14 +1040,21 @@ export async function confirmerVente(
         );
 
 
+
         alert(
 
             error.message
 
+            ||
+
+            "Erreur pendant la vente"
+
         );
 
 
+
         return false;
+
 
 
     }
@@ -827,9 +1069,9 @@ export async function confirmerVente(
     }
 
 
-            }
+}
 // ===============================
-// FERMER FENÊTRE DE VENTE
+// FERMER FENETRE DE VENTE
 // ===============================
 
 
@@ -858,7 +1100,8 @@ export function fermerVente(){
 
 
 
-    const champ =
+
+    const champQuantite =
 
     document.getElementById(
 
@@ -868,13 +1111,14 @@ export function fermerVente(){
 
 
 
-    if(champ){
+    if(champQuantite){
 
 
-        champ.value = "";
+        champQuantite.value = "";
 
 
     }
+
 
 
 
@@ -900,7 +1144,109 @@ export function fermerVente(){
 
 
 
+
     produitVenteActuel = null;
 
 
+
 }
+
+
+
+
+
+
+
+// ===============================
+// NETTOYAGE SESSION
+// ===============================
+
+
+export function viderVentes(){
+
+
+    ventesGlobales = [];
+
+
+    produitVenteActuel = null;
+
+
+    traitementVente = false;
+
+
+}
+
+
+
+
+
+
+
+// ===============================
+// VERIFIER PRODUIT ACTUEL
+// ===============================
+
+
+export function getProduitVenteActuel(){
+
+
+    return produitVenteActuel;
+
+
+}
+
+
+
+
+
+
+
+// ===============================
+// FORMAT STATISTIQUE SIMPLE
+// ===============================
+
+
+export function calculerTotalVentes(){
+
+
+    let total = 0;
+
+
+
+    ventesGlobales.forEach((vente)=>{
+
+
+        total +=
+
+        nombreValide(
+
+            vente.montantTotal
+
+        );
+
+
+    });
+
+
+
+    return total;
+
+
+}
+
+
+
+
+
+
+
+// ===============================
+// EXPORTS UTILITAIRES
+// ===============================
+
+
+export {
+
+    ventesGlobales
+
+};
