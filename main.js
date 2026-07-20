@@ -1,15 +1,3 @@
-// ===============================
-// MAIN APPLICATION
-// VERSION RENFORCEE COMPLETE
-// PARTIE 1/3
-// ===============================
-
-
-// ===============================
-// IMPORT FIREBASE
-// ===============================
-
-
 import {
 
     auth,
@@ -40,7 +28,6 @@ import {
 
 import {
 
-
     chargerProduits,
 
     ajouterProduit,
@@ -53,9 +40,7 @@ import {
 
     annulerModification as resetModification
 
-
 } from "./JS/produits.js";
-
 
 
 
@@ -67,7 +52,6 @@ import {
 
 import {
 
-
     chargerVentes,
 
     vendreProduit,
@@ -76,9 +60,7 @@ import {
 
     fermerVente as fermerFenetreVente
 
-
 } from "./JS/ventes.js";
-
 
 
 
@@ -90,14 +72,11 @@ import {
 
 import {
 
-
     chargerHistorique,
 
     viderHistorique as supprimerHistorique
 
-
 } from "./JS/historique.js";
-
 
 
 
@@ -109,7 +88,6 @@ import {
 
 import {
 
-
     mettreAJourResume,
 
     calculerStockRestant,
@@ -117,7 +95,6 @@ import {
     viderDashboard,
 
     preparerGraphique
-
 
 } from "./JS/dashboard.js";
 
@@ -127,13 +104,7 @@ import {
 
 
 
-
-console.log(
-
-    "MAIN JS CHARGE"
-
-);
-
+console.log("MAIN JS CHARGE");
 
 
 
@@ -148,6 +119,9 @@ console.log(
 let utilisateurConnecte = false;
 
 
+let utilisateurActuel = null;
+
+
 let produits = [];
 
 
@@ -158,8 +132,9 @@ let ventesGlobales = [];
 
 
 
+
 // ===============================
-// AFFICHAGE UTILISATEUR
+// AFFICHAGE ETAT UTILISATEUR
 // ===============================
 
 
@@ -179,9 +154,9 @@ function mettreEtatUtilisateur(user){
 
     const boutonConnexion =
 
-    document.querySelector(
+    document.getElementById(
 
-        'button[onclick="connexionGoogle()"]'
+        "btnConnexion"
 
     );
 
@@ -189,11 +164,12 @@ function mettreEtatUtilisateur(user){
 
     const boutonDeconnexion =
 
-    document.querySelector(
+    document.getElementById(
 
-        'button[onclick="deconnexionGoogle()"]'
+        "btnDeconnexion"
 
     );
+
 
 
 
@@ -204,7 +180,13 @@ function mettreEtatUtilisateur(user){
 
 
 
+        utilisateurActuel = user;
+
+
+
         utilisateurConnecte = true;
+
+
 
 
 
@@ -225,6 +207,8 @@ function mettreEtatUtilisateur(user){
 
 
 
+
+
         if(boutonConnexion){
 
 
@@ -234,6 +218,7 @@ function mettreEtatUtilisateur(user){
 
 
         }
+
 
 
 
@@ -250,14 +235,21 @@ function mettreEtatUtilisateur(user){
 
 
 
-
     }
+
+
 
     else{
 
 
 
+        utilisateurActuel = null;
+
+
+
         utilisateurConnecte = false;
+
+
 
 
 
@@ -275,6 +267,7 @@ function mettreEtatUtilisateur(user){
 
 
 
+
         if(boutonConnexion){
 
 
@@ -284,6 +277,7 @@ function mettreEtatUtilisateur(user){
 
 
         }
+
 
 
 
@@ -300,10 +294,12 @@ function mettreEtatUtilisateur(user){
         }
 
 
+
     }
 
 
 }
+
 
 
 
@@ -320,37 +316,12 @@ function mettreEtatUtilisateur(user){
 window.connexionGoogle = async function(){
 
 
+
     try{
 
 
-        console.log(
-
-            "Connexion Google..."
-
-        );
-
-
-
-        const user =
 
         await lancerConnexionGoogle();
-
-
-
-
-
-        if(user){
-
-
-            mettreEtatUtilisateur(
-
-                user
-
-            );
-
-
-        }
-
 
 
 
@@ -358,6 +329,7 @@ window.connexionGoogle = async function(){
 
 
     catch(error){
+
 
 
         console.error(
@@ -375,7 +347,6 @@ window.connexionGoogle = async function(){
             error.message
 
         );
-
 
 
     }
@@ -398,22 +369,12 @@ window.connexionGoogle = async function(){
 window.deconnexionGoogle = async function(){
 
 
+
     try{
 
 
+
         await lancerDeconnexionGoogle();
-
-
-
-        mettreEtatUtilisateur(
-
-            null
-
-        );
-
-
-
-        viderDashboard();
 
 
 
@@ -421,6 +382,7 @@ window.deconnexionGoogle = async function(){
 
 
     catch(error){
+
 
 
         console.error(
@@ -443,6 +405,7 @@ window.deconnexionGoogle = async function(){
 
 
 
+
 // ===============================
 // AUTHENTIFICATION FIREBASE
 // ===============================
@@ -455,28 +418,34 @@ onAuthStateChanged(
     async(user)=>{
 
 
-        try{
 
+        console.log(
 
-            mettreEtatUtilisateur(
+            "Etat Firebase :",
 
-                user
+            user
 
-            );
-
-
-
-            if(user){
+        );
 
 
 
-                console.log(
 
-                    "Connecté :",
 
-                    user.email
+        mettreEtatUtilisateur(
 
-                );
+            user
+
+        );
+
+
+
+
+
+        if(user){
+
+
+
+            try{
 
 
 
@@ -488,7 +457,9 @@ onAuthStateChanged(
 
                 )
 
-                || [];
+                ||
+
+                [];
 
 
 
@@ -502,7 +473,9 @@ onAuthStateChanged(
 
                 )
 
-                || [];
+                ||
+
+                [];
 
 
 
@@ -548,26 +521,11 @@ onAuthStateChanged(
 
 
 
-            }
-
-            else{
-
-
-
-                produits = [];
-
-
-                ventesGlobales = [];
-
-
-
-                viderDashboard();
-
 
 
                 console.log(
 
-                    "Aucun utilisateur connecté"
+                    "Données chargées après connexion"
 
                 );
 
@@ -577,21 +535,49 @@ onAuthStateChanged(
 
 
 
+            catch(error){
+
+
+
+                console.error(
+
+                    "Erreur chargement données :",
+
+                    error
+
+                );
+
+
+            }
+
+
+
+
+
         }
 
 
-        catch(error){
+        else{
 
 
 
-            console.error(
+            produits = [];
 
-                "Erreur session Firebase :",
 
-                error
+
+            ventesGlobales = [];
+
+
+
+            viderDashboard();
+
+
+
+            console.log(
+
+                "Utilisateur déconnecté"
 
             );
-
 
 
         }
@@ -607,10 +593,13 @@ onAuthStateChanged(
 // ===============================
 
 
+
 window.vendreProduit = function(id){
 
 
+
     if(!utilisateurConnecte){
+
 
 
         alert(
@@ -627,7 +616,9 @@ window.vendreProduit = function(id){
 
 
 
+
     try{
+
 
 
         vendreProduit(
@@ -639,10 +630,12 @@ window.vendreProduit = function(id){
         );
 
 
+
     }
 
 
     catch(error){
+
 
 
         console.error(
@@ -657,7 +650,9 @@ window.vendreProduit = function(id){
     }
 
 
+
 };
+
 
 
 
@@ -667,7 +662,9 @@ window.vendreProduit = function(id){
 window.confirmerVente = async function(){
 
 
+
     if(!utilisateurConnecte){
+
 
 
         alert(
@@ -684,7 +681,10 @@ window.confirmerVente = async function(){
 
 
 
+
+
     try{
+
 
 
         const resultat =
@@ -698,6 +698,7 @@ window.confirmerVente = async function(){
 
 
 
+
         if(!resultat)
 
             return;
@@ -706,71 +707,10 @@ window.confirmerVente = async function(){
 
 
 
-        produits =
 
-        await chargerProduits(
-
-            true
-
-        )
-
-        || [];
+        await actualiserDonnees();
 
 
-
-
-
-        ventesGlobales =
-
-        await chargerVentes(
-
-            true
-
-        )
-
-        || [];
-
-
-
-
-
-        await chargerHistorique(
-
-            true
-
-        );
-
-
-
-
-
-        mettreAJourResume(
-
-            produits,
-
-            ventesGlobales
-
-        );
-
-
-
-
-
-        calculerStockRestant(
-
-            produits
-
-        );
-
-
-
-
-
-        preparerGraphique(
-
-            ventesGlobales
-
-        );
 
 
 
@@ -778,6 +718,7 @@ window.confirmerVente = async function(){
 
 
     catch(error){
+
 
 
         console.error(
@@ -801,7 +742,10 @@ window.confirmerVente = async function(){
     }
 
 
+
 };
+
+
 
 
 
@@ -811,7 +755,9 @@ window.confirmerVente = async function(){
 window.fermerVente = function(){
 
 
+
     try{
+
 
 
         fermerFenetreVente();
@@ -824,6 +770,7 @@ window.fermerVente = function(){
     catch(error){
 
 
+
         console.error(
 
             "Erreur fermeture vente :",
@@ -834,6 +781,7 @@ window.fermerVente = function(){
 
 
     }
+
 
 
 };
@@ -851,11 +799,13 @@ window.fermerVente = function(){
 // ===============================
 
 
+
 window.ajouterProduit = async function(){
 
 
 
     if(!utilisateurConnecte){
+
 
 
         alert(
@@ -877,11 +827,12 @@ window.ajouterProduit = async function(){
     try{
 
 
+
         const donnees = {
 
 
-            nom:
 
+            nom:
 
             document
 
@@ -898,7 +849,6 @@ window.ajouterProduit = async function(){
 
 
             prixGros:
-
 
             Number(
 
@@ -920,7 +870,6 @@ window.ajouterProduit = async function(){
 
             nombreCartons:
 
-
             Number(
 
                 document
@@ -941,7 +890,6 @@ window.ajouterProduit = async function(){
 
             produitsParCarton:
 
-
             Number(
 
                 document
@@ -961,7 +909,6 @@ window.ajouterProduit = async function(){
 
 
             prixRevente:
-
 
             Number(
 
@@ -1001,6 +948,8 @@ window.ajouterProduit = async function(){
 
 
 
+
+
         if(!resultat)
 
             return;
@@ -1010,39 +959,9 @@ window.ajouterProduit = async function(){
 
 
 
-        produits =
 
-        await chargerProduits(
+        await actualiserDonnees();
 
-            true
-
-        )
-
-        || [];
-
-
-
-
-
-
-        mettreAJourResume(
-
-            produits,
-
-            ventesGlobales
-
-        );
-
-
-
-
-
-
-        calculerStockRestant(
-
-            produits
-
-        );
 
 
 
@@ -1050,6 +969,7 @@ window.ajouterProduit = async function(){
 
 
         viderChamps();
+
 
 
         resetModification();
@@ -1061,6 +981,7 @@ window.ajouterProduit = async function(){
 
 
     catch(error){
+
 
 
         console.error(
@@ -1099,13 +1020,14 @@ window.ajouterProduit = async function(){
 // ===============================
 
 
+
 window.modifierProduit = function(id){
+
 
 
     try{
 
 
-        const resultat =
 
         modifierProduit(
 
@@ -1115,25 +1037,11 @@ window.modifierProduit = function(id){
 
 
 
-
-        if(!resultat){
-
-
-            console.warn(
-
-                "Produit introuvable"
-
-            );
-
-
-        }
-
-
-
     }
 
 
     catch(error){
+
 
 
         console.error(
@@ -1148,7 +1056,9 @@ window.modifierProduit = function(id){
     }
 
 
+
 };
+
 
 
 
@@ -1162,11 +1072,13 @@ window.modifierProduit = function(id){
 // ===============================
 
 
+
 window.supprimerProduit = async function(id){
 
 
 
     if(!utilisateurConnecte){
+
 
 
         alert(
@@ -1180,6 +1092,8 @@ window.supprimerProduit = async function(id){
 
 
     }
+
+
 
 
 
@@ -1203,6 +1117,7 @@ window.supprimerProduit = async function(id){
 
 
 
+
         if(!resultat)
 
             return;
@@ -1212,40 +1127,9 @@ window.supprimerProduit = async function(id){
 
 
 
-
-        produits =
-
-        await chargerProduits(
-
-            true
-
-        )
-
-        || [];
+        await actualiserDonnees();
 
 
-
-
-
-
-        mettreAJourResume(
-
-            produits,
-
-            ventesGlobales
-
-        );
-
-
-
-
-
-
-        calculerStockRestant(
-
-            produits
-
-        );
 
 
 
@@ -1253,6 +1137,7 @@ window.supprimerProduit = async function(id){
 
 
     catch(error){
+
 
 
         console.error(
@@ -1270,15 +1155,24 @@ window.supprimerProduit = async function(id){
 
 };
 
+
+
+
+
+
+
 // ===============================
-// GESTION HISTORIQUE
+// HISTORIQUE
 // ===============================
+
 
 
 window.viderHistorique = async function(){
 
 
+
     if(!utilisateurConnecte){
+
 
 
         alert(
@@ -1296,10 +1190,10 @@ window.viderHistorique = async function(){
 
 
 
+
     try{
 
 
-        const resultat =
 
         await supprimerHistorique(
 
@@ -1309,17 +1203,11 @@ window.viderHistorique = async function(){
 
 
 
-        if(resultat){
+        await chargerHistorique(
 
+            true
 
-            console.log(
-
-                "Historique supprimé"
-
-            );
-
-
-        }
+        );
 
 
 
@@ -1329,9 +1217,10 @@ window.viderHistorique = async function(){
     catch(error){
 
 
+
         console.error(
 
-            "Erreur suppression historique :",
+            "Erreur historique :",
 
             error
 
@@ -1341,60 +1230,10 @@ window.viderHistorique = async function(){
     }
 
 
-};
-
-
-
-
-
-
-// ===============================
-// ANNULER MODIFICATION
-// ===============================
-
-
-window.annulerModification = function(){
-
-
-    try{
-
-
-        resetModification();
-
-
-        viderChamps();
-
-
-
-    }
-
-
-    catch(error){
-
-
-        console.error(
-
-            "Erreur annulation modification :",
-
-            error
-
-        );
-
-
-    }
-
 
 };
-
-
-
-
-
-
-
-
 // ===============================
-// ACTUALISATION DONNEES
+// ACTUALISATION DES DONNEES
 // ===============================
 
 
@@ -1405,6 +1244,7 @@ async function actualiserDonnees(){
     if(!utilisateurConnecte)
 
         return;
+
 
 
 
@@ -1422,6 +1262,7 @@ async function actualiserDonnees(){
         )
 
         || [];
+
 
 
 
@@ -1441,11 +1282,14 @@ async function actualiserDonnees(){
 
 
 
+
+
         await chargerHistorique(
 
             true
 
         );
+
 
 
 
@@ -1465,11 +1309,14 @@ async function actualiserDonnees(){
 
 
 
+
+
         calculerStockRestant(
 
             produits
 
         );
+
 
 
 
@@ -1490,16 +1337,19 @@ async function actualiserDonnees(){
     catch(error){
 
 
+
         console.error(
 
-            "Erreur actualisation :",
+            "Erreur actualisation données:",
 
             error
 
         );
 
 
+
     }
+
 
 
 }
@@ -1512,8 +1362,60 @@ async function actualiserDonnees(){
 
 
 // ===============================
-// PROTECTION ERREURS
+// ANNULER MODIFICATION
 // ===============================
+
+
+window.annulerModification = function(){
+
+
+
+    try{
+
+
+
+        resetModification();
+
+
+
+        viderChamps();
+
+
+
+    }
+
+
+    catch(error){
+
+
+
+        console.error(
+
+            "Erreur annulation modification:",
+
+            error
+
+        );
+
+
+
+    }
+
+
+
+};
+
+
+
+
+
+
+
+
+// ===============================
+// PROTECTION ERREURS GLOBALES
+// ===============================
+
 
 
 window.addEventListener(
@@ -1523,19 +1425,23 @@ window.addEventListener(
     (event)=>{
 
 
+
         console.error(
 
-            "Erreur application :",
+            "Erreur application:",
 
             event.error
 
         );
 
 
+
     }
 
 
 );
+
+
 
 
 
@@ -1548,13 +1454,15 @@ window.addEventListener(
     (event)=>{
 
 
+
         console.error(
 
-            "Erreur Promise :",
+            "Erreur Promise:",
 
             event.reason
 
         );
+
 
 
     }
@@ -1568,14 +1476,19 @@ window.addEventListener(
 
 
 
+
 // ===============================
 // SYNCHRONISATION AUTOMATIQUE
 // ===============================
 
 
+
 setInterval(
 
+
+
     ()=>{
+
 
 
         if(
@@ -1589,7 +1502,9 @@ setInterval(
         ){
 
 
+
             actualiserDonnees();
+
 
 
         }
@@ -1599,7 +1514,9 @@ setInterval(
     },
 
 
+
     300000
+
 
 
 );
@@ -1609,13 +1526,16 @@ setInterval(
 
 
 
+
+
 // ===============================
-// VERIFICATION FINALE
+// VERIFICATION APPLICATION
 // ===============================
+
 
 
 console.log(
 
-    "Application prête"
+    "Application prête avec authentification Firebase"
 
 );
