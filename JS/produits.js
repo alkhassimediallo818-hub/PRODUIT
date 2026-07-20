@@ -6,8 +6,7 @@
 import {
     db,
     auth
-} from "./firebase.js";
-
+} from "../firebase.js";
 
 import {
 
@@ -237,15 +236,17 @@ export async function chargerProduits(utilisateurConnecte){
 
             produits.push({
 
-                id:item.id,
+id: docSnap.id,
 
-                ...item.data()
+...docSnap.data(),
 
-            });
+stockTotal:
+nombreValide(docSnap.data().stockTotal),
 
+benefice:
+nombreValide(docSnap.data().benefice)
 
-        });
-
+});
 
 
         return produits;
@@ -355,19 +356,17 @@ export async function ajouterProduit(
 
 
             await updateDoc(
+    reference,
+    {
+        ...produit,
 
-                ref,
+        userId:
+        auth.currentUser.uid,
 
-                {
-
-                    ...produit,
-
-                    dateModification:
-                    serverTimestamp()
-
-                }
-
-            );
+        dateModification:
+        serverTimestamp()
+    }
+);
 
 
 
