@@ -2,7 +2,7 @@
 // IMPORTS
 // ===============================
 
-
+console.log("MAIN JS CHARGE");
 import {
 
     auth,
