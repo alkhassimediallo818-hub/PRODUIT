@@ -1,26 +1,40 @@
 // ===============================
 // PRODUITS
-// VERSION RENFORCEE
+// VERSION RENFORCEE + AFFICHAGE
+// PARTIE 1/3
 // ===============================
 
 
 import {
+
     db,
+
     auth
+
 } from "../firebase.js";
+
 
 
 import {
 
     collection,
+
     addDoc,
+
     getDocs,
+
     deleteDoc,
+
     doc,
+
     query,
+
     where,
+
     serverTimestamp,
+
     updateDoc,
+
     getDoc
 
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
@@ -30,10 +44,13 @@ import {
 import {
 
     nombreValide,
+
     utilisateurValide,
+
     nettoyerTexte
 
 } from "./utils.js";
+
 
 
 
@@ -52,6 +69,7 @@ let produitModification = null;
 
 
 
+
 // ===============================
 // GET PRODUITS
 // ===============================
@@ -59,16 +77,22 @@ let produitModification = null;
 
 export function getProduits(){
 
+
     return produits;
 
+
 }
+
+
 
 
 
 
 export function estEnModification(){
 
+
     return produitModification !== null;
+
 
 }
 
@@ -76,59 +100,92 @@ export function estEnModification(){
 
 
 
+
+
 // ===============================
-// CREER PRODUIT
+// CREATION PRODUIT
 // ===============================
 
 
 function creerProduit(data){
 
 
+
     const nom =
-    nettoyerTexte(data.nom);
+
+    nettoyerTexte(
+
+        data.nom
+
+    );
+
 
 
 
     const prixGros =
-    nombreValide(data.prixGros);
+
+    nombreValide(
+
+        data.prixGros
+
+    );
 
 
 
-    const nombreCartons =
-    nombreValide(data.nombreCartons);
+
+    const cartons =
+
+    nombreValide(
+
+        data.nombreCartons
+
+    );
 
 
 
-    const produitsParCarton =
-    nombreValide(data.produitsParCarton);
+
+    const parCarton =
+
+    nombreValide(
+
+        data.produitsParCarton
+
+    );
+
 
 
 
     const prixRevente =
-    nombreValide(data.prixRevente);
+
+    nombreValide(
+
+        data.prixRevente
+
+    );
+
 
 
 
 
     const stockTotal =
 
-    nombreCartons *
+    cartons * parCarton;
 
-    produitsParCarton;
 
 
 
 
     const prixTotalStock =
 
-    prixGros *
+    prixGros * cartons;
 
-    nombreCartons;
+
 
 
 
 
     const prixUnitaire =
+
 
     stockTotal > 0
 
@@ -143,19 +200,25 @@ function creerProduit(data){
 
 
 
+
+
     const benefice =
+
 
     (
 
-        prixRevente *
+        prixRevente
 
-        stockTotal
+        -
+
+        prixUnitaire
 
     )
 
-    -
+    *
 
-    prixTotalStock;
+    stockTotal;
+
 
 
 
@@ -170,24 +233,28 @@ function creerProduit(data){
         prixGros,
 
 
-        nombreCartons,
+        nombreCartons:
+
+        cartons,
 
 
-        produitsParCarton,
+
+        produitsParCarton:
+
+        parCarton,
+
 
 
         prixTotalStock,
 
 
+
         stockTotal,
 
 
-        stockUnitaire:
 
         prixUnitaire,
 
-
-        prixUnitaire,
 
 
         prixRevente,
@@ -196,18 +263,18 @@ function creerProduit(data){
 
         benefice:
 
-        benefice > 0
+        Math.max(
 
-        ?
+            0,
 
-        benefice
+            benefice
 
-        :
+        )
 
-        0
 
 
     };
+
 
 
 }
@@ -216,19 +283,25 @@ function creerProduit(data){
 
 
 
+
+
 // ===============================
-// CHARGER PRODUITS FIRESTORE
+// CHARGER PRODUITS
 // ===============================
 
 
 export async function chargerProduits(
 
+
     utilisateurConnecte
+
 
 ){
 
 
+
     if(
+
 
         !utilisateurValide(
 
@@ -245,11 +318,13 @@ export async function chargerProduits(
 
 
 
+
     try{
 
 
 
         const q = query(
+
 
 
             collection(
@@ -262,18 +337,24 @@ export async function chargerProduits(
 
 
 
+
             where(
+
 
                 "userId",
 
+
                 "==",
 
+
                 auth.currentUser.uid
+
 
             )
 
 
         );
+
 
 
 
@@ -287,20 +368,16 @@ export async function chargerProduits(
 
 
 
+
         produits = [];
 
 
 
 
 
+
+
         resultat.forEach((docSnap)=>{
-
-
-
-            const data =
-
-            docSnap.data();
-
 
 
 
@@ -313,27 +390,7 @@ export async function chargerProduits(
 
 
 
-                ...data,
-
-
-
-                stockTotal:
-
-                nombreValide(
-
-                    data.stockTotal
-
-                ),
-
-
-
-                benefice:
-
-                nombreValide(
-
-                    data.benefice
-
-                )
+                ...docSnap.data()
 
 
 
@@ -347,7 +404,11 @@ export async function chargerProduits(
 
 
 
+
         afficherProduits();
+
+
+
 
 
 
@@ -355,8 +416,9 @@ export async function chargerProduits(
 
 
 
-    }
 
+
+    }
 
 
     catch(error){
@@ -382,7 +444,6 @@ export async function chargerProduits(
 
 
     }
-
 
 
 }
@@ -417,12 +478,18 @@ export async function ajouterProduit(
 
 
 
+
     try{
 
 
         const produit =
 
-        creerProduit(donnees);
+        creerProduit(
+
+            donnees
+
+        );
+
 
 
 
@@ -437,15 +504,19 @@ export async function ajouterProduit(
 
         ){
 
+
             alert(
 
                 "Informations produit invalides"
 
             );
 
+
             return false;
 
+
         }
+
 
 
 
@@ -474,9 +545,15 @@ export async function ajouterProduit(
 
 
 
+
             const ancien =
 
-            await getDoc(reference);
+            await getDoc(
+
+                reference
+
+            );
+
 
 
 
@@ -500,6 +577,9 @@ export async function ajouterProduit(
 
 
 
+
+
+
             await updateDoc(
 
                 reference,
@@ -510,15 +590,22 @@ export async function ajouterProduit(
                     ...produit,
 
 
+                    userId:
+
+                    auth.currentUser.uid,
+
+
+
                     dateModification:
 
                     serverTimestamp()
 
 
+
                 }
 
-
             );
+
 
 
 
@@ -528,6 +615,8 @@ export async function ajouterProduit(
 
 
         }
+
+
 
 
 
@@ -542,6 +631,7 @@ export async function ajouterProduit(
 
             await addDoc(
 
+
                 collection(
 
                     db,
@@ -550,10 +640,13 @@ export async function ajouterProduit(
 
                 ),
 
+
+
                 {
 
 
                     ...produit,
+
 
 
                     userId:
@@ -561,17 +654,22 @@ export async function ajouterProduit(
                     auth.currentUser.uid,
 
 
+
                     dateAjout:
 
                     serverTimestamp()
 
 
+
                 }
+
 
             );
 
 
+
         }
+
 
 
 
@@ -583,9 +681,7 @@ export async function ajouterProduit(
     }
 
 
-
     catch(error){
-
 
 
         console.error(
@@ -597,10 +693,13 @@ export async function ajouterProduit(
         );
 
 
+
         return false;
 
 
+
     }
+
 
 
 }
@@ -611,21 +710,238 @@ export async function ajouterProduit(
 
 
 
+
 // ===============================
-// SUPPRESSION PRODUIT
+// AFFICHER PRODUITS
+// ===============================
+
+
+export function afficherProduits(){
+
+
+
+    const tableau =
+
+    document.getElementById(
+
+        "tableauProduits"
+
+    );
+
+
+
+
+
+    if(!tableau)
+
+    return;
+
+
+
+
+
+    tableau.innerHTML = "";
+
+
+
+
+
+
+    produits.forEach((produit)=>{
+
+
+
+        const ligne =
+
+        document.createElement(
+
+            "tr"
+
+        );
+
+
+
+
+
+        ligne.innerHTML = `
+
+
+
+        <td>
+
+        ${produit.nom || "Produit"}
+
+        </td>
+
+
+
+        <td>
+
+        ${nombreValide(produit.prixGros)}
+
+        FCFA
+
+        </td>
+
+
+
+
+        <td>
+
+        ${nombreValide(produit.nombreCartons)}
+
+        </td>
+
+
+
+
+        <td>
+
+        ${nombreValide(produit.produitsParCarton)}
+
+        </td>
+
+
+
+
+        <td>
+
+        ${nombreValide(produit.stockTotal)}
+
+        </td>
+
+
+
+
+        <td>
+
+        ${
+
+        nombreValide(
+
+            produit.prixUnitaire
+
+        )
+
+        }
+
+        FCFA
+
+        </td>
+
+
+
+
+        <td>
+
+        ${
+
+        nombreValide(
+
+            produit.prixRevente
+
+        )
+
+        }
+
+        FCFA
+
+        </td>
+
+
+
+
+        <td>
+
+        ${
+
+        nombreValide(
+
+            produit.benefice
+
+        )
+
+        }
+
+        FCFA
+
+        </td>
+
+
+
+
+
+        <td>
+
+
+
+        <button onclick="modifierProduit('${produit.id}')">
+
+        Modifier
+
+        </button>
+
+
+
+        <button onclick="supprimerProduit('${produit.id}')">
+
+        Supprimer
+
+        </button>
+
+
+
+        <button onclick="vendreProduit('${produit.id}')">
+
+        Vendre
+
+        </button>
+
+
+
+        </td>
+
+
+
+        `;
+
+
+
+
+
+        tableau.appendChild(
+
+            ligne
+
+        );
+
+
+
+    });
+
+
+
+}
+// ===============================
+// SUPPRIMER PRODUIT
 // ===============================
 
 
 export async function supprimerProduit(
 
+
     utilisateurConnecte,
 
+
     id
+
 
 ){
 
 
+
     if(
+
 
         !utilisateurValide(
 
@@ -638,6 +954,7 @@ export async function supprimerProduit(
     )
 
     return false;
+
 
 
 
@@ -661,14 +978,23 @@ export async function supprimerProduit(
 
 
 
+
+
         const resultat =
 
-        await getDoc(reference);
+        await getDoc(
+
+            reference
+
+        );
+
+
 
 
 
 
         if(
+
 
             !resultat.exists()
 
@@ -687,13 +1013,23 @@ export async function supprimerProduit(
 
 
 
-        await deleteDoc(reference);
+
+
+
+        await deleteDoc(
+
+            reference
+
+        );
 
 
 
 
 
-        produits = produits.filter(
+
+        produits =
+
+        produits.filter(
 
             (produit)=>
 
@@ -706,7 +1042,12 @@ export async function supprimerProduit(
 
 
 
+
+
         afficherProduits();
+
+
+
 
 
 
@@ -717,9 +1058,7 @@ export async function supprimerProduit(
     }
 
 
-
     catch(error){
-
 
 
         console.error(
@@ -734,10 +1073,13 @@ export async function supprimerProduit(
         return false;
 
 
+
     }
 
 
+
 }
+
 
 
 
@@ -750,7 +1092,13 @@ export async function supprimerProduit(
 // ===============================
 
 
-export function modifierProduit(id){
+export function modifierProduit(
+
+
+    id
+
+
+){
 
 
 
@@ -765,9 +1113,13 @@ export function modifierProduit(id){
 
 
 
+
+
     if(!produit)
 
     return false;
+
+
 
 
 
@@ -778,31 +1130,36 @@ export function modifierProduit(id){
 
         nom:
 
-        produit.nom,
+        produit.nom || "",
+
 
 
 
         prixGros:
 
-        produit.prixGros,
+        produit.prixGros || "",
+
 
 
 
         nombreCartons:
 
-        produit.nombreCartons,
+        produit.nombreCartons || "",
+
 
 
 
         produitsParCarton:
 
-        produit.produitsParCarton,
+        produit.produitsParCarton || "",
+
 
 
 
         prixRevente:
 
-        produit.prixRevente
+        produit.prixRevente || ""
+
 
 
     };
@@ -811,26 +1168,38 @@ export function modifierProduit(id){
 
 
 
-    Object.keys(champs)
 
-    .forEach((champ)=>{
+
+    Object.entries(champs)
+
+    .forEach(([id,valeur])=>{
 
 
 
         const element =
 
-        document.getElementById(champ);
+        document.getElementById(
+
+            id
+
+        );
 
 
 
+        if(element){
 
-        if(element)
 
-        element.value = champs[champ];
+            element.value = valeur;
+
+
+        }
 
 
 
     });
+
+
+
 
 
 
@@ -839,122 +1208,21 @@ export function modifierProduit(id){
 
 
 
+
+
     return true;
 
 
+
 }
 
 
 
 
 
-// ===============================
-// AFFICHAGE TABLEAU PRODUITS
-// ===============================
 
 
-export function afficherProduits(){
 
-
-    const tableau =
-
-    document.getElementById(
-
-        "tableauProduits"
-
-    );
-
-
-
-    if(!tableau)
-
-    return;
-
-
-
-
-    tableau.innerHTML = "";
-
-
-
-
-
-    produits.forEach((produit)=>{
-
-
-
-        const ligne =
-
-        document.createElement(
-
-            "tr"
-
-        );
-
-
-
-
-        ligne.innerHTML = `
-
-
-        <td>${produit.nom}</td>
-
-
-        <td>${produit.stockTotal}</td>
-
-
-        <td>${produit.prixRevente} FCFA</td>
-
-
-        <td>${produit.benefice} FCFA</td>
-
-
-        <td>
-
-
-        <button onclick="vendreProduit('${produit.id}')">
-
-        Vendre
-
-        </button>
-
-
-
-        <button onclick="modifierProduit('${produit.id}')">
-
-        Modifier
-
-        </button>
-
-
-
-        <button onclick="supprimerProduit('${produit.id}')">
-
-        Supprimer
-
-        </button>
-
-
-        </td>
-
-
-        `;
-
-
-
-        tableau.appendChild(
-
-            ligne
-
-        );
-
-
-
-    });
-
-
-
-}
 // ===============================
 // ANNULER MODIFICATION
 // ===============================
@@ -963,10 +1231,13 @@ export function afficherProduits(){
 export function annulerModification(){
 
 
+
     produitModification = null;
 
 
+
 }
+
 
 
 
@@ -988,16 +1259,22 @@ export function viderChamps(){
 
         "nom",
 
+
         "prixGros",
+
 
         "nombreCartons",
 
+
         "produitsParCarton",
+
 
         "prixRevente"
 
 
+
     ];
+
 
 
 
@@ -1009,7 +1286,13 @@ export function viderChamps(){
 
         const element =
 
-        document.getElementById(id);
+        document.getElementById(
+
+            id
+
+        );
+
+
 
 
 
@@ -1019,11 +1302,13 @@ export function viderChamps(){
 
             element.value = "";
 
+
         }
 
 
 
     });
+
 
 
 }
@@ -1034,15 +1319,18 @@ export function viderChamps(){
 
 
 
+
 // ===============================
-// REINITIALISER PRODUITS
+// NETTOYAGE LOCAL
 // ===============================
 
 
 export function nettoyerProduits(){
 
 
+
     produits = [];
+
 
 
     produitModification = null;
@@ -1052,57 +1340,6 @@ export function nettoyerProduits(){
     afficherProduits();
 
 
-}
-
-
-
-
-
-
-
-// ===============================
-// RECHERCHER PRODUIT
-// ===============================
-
-
-export function rechercherProduit(
-
-    texte
-
-){
-
-
-
-    const recherche =
-
-    nettoyerTexte(texte)
-
-    .toLowerCase();
-
-
-
-
-    if(!recherche)
-
-    return produits;
-
-
-
-
-    return produits.filter(
-
-        (produit)=>
-
-
-        produit.nom
-
-        .toLowerCase()
-
-        .includes(recherche)
-
-
-    );
-
 
 }
 
@@ -1112,47 +1349,14 @@ export function rechercherProduit(
 
 
 
-// ===============================
-// CALCUL STOCK TOTAL
-// ===============================
-
-
-export function calculerStockProduits(){
-
-
-    let total = 0;
-
-
-
-    produits.forEach((produit)=>{
-
-
-
-        total +=
-
-        nombreValide(
-
-            produit.stockTotal
-
-        );
-
-
-
-    });
-
-
-
-    return total;
-
-
-}
-
-
-
-
-
-
 
 // ===============================
-// FIN MODULE PRODUITS
+// FIN MODULE
 // ===============================
+
+
+console.log(
+
+    "Module produits chargé"
+
+);
