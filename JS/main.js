@@ -11,13 +11,7 @@ import {
 
     deconnexionGoogle as lancerDeconnexionGoogle
 
-} from "./firebase.js";
-window.connexionGoogle = async function(){
-
-    await lancerConnexionGoogle();
-
-};
-
+} from "../firebase.js";
 
 
 import {
