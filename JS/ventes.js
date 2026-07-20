@@ -1,257 +1,15 @@
 // ===============================
-// VENTES
-// VERSION RENFORCEE
+// SUPPRIMER PRODUIT
 // ===============================
 
 
-import {
-
-    db,
-    auth
-
-} from "../firebase.js";
-
-
-
-import {
-
-    collection,
-    addDoc,
-    getDocs,
-    doc,
-    query,
-    where,
-    serverTimestamp,
-    updateDoc,
-    getDoc
-
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-
-
-import {
-
-    nombreValide,
-    nettoyerTexte,
-    utilisateurValide
-
-} from "./utils.js";
-
-
-
-
-
-// ===============================
-// VARIABLES
-// ===============================
-
-
-let ventesGlobales = [];
-
-let produitVenteActuel = null;
-
-let traitementVente = false;
-
-
-
-
-
-
-
-// ===============================
-// GET VENTES
-// ===============================
-
-
-export function getVentes(){
-
-
-    return ventesGlobales;
-
-
-}
-
-
-
-
-
-
-
-// ===============================
-// CHARGER LES VENTES
-// ===============================
-
-
-export async function chargerVentes(
-
-    utilisateurConnecte
-
-){
-
-
-
-    if(
-
-        !utilisateurValide(
-
-            auth,
-
-            utilisateurConnecte
-
-        )
-
-    )
-
-    return [];
-
-
-
-
-
-    try{
-
-
-
-        const q = query(
-
-
-
-            collection(
-
-                db,
-
-                "ventes"
-
-            ),
-
-
-
-
-            where(
-
-                "userId",
-
-                "==",
-
-                auth.currentUser.uid
-
-            )
-
-
-
-        );
-
-
-
-
-
-        const resultat =
-
-        await getDocs(q);
-
-
-
-
-
-        ventesGlobales = [];
-
-
-
-
-
-        resultat.forEach((docSnap)=>{
-
-
-
-            ventesGlobales.push({
-
-
-                id:
-
-                docSnap.id,
-
-
-                ...docSnap.data()
-
-
-
-            });
-
-
-
-        });
-
-
-
-
-
-        afficherVentes();
-
-
-
-
-
-        return ventesGlobales;
-
-
-
-    }
-
-
-
-    catch(error){
-
-
-
-        console.error(
-
-            "Erreur chargement ventes:",
-
-            error
-
-        );
-
-
-
-        ventesGlobales = [];
-
-
-
-        return [];
-
-
-
-    }
-
-
-
-}
-
-
-
-
-
-
-
-// ===============================
-// ENREGISTRER UNE VENTE
-// ===============================
-
-
-export async function enregistrerVente(
+export async function supprimerProduit(
 
 
     utilisateurConnecte,
 
 
-    produit,
-
-
-    quantite,
-
-
-    benefice
-
+    id
 
 
 ){
@@ -259,6 +17,7 @@ export async function enregistrerVente(
 
 
     if(
+
 
         !utilisateurValide(
 
@@ -280,20 +39,48 @@ export async function enregistrerVente(
 
 
 
-        const quantiteFinale =
+        const reference =
 
-        nombreValide(
+        doc(
 
-            quantite
+            db,
+
+            "produits",
+
+            id
 
         );
 
 
 
 
+
+
+        const resultat =
+
+        await getDoc(
+
+            reference
+
+        );
+
+
+
+
+
+
         if(
 
-            quantiteFinale <= 0
+
+            !resultat.exists()
+
+            ||
+
+            resultat.data().userId
+
+            !==
+
+            auth.currentUser.uid
 
         )
 
@@ -303,11 +90,11 @@ export async function enregistrerVente(
 
 
 
-        const prix =
 
-        nombreValide(
 
-            produit.prixRevente
+        await deleteDoc(
+
+            reference
 
         );
 
@@ -315,88 +102,15 @@ export async function enregistrerVente(
 
 
 
-        const nouvelleVente = {
+
+        produits =
+
+        produits.filter(
+
+            (produit)=>
 
 
-            userId:
-
-            auth.currentUser.uid,
-
-
-
-            produit:
-
-            nettoyerTexte(
-
-                produit.nom
-
-            ),
-
-
-
-            quantiteVendue:
-
-
-            quantiteFinale,
-
-
-
-            prixVente:
-
-            prix,
-
-
-
-            montantTotal:
-
-
-            prix *
-
-            quantiteFinale,
-
-
-
-            benefice:
-
-
-            nombreValide(
-
-                benefice
-
-            ),
-
-
-
-            date:
-
-            serverTimestamp()
-
-
-
-        };
-
-
-
-
-
-        const ajout =
-
-        await addDoc(
-
-
-
-            collection(
-
-                db,
-
-                "ventes"
-
-            ),
-
-
-
-            nouvelleVente
-
+            produit.id !== id
 
 
         );
@@ -405,23 +119,10 @@ export async function enregistrerVente(
 
 
 
-        ventesGlobales.push({
+
+        afficherProduits();
 
 
-            id:
-
-            ajout.id,
-
-
-            ...nouvelleVente
-
-
-
-        });
-
-
-
-        afficherVentes();
 
 
 
@@ -433,19 +134,16 @@ export async function enregistrerVente(
     }
 
 
-
     catch(error){
-
 
 
         console.error(
 
-            "Erreur création vente:",
+            "Erreur suppression produit:",
 
             error
 
         );
-
 
 
         return false;
@@ -455,19 +153,29 @@ export async function enregistrerVente(
     }
 
 
+
 }
+
+
+
+
+
+
+
+
 // ===============================
-// OUVRIR FENETRE DE VENTE
+// MODIFIER PRODUIT
 // ===============================
 
 
-export function vendreProduit(
+export function modifierProduit(
 
-    id,
 
-    produits
+    id
+
 
 ){
+
 
 
     const produit =
@@ -480,6 +188,9 @@ export function vendreProduit(
 
 
 
+
+
+
     if(!produit)
 
     return false;
@@ -488,7 +199,295 @@ export function vendreProduit(
 
 
 
+
+    const champs = {
+
+
+
+        nom:
+
+        produit.nom || "",
+
+
+
+
+        prixGros:
+
+        produit.prixGros || "",
+
+
+
+
+        nombreCartons:
+
+        produit.nombreCartons || "",
+
+
+
+
+        produitsParCarton:
+
+        produit.produitsParCarton || "",
+
+
+
+
+        prixRevente:
+
+        produit.prixRevente || ""
+
+
+
+    };
+
+
+
+
+
+
+
+    Object.entries(champs)
+
+    .forEach(([id,valeur])=>{
+
+
+
+        const element =
+
+        document.getElementById(
+
+            id
+
+        );
+
+
+
+        if(element){
+
+
+            element.value = valeur;
+
+
+        }
+
+
+
+    });
+
+
+
+
+
+
+
+    produitModification = id;
+
+
+
+
+
+    return true;
+
+
+
+}
+
+
+
+
+
+
+
+
+// ===============================
+// ANNULER MODIFICATION
+// ===============================
+
+
+export function annulerModification(){
+
+
+
+    produitModification = null;
+
+
+
+}
+
+
+
+
+
+
+
+
+// ===============================
+// VIDER CHAMPS FORMULAIRE
+// ===============================
+
+
+export function viderChamps(){
+
+
+
+    const champs = [
+
+
+        "nom",
+
+
+        "prixGros",
+
+
+        "nombreCartons",
+
+
+        "produitsParCarton",
+
+
+        "prixRevente"
+
+
+
+    ];
+
+
+
+
+
+
+    champs.forEach((id)=>{
+
+
+
+        const element =
+
+        document.getElementById(
+
+            id
+
+        );
+
+
+
+
+
+
+        if(element){
+
+
+            element.value = "";
+
+
+        }
+
+
+
+    });
+
+
+
+}
+
+
+
+
+
+
+
+
+// ===============================
+// NETTOYAGE LOCAL
+// ===============================
+
+
+export function nettoyerProduits(){
+
+
+
+    produits = [];
+
+
+
+    produitModification = null;
+
+
+
+    afficherProduits();
+
+
+
+}
+
+
+
+
+
+
+
+
+// ===============================
+// FIN MODULE
+// ===============================
+
+
+console.log(
+
+    "Module produits chargé"
+
+);
+// ===============================
+// OUVRIR FENETRE VENTE
+// ===============================
+
+
+export function vendreProduit(
+
+
+    id,
+
+
+    produits = []
+
+
+){
+
+
+
+    if(!Array.isArray(produits))
+
+        return false;
+
+
+
+
+
+
+    const produit =
+
+    produits.find(
+
+        (p)=>p.id === id
+
+    );
+
+
+
+
+
+
+    if(!produit)
+
+        return false;
+
+
+
+
+
+
     produitVenteActuel = produit;
+
+
 
 
 
@@ -504,7 +503,10 @@ export function vendreProduit(
 
 
 
+
+
     if(nom){
+
 
 
         nom.textContent =
@@ -514,6 +516,7 @@ export function vendreProduit(
         +
 
         produit.nom;
+
 
 
     }
@@ -533,15 +536,19 @@ export function vendreProduit(
 
 
 
+
+
     if(quantite){
+
 
 
         quantite.value = "";
 
-        quantite.focus();
 
 
     }
+
+
 
 
 
@@ -557,7 +564,10 @@ export function vendreProduit(
 
 
 
+
+
     if(modal){
+
 
 
         modal.style.display =
@@ -565,11 +575,17 @@ export function vendreProduit(
         "block";
 
 
+
     }
 
 
 
+
+
+
+
     return true;
+
 
 
 }
@@ -588,7 +604,9 @@ export function vendreProduit(
 
 export async function confirmerVente(
 
+
     utilisateurConnecte
+
 
 ){
 
@@ -596,7 +614,8 @@ export async function confirmerVente(
 
     if(traitementVente)
 
-    return false;
+        return false;
+
 
 
 
@@ -604,9 +623,7 @@ export async function confirmerVente(
 
     if(
 
-        !utilisateurValide(
-
-            auth,
+        !verifierUtilisateur(
 
             utilisateurConnecte
 
@@ -614,7 +631,8 @@ export async function confirmerVente(
 
     )
 
-    return false;
+        return false;
+
 
 
 
@@ -635,7 +653,9 @@ export async function confirmerVente(
         return false;
 
 
+
     }
+
 
 
 
@@ -647,85 +667,6 @@ export async function confirmerVente(
 
 
         traitementVente = true;
-
-
-
-
-
-        const reference =
-
-        doc(
-
-            db,
-
-            "produits",
-
-            produitVenteActuel.id
-
-        );
-
-
-
-
-
-        const resultat =
-
-        await getDoc(reference);
-
-
-
-
-
-
-        if(
-
-            !resultat.exists()
-
-        ){
-
-
-            throw new Error(
-
-                "Produit introuvable"
-
-            );
-
-
-        }
-
-
-
-
-
-
-        const produit =
-
-        resultat.data();
-
-
-
-
-
-
-        if(
-
-            produit.userId
-
-            !==
-
-            auth.currentUser.uid
-
-        ){
-
-
-            throw new Error(
-
-                "Accès interdit"
-
-            );
-
-
-        }
 
 
 
@@ -757,34 +698,14 @@ export async function confirmerVente(
 
 
 
-        const stock =
 
-        nombreValide(
-
-            produit.stockTotal
-
-        );
-
-
-
-
-
-
-        if(
-
-            quantite <= 0
-
-            ||
-
-            quantite > stock
-
-        ){
+        if(quantite <= 0){
 
 
 
             alert(
 
-                "Stock insuffisant"
+                "Quantité invalide"
 
             );
 
@@ -793,96 +714,6 @@ export async function confirmerVente(
             return false;
 
 
-        }
-
-
-
-
-
-
-
-        const nouveauStock =
-
-        stock
-
-        -
-
-        quantite;
-
-
-
-
-
-
-        const beneficeUnitaire =
-
-
-
-        nombreValide(
-
-            produit.prixRevente
-
-        )
-
-        -
-
-        nombreValide(
-
-            produit.prixUnitaire
-
-        );
-
-
-
-
-
-
-
-        const beneficeTotal =
-
-
-
-        beneficeUnitaire
-
-        *
-
-        quantite;
-
-
-
-
-
-
-
-        const vente =
-
-        await enregistrerVente(
-
-            utilisateurConnecte,
-
-            produit,
-
-            quantite,
-
-            beneficeTotal
-
-        );
-
-
-
-
-
-
-        if(!vente){
-
-
-
-            throw new Error(
-
-                "Erreur enregistrement vente"
-
-            );
-
 
         }
 
@@ -891,32 +722,397 @@ export async function confirmerVente(
 
 
 
-        await updateDoc(
+
+        const produitId =
+
+        produitVenteActuel.id;
 
 
 
-            reference,
 
 
 
-            {
+
+        const reference =
+
+        doc(
+
+            db,
+
+            "produits",
+
+            produitId
+
+        );
 
 
-                stockTotal:
-
-
-                nouveauStock,
 
 
 
-                derniereVente:
+
+        let vente = null;
 
 
-                serverTimestamp()
+
+
+
+
+
+
+        await runTransaction(
+
+
+
+            db,
+
+
+
+            async(transaction)=>{
+
+
+
+
+
+
+                const produitSnap =
+
+                await transaction.get(
+
+                    reference
+
+                );
+
+
+
+
+
+
+
+                if(!produitSnap.exists())
+
+                    throw new Error(
+
+                        "Produit introuvable"
+
+                    );
+
+
+
+
+
+
+
+                const produit =
+
+                produitSnap.data();
+
+
+
+
+
+
+
+
+                if(
+
+                    produit.userId
+
+                    !==
+
+                    auth.currentUser.uid
+
+                ){
+
+
+
+                    throw new Error(
+
+                        "Accès refusé"
+
+                    );
+
+
+
+                }
+
+
+
+
+
+
+
+
+                const stock =
+
+                nombreValide(
+
+                    produit.stockTotal
+
+                );
+
+
+
+
+
+
+
+
+                if(
+
+                    quantite > stock
+
+                ){
+
+
+
+                    throw new Error(
+
+                        "Stock insuffisant"
+
+                    );
+
+
+
+                }
+
+
+
+
+
+
+
+
+                const prixRevente =
+
+                nombreValide(
+
+                    produit.prixRevente
+
+                );
+
+
+
+
+
+
+
+                const prixUnitaire =
+
+                nombreValide(
+
+                    produit.prixUnitaire
+
+                );
+
+
+
+
+
+
+
+                const benefice =
+
+
+
+                Math.max(
+
+                    0,
+
+                    (
+
+                        prixRevente
+
+                        -
+
+                        prixUnitaire
+
+                    )
+
+                    *
+
+                    quantite
+
+                );
+
+
+
+
+
+
+
+
+
+                vente = {
+
+
+
+
+                    userId:
+
+                    auth.currentUser.uid,
+
+
+
+
+                    produit:
+
+                    nettoyerTexte(
+
+                        produit.nom
+
+                    )
+
+                    || "Produit",
+
+
+
+
+
+
+                    quantiteVendue:
+
+                    quantite,
+
+
+
+
+
+
+                    prixVente:
+
+                    prixRevente,
+
+
+
+
+
+
+                    montantTotal:
+
+                    prixRevente
+
+                    *
+
+                    quantite,
+
+
+
+
+
+
+
+                    benefice:
+
+                    benefice,
+
+
+
+
+
+
+                    statut:
+
+                    "validée",
+
+
+
+
+
+
+                    date:
+
+                    serverTimestamp()
+
+
+
+                };
+
+
+
+
+
+
+
+                transaction.update(
+
+
+
+                    reference,
+
+
+
+                    {
+
+
+
+                        stockTotal:
+
+                        stock - quantite,
+
+
+
+
+
+                        derniereVente:
+
+                        serverTimestamp()
+
+
+
+                    }
+
+
+
+                );
+
+
 
 
 
             }
+
+
+
+        );
+
+
+
+
+
+
+
+
+
+        if(!vente)
+
+            throw new Error(
+
+                "Vente impossible"
+
+            );
+
+
+
+
+
+
+
+
+        await addDoc(
+
+
+
+            collection(
+
+                db,
+
+                "ventes"
+
+            ),
+
+
+
+            vente
 
 
 
@@ -941,8 +1137,8 @@ export async function confirmerVente(
 
 
 
-    }
 
+    }
 
 
     catch(error){
@@ -951,7 +1147,7 @@ export async function confirmerVente(
 
         console.error(
 
-            "Erreur confirmation vente:",
+            "Erreur création vente:",
 
             error
 
@@ -974,12 +1170,12 @@ export async function confirmerVente(
     }
 
 
-
     finally{
 
 
 
         traitementVente = false;
+
 
 
     }
@@ -995,6 +1191,7 @@ export async function confirmerVente(
 export function fermerVente(){
 
 
+
     const modal =
 
     document.getElementById(
@@ -1005,7 +1202,10 @@ export function fermerVente(){
 
 
 
+
+
     if(modal){
+
 
 
         modal.style.display =
@@ -1013,7 +1213,9 @@ export function fermerVente(){
         "none";
 
 
+
     }
+
 
 
 
@@ -1030,10 +1232,14 @@ export function fermerVente(){
 
 
 
+
+
     if(champ){
 
 
+
         champ.value = "";
+
 
 
     }
@@ -1044,7 +1250,7 @@ export function fermerVente(){
 
 
 
-    const nom =
+    const nomProduit =
 
     document.getElementById(
 
@@ -1054,12 +1260,16 @@ export function fermerVente(){
 
 
 
-    if(nom){
 
 
-        nom.textContent =
+    if(nomProduit){
+
+
+
+        nomProduit.textContent =
 
         "Produit sélectionné";
+
 
 
     }
@@ -1069,6 +1279,7 @@ export function fermerVente(){
 
 
 
+
     produitVenteActuel = null;
 
 
@@ -1084,173 +1295,11 @@ export function fermerVente(){
 
 
 // ===============================
-// AFFICHER TABLEAU DES VENTES
+// NETTOYAGE SESSION
 // ===============================
 
 
-export function afficherVentes(){
-
-
-
-    const tableau =
-
-    document.getElementById(
-
-        "tableauVentes"
-
-    );
-
-
-
-
-    if(!tableau)
-
-    return;
-
-
-
-
-
-    tableau.innerHTML = "";
-
-
-
-
-
-
-    ventesGlobales.forEach((vente)=>{
-
-
-
-        const ligne =
-
-        document.createElement(
-
-            "tr"
-
-        );
-
-
-
-
-
-        let date =
-
-        "Date inconnue";
-
-
-
-
-
-        if(
-
-            vente.date
-
-            &&
-
-            typeof vente.date.toDate === "function"
-
-        ){
-
-
-
-            date =
-
-            vente.date
-
-            .toDate()
-
-            .toLocaleString();
-
-
-
-        }
-
-
-
-
-
-
-
-        ligne.innerHTML = `
-
-
-        <td>
-
-        ${vente.produit || "Produit"}
-
-        </td>
-
-
-
-        <td>
-
-        ${vente.quantiteVendue || 0}
-
-        </td>
-
-
-
-        <td>
-
-        ${vente.montantTotal || 0} FCFA
-
-        </td>
-
-
-
-        <td>
-
-        ${vente.benefice || 0} FCFA
-
-        </td>
-
-
-
-        <td>
-
-        ${date}
-
-        </td>
-
-
-
-        `;
-
-
-
-
-
-
-        tableau.appendChild(
-
-            ligne
-
-        );
-
-
-
-
-    });
-
-
-
-}
-
-
-
-
-
-
-
-
-
-// ===============================
-// REINITIALISER VENTES
-// ===============================
-
-
-export function nettoyerVentes(){
+export function viderVentes(){
 
 
 
@@ -1259,6 +1308,12 @@ export function nettoyerVentes(){
 
 
     produitVenteActuel = null;
+
+
+
+    traitementVente = false;
+
+
 
 
 
@@ -1276,15 +1331,39 @@ export function nettoyerVentes(){
 
 
 // ===============================
-// CALCULS RAPIDES
+// PRODUIT ACTUEL
 // ===============================
 
 
-export function totalVentes(){
+export function getProduitVenteActuel(){
+
+
+
+    return produitVenteActuel;
+
+
+
+}
+
+
+
+
+
+
+
+
+// ===============================
+// TOTAL VENTES
+// ===============================
+
+
+export function calculerTotalVentes(){
 
 
 
     let total = 0;
+
+
 
 
 
@@ -1309,46 +1388,6 @@ export function totalVentes(){
 
 
 
-    return total;
-
-
-
-}
-
-
-
-
-
-
-
-export function totalBeneficeVentes(){
-
-
-
-    let total = 0;
-
-
-
-
-    ventesGlobales.forEach((vente)=>{
-
-
-
-        total +=
-
-        nombreValide(
-
-            vente.benefice
-
-        );
-
-
-
-    });
-
-
-
-
 
     return total;
 
@@ -1361,6 +1400,15 @@ export function totalBeneficeVentes(){
 
 
 
+
+
 // ===============================
-// FIN MODULE VENTES
+// FIN MODULE
 // ===============================
+
+
+console.log(
+
+    "Module ventes chargé"
+
+);
