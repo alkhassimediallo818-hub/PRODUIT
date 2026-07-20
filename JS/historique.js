@@ -1,17 +1,14 @@
 // ===============================
 // HISTORIQUE
 // VERSION RENFORCEE COMPLETE
-// ===============================
-
-
-// ===============================
-// IMPORTS
+// PARTIE 1/3
 // ===============================
 
 
 import {
 
     db,
+
     auth
 
 } from "../firebase.js";
@@ -21,12 +18,19 @@ import {
 import {
 
     collection,
+
     addDoc,
+
     getDocs,
+
     deleteDoc,
+
     doc,
+
     query,
+
     where,
+
     serverTimestamp
 
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
@@ -36,9 +40,12 @@ import {
 import {
 
     nettoyerTexte,
+
     utilisateurValide
 
 } from "./utils.js";
+
+
 
 
 
@@ -50,6 +57,8 @@ import {
 
 
 let historiqueGlobal = [];
+
+
 
 
 
@@ -67,6 +76,14 @@ export function getHistorique(){
 
 
 }
+
+
+
+
+
+
+
+
 // ===============================
 // ENREGISTRER HISTORIQUE
 // ===============================
@@ -74,16 +91,23 @@ export function getHistorique(){
 
 export async function enregistrerHistorique(
 
+
     utilisateurConnecte,
+
 
     type,
 
+
     produit
+
+
 
 ){
 
 
+
     if(
+
 
         !utilisateurValide(
 
@@ -100,10 +124,15 @@ export async function enregistrerHistorique(
 
 
 
+
+
+
     try{
 
 
+
         const action = {
+
 
 
             userId:
@@ -112,23 +141,39 @@ export async function enregistrerHistorique(
 
 
 
+
+
             type:
 
-            nettoyerTexte(type)
+            nettoyerTexte(
+
+                type
+
+            )
 
             ||
 
-            "action",
+            "Action",
+
+
+
 
 
 
             produit:
 
-            nettoyerTexte(produit)
+            nettoyerTexte(
+
+                produit
+
+            )
 
             ||
 
             "Inconnu",
+
+
+
 
 
 
@@ -137,13 +182,19 @@ export async function enregistrerHistorique(
             serverTimestamp()
 
 
+
         };
 
 
 
 
 
+
+
+
         await addDoc(
+
+
 
             collection(
 
@@ -153,9 +204,16 @@ export async function enregistrerHistorique(
 
             ),
 
+
+
             action
 
+
+
         );
+
+
+
 
 
 
@@ -169,6 +227,7 @@ export async function enregistrerHistorique(
     catch(error){
 
 
+
         console.error(
 
             "Erreur enregistrement historique:",
@@ -178,13 +237,18 @@ export async function enregistrerHistorique(
         );
 
 
+
         return false;
+
 
 
     }
 
 
+
 }
+
+
 
 
 
@@ -198,12 +262,16 @@ export async function enregistrerHistorique(
 
 export async function chargerHistorique(
 
+
     utilisateurConnecte
+
 
 ){
 
 
+
     if(
+
 
         !utilisateurValide(
 
@@ -220,10 +288,15 @@ export async function chargerHistorique(
 
 
 
+
+
+
     try{
 
 
+
         const q = query(
+
 
 
             collection(
@@ -233,6 +306,8 @@ export async function chargerHistorique(
                 "historique"
 
             ),
+
+
 
 
 
@@ -247,7 +322,11 @@ export async function chargerHistorique(
             )
 
 
+
         );
+
+
+
 
 
 
@@ -259,34 +338,44 @@ export async function chargerHistorique(
 
 
 
+
+
+
         historiqueGlobal = [];
 
 
 
 
-        resultat.forEach(
-
-            (docSnap)=>{
-
-
-                historiqueGlobal.push({
-
-
-                    id:
-
-                    docSnap.id,
 
 
 
-                    ...docSnap.data()
+
+        resultat.forEach((docSnap)=>{
 
 
-                });
+
+            historiqueGlobal.push({
 
 
-            }
 
-        );
+                id:
+
+                docSnap.id,
+
+
+
+                ...docSnap.data()
+
+
+
+            });
+
+
+
+        });
+
+
+
 
 
 
@@ -299,7 +388,13 @@ export async function chargerHistorique(
 
 
 
+
+
+
         return historiqueGlobal;
+
+
+
 
 
 
@@ -307,6 +402,7 @@ export async function chargerHistorique(
 
 
     catch(error){
+
 
 
         console.error(
@@ -330,13 +426,8 @@ export async function chargerHistorique(
     }
 
 
+
 }
-
-
-
-
-
-
 // ===============================
 // AFFICHER HISTORIQUE
 // ===============================
@@ -344,9 +435,11 @@ export async function chargerHistorique(
 
 export function afficherHistorique(
 
+
     historique = []
 
 ){
+
 
 
     const tableau =
@@ -359,9 +452,14 @@ export function afficherHistorique(
 
 
 
+
+
     if(!tableau)
 
-    return;
+        return;
+
+
+
 
 
 
@@ -370,143 +468,62 @@ export function afficherHistorique(
 
 
 
-    historique.forEach(
 
-        (action)=>{
 
 
-            const ligne =
+    historique.forEach((action)=>{
 
-            document.createElement(
 
-                "tr"
 
-            );
+        const ligne =
 
+        document.createElement(
 
+            "tr"
 
-            let date =
+        );
 
-            "Date inconnue";
 
 
 
-            if(
 
-                action.date
 
-                &&
 
-                typeof action.date.toDate === "function"
 
-            ){
+        let date =
 
+        "Date inconnue";
 
-                date =
 
-                action.date
 
-                .toDate()
 
-                .toLocaleString();
 
 
-            }
 
 
+        if(
 
 
-            const celluleType =
+            action.date
 
-            document.createElement(
+            &&
 
-                "td"
+            typeof action.date.toDate === "function"
 
-            );
 
+        ){
 
 
-            celluleType.textContent =
 
-            action.type
+            date =
 
-            ||
+            action.date
 
-            "Action";
+            .toDate()
 
+            .toLocaleString(
 
-
-
-
-            const celluleProduit =
-
-            document.createElement(
-
-                "td"
-
-            );
-
-
-
-            celluleProduit.textContent =
-
-            action.produit
-
-            ||
-
-            "Inconnu";
-
-
-
-
-
-            const celluleDate =
-
-            document.createElement(
-
-                "td"
-
-            );
-
-
-
-            celluleDate.textContent =
-
-            date;
-
-
-
-
-
-            ligne.appendChild(
-
-                celluleType
-
-            );
-
-
-
-            ligne.appendChild(
-
-                celluleProduit
-
-            );
-
-
-
-            ligne.appendChild(
-
-                celluleDate
-
-            );
-
-
-
-
-
-            tableau.appendChild(
-
-                ligne
+                "fr-FR"
 
             );
 
@@ -514,10 +531,90 @@ export function afficherHistorique(
 
         }
 
-    );
+
+
+
+
+
+
+
+        ligne.innerHTML = `
+
+
+
+        <td>
+
+        ${
+
+        action.type
+
+        ||
+
+        "Action"
+
+        }
+
+        </td>
+
+
+
+
+        <td>
+
+        ${
+
+        action.produit
+
+        ||
+
+        "Inconnu"
+
+        }
+
+        </td>
+
+
+
+
+        <td>
+
+        ${date}
+
+        </td>
+
+
+
+        `;
+
+
+
+
+
+
+
+        tableau.appendChild(
+
+            ligne
+
+        );
+
+
+
+
+    });
+
 
 
 }
+
+
+
+
+
+
+
+
+
 // ===============================
 // SUPPRIMER HISTORIQUE
 // ===============================
@@ -525,12 +622,16 @@ export function afficherHistorique(
 
 export async function viderHistorique(
 
+
     utilisateurConnecte
+
 
 ){
 
 
+
     if(
+
 
         !utilisateurValide(
 
@@ -547,7 +648,12 @@ export async function viderHistorique(
 
 
 
-    const confirmation = confirm(
+
+
+
+    const confirmation =
+
+    confirm(
 
         "Supprimer tout l'historique ?"
 
@@ -555,15 +661,25 @@ export async function viderHistorique(
 
 
 
+
+
+
+
     if(!confirmation)
 
-    return false;
+        return false;
+
+
+
 
 
 
 
 
     try{
+
+
+
 
 
         const q = query(
@@ -580,6 +696,8 @@ export async function viderHistorique(
 
 
 
+
+
             where(
 
                 "userId",
@@ -591,7 +709,11 @@ export async function viderHistorique(
             )
 
 
+
         );
+
+
+
 
 
 
@@ -605,48 +727,52 @@ export async function viderHistorique(
 
 
 
+
+
+
         const suppressions = [];
 
 
 
 
 
-        resultat.forEach(
-
-            (element)=>{
 
 
-
-                suppressions.push(
-
-
-                    deleteDoc(
+        resultat.forEach((element)=>{
 
 
-                        doc(
+
+            suppressions.push(
 
 
-                            db,
+
+                deleteDoc(
 
 
-                            "historique",
 
+                    doc(
 
-                            element.id
+                        db,
 
+                        "historique",
 
-                        )
-
+                        element.id
 
                     )
 
 
-                );
+
+                )
 
 
-            }
 
-        );
+            );
+
+
+
+        });
+
+
 
 
 
@@ -662,7 +788,13 @@ export async function viderHistorique(
 
 
 
+
+
+
         historiqueGlobal = [];
+
+
+
 
 
 
@@ -673,6 +805,9 @@ export async function viderHistorique(
             []
 
         );
+
+
+
 
 
 
@@ -691,6 +826,8 @@ export async function viderHistorique(
 
         console.error(
 
+
+
             "Erreur suppression historique:",
 
             error
@@ -706,7 +843,9 @@ export async function viderHistorique(
     }
 
 
+
 }
+
 
 
 
@@ -722,13 +861,32 @@ export async function viderHistorique(
 export function nettoyerHistorique(){
 
 
+
     historiqueGlobal = [];
+
 
 
 
     afficherHistorique(
 
         []
+
+    );
+
+
+
+}
+// ===============================
+// RECHARGER HISTORIQUE LOCAL
+// ===============================
+
+
+export function actualiserHistorique(){
+
+
+    afficherHistorique(
+
+        historiqueGlobal
 
     );
 
@@ -741,13 +899,74 @@ export function nettoyerHistorique(){
 
 
 
+
 // ===============================
-// EXPORT FIN MODULE
+// COMPTER ACTIONS
+// ===============================
+
+
+export function compterHistorique(){
+
+
+
+    return historiqueGlobal.length;
+
+
+
+}
+
+
+
+
+
+
+
+
+// ===============================
+// DERNIERE ACTION
+// ===============================
+
+
+export function derniereAction(){
+
+
+
+    if(
+
+        historiqueGlobal.length === 0
+
+    )
+
+        return null;
+
+
+
+
+
+    return historiqueGlobal[
+
+        historiqueGlobal.length - 1
+
+    ];
+
+
+
+}
+
+
+
+
+
+
+
+
+// ===============================
+// VERIFICATION MODULE
 // ===============================
 
 
 console.log(
 
-    "Module historique chargé correctement"
+    "Module historique chargé"
 
 );
