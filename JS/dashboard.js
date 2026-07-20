@@ -1,5 +1,5 @@
 // ===============================
-// DASHBOARD
+// DASHBOARD RENFORCE
 // ===============================
 
 
@@ -11,35 +11,76 @@ import {
 
 
 // ===============================
-// OUTILS AFFICHAGE
+// VARIABLE GRAPHIQUE
 // ===============================
 
 
-function afficherValeur(id, valeur){
+let graphiqueActuel = null;
+
+
+
+
+// ===============================
+// AFFICHAGE SECURISE
+// ===============================
+
+
+function afficherValeur(
+    id,
+    valeur
+){
 
     const element =
     document.getElementById(id);
 
 
-    if(element){
+    if(!element)
 
-        element.textContent = valeur;
+        return;
+
+
+    if(
+        valeur === undefined ||
+        valeur === null ||
+        Number.isNaN(valeur)
+    ){
+
+        element.textContent = "0";
+
+        return;
 
     }
+
+
+    element.textContent = valeur;
+
 
 }
 
 
 
 
+// ===============================
+// FORMAT FCFA
+// ===============================
 
-function formatFCFA(nombre){
+
+function formatFCFA(
+    nombre
+){
 
     return (
+
         nombreValide(nombre)
-        .toLocaleString("fr-FR")
+
+        .toLocaleString(
+            "fr-FR"
+        )
+
         +
+
         " FCFA"
+
     );
 
 }
@@ -49,7 +90,25 @@ function formatFCFA(nombre){
 
 
 // ===============================
-// RESUME COMPLET
+// VERIFICATION TABLEAUX
+// ===============================
+
+
+function tableauValide(
+    tableau
+){
+
+    return Array.isArray(tableau)
+        ? tableau
+        : [];
+
+}
+
+
+
+
+// ===============================
+// RESUME PRINCIPAL
 // ===============================
 
 
@@ -62,7 +121,17 @@ export function mettreAJourResume(
 ){
 
 
-    let stock = 0;
+    produits =
+    tableauValide(produits);
+
+
+
+    ventesGlobales =
+    tableauValide(ventesGlobales);
+
+
+
+    let stockTotal = 0;
 
     let stockFaible = 0;
 
@@ -70,39 +139,50 @@ export function mettreAJourResume(
 
 
 
-    produits.forEach((produit)=>{
+
+    produits.forEach(
+
+        (produit)=>{
 
 
-        const stockProduit =
+            const stock =
 
-        nombreValide(
+            nombreValide(
 
-            produit.stockTotal
+                produit.stockTotal
 
-        );
-
-
-
-        stock += stockProduit;
-
-
-
-        if(stockProduit <= 10)
-
-            stockFaible++;
+            );
 
 
 
-        beneficeStock +=
-
-        nombreValide(
-
-            produit.benefice
-
-        );
+            stockTotal += stock;
 
 
-    });
+
+            if(
+                stock <= 10
+                &&
+                stock > 0
+            ){
+
+                stockFaible++;
+
+            }
+
+
+
+            beneficeStock +=
+
+            nombreValide(
+
+                produit.benefice
+
+            );
+
+
+        }
+
+    );
 
 
 
@@ -118,25 +198,15 @@ export function mettreAJourResume(
 
 
 
-    afficherValeur(
-
-        "beneficeTotal",
-
-        formatFCFA(
-            beneficeStock
-        )
-
-    );
-
-
 
     afficherValeur(
 
         "stockRestant",
 
-        stock
+        stockTotal
 
     );
+
 
 
 
@@ -145,6 +215,19 @@ export function mettreAJourResume(
         "stockFaible",
 
         stockFaible
+
+    );
+
+
+
+
+    afficherValeur(
+
+        "beneficeTotal",
+
+        formatFCFA(
+            beneficeStock
+        )
 
     );
 
@@ -162,13 +245,16 @@ export function mettreAJourResume(
 
 
 
+
     afficherValeur(
 
         "resumeStock",
 
-        stock
+        stockTotal
 
     );
+
+
 
 
 
@@ -192,13 +278,16 @@ export function calculerResumeVentes(
 ){
 
 
+    ventesGlobales =
+    tableauValide(ventesGlobales);
+
+
+
     let chiffreAffaires = 0;
 
-    let benefice = 0;
+    let beneficeReel = 0;
 
-    let unites = 0;
-
-
+    let unitesVendues = 0;
 
     let ventesJour = 0;
 
@@ -210,64 +299,72 @@ export function calculerResumeVentes(
 
 
 
-    ventesGlobales.forEach((vente)=>{
+
+    ventesGlobales.forEach(
+
+        (vente)=>{
 
 
-        const montant =
+            const montant =
 
-        nombreValide(
+            nombreValide(
 
-            vente.montantTotal
+                vente.montantTotal
 
-        );
-
-
-
-        const gain =
-
-        nombreValide(
-
-            vente.benefice
-
-        );
+            );
 
 
 
-        const quantite =
+            const gain =
 
-        nombreValide(
+            nombreValide(
 
-            vente.quantiteVendue
+                vente.benefice
 
-        );
+            );
 
 
 
-        chiffreAffaires += montant;
+            const quantite =
 
-        benefice += gain;
+            nombreValide(
 
-        unites += quantite;
+                vente.quantiteVendue
+
+            );
 
 
 
 
-        if(
+            chiffreAffaires += montant;
 
-            vente.date &&
+            beneficeReel += gain;
 
-            typeof vente.date.toDate === "function"
-
-        ){
+            unitesVendues += quantite;
 
 
-            const dateVente =
-
-            vente.date.toDate();
 
 
 
             if(
+
+                vente.date
+
+                &&
+
+                typeof vente.date.toDate === "function"
+
+            ){
+
+
+                const dateVente =
+
+                vente.date.toDate();
+
+
+
+
+                const memeJour =
 
                 dateVente.getDate()
 
@@ -289,19 +386,13 @@ export function calculerResumeVentes(
 
                 ===
 
-                maintenant.getFullYear()
-
-            ){
-
-                ventesJour += montant;
-
-            }
+                maintenant.getFullYear();
 
 
 
 
 
-            if(
+                const memeMois =
 
                 dateVente.getMonth()
 
@@ -315,19 +406,34 @@ export function calculerResumeVentes(
 
                 ===
 
-                maintenant.getFullYear()
+                maintenant.getFullYear();
 
-            ){
 
-                ventesMois += montant;
+
+
+
+                if(memeJour){
+
+                    ventesJour += montant;
+
+                }
+
+
+
+                if(memeMois){
+
+                    ventesMois += montant;
+
+                }
+
+
 
             }
 
 
         }
 
-
-    });
+    );
 
 
 
@@ -337,9 +443,12 @@ export function calculerResumeVentes(
 
         "chiffreAffaires",
 
-        formatFCFA(chiffreAffaires)
+        formatFCFA(
+            chiffreAffaires
+        )
 
     );
+
 
 
 
@@ -347,9 +456,12 @@ export function calculerResumeVentes(
 
         "beneficeVentes",
 
-        formatFCFA(benefice)
+        formatFCFA(
+            beneficeReel
+        )
 
     );
+
 
 
 
@@ -357,9 +469,12 @@ export function calculerResumeVentes(
 
         "ventesJour",
 
-        formatFCFA(ventesJour)
+        formatFCFA(
+            ventesJour
+        )
 
     );
+
 
 
 
@@ -367,9 +482,12 @@ export function calculerResumeVentes(
 
         "ventesMois",
 
-        formatFCFA(ventesMois)
+        formatFCFA(
+            ventesMois
+        )
 
     );
+
 
 
 
@@ -377,9 +495,10 @@ export function calculerResumeVentes(
 
         "unitesVendues",
 
-        unites
+        unitesVendues
 
     );
+
 
 
 
@@ -399,9 +518,10 @@ export function calculerResumeVentes(
 
         "resumeVentes",
 
-        unites
+        unitesVendues
 
     );
+
 
 
 
@@ -409,9 +529,12 @@ export function calculerResumeVentes(
 
         "resumeCA",
 
-        formatFCFA(chiffreAffaires)
+        formatFCFA(
+            chiffreAffaires
+        )
 
     );
+
 
 
 
@@ -419,7 +542,9 @@ export function calculerResumeVentes(
 
         "resumeBenefice",
 
-        formatFCFA(benefice)
+        formatFCFA(
+            beneficeReel
+        )
 
     );
 
@@ -434,7 +559,12 @@ export function calculerResumeVentes(
     );
 
 
-        }
+}
+
+
+
+
+
 // ===============================
 // PRODUIT VEDETTE
 // ===============================
@@ -447,88 +577,105 @@ export function afficherProduitVedette(
 ){
 
 
+    ventesGlobales =
+    tableauValide(ventesGlobales);
+
+
+
     const compteur = {};
 
 
 
-    ventesGlobales.forEach((vente)=>{
+
+    ventesGlobales.forEach(
+
+        (vente)=>{
 
 
-        const nom =
+            const nom =
 
-        vente.produit
-
-        ||
-
-        "Produit";
-
-
-
-        compteur[nom] =
-
-        (
-
-            compteur[nom]
+            vente.produit
 
             ||
 
-            0
-
-        )
-
-        +
-
-        nombreValide(
-
-            vente.quantiteVendue
-
-        );
-
-
-    });
+            "Produit";
 
 
 
+            compteur[nom] =
+
+            (
+
+                compteur[nom]
+
+                ||
+
+                0
+
+            )
+
+            +
+
+            nombreValide(
+
+                vente.quantiteVendue
+
+            );
 
 
-    let meilleur = "Aucun";
+
+        }
+
+    );
+
+
+
+
+    let meilleurProduit =
+    "Aucun";
+
+
 
     let maximum = 0;
 
 
 
+
     Object.keys(compteur)
 
-    .forEach((nom)=>{
+    .forEach(
+
+        (nom)=>{
 
 
-        if(
+            if(
 
-            compteur[nom]
+                compteur[nom]
 
-            >
+                >
 
-            maximum
+                maximum
 
-        ){
-
-
-            maximum =
-
-            compteur[nom];
+            ){
 
 
+                maximum =
 
-            meilleur =
+                compteur[nom];
 
-            nom;
+
+
+                meilleurProduit =
+
+                nom;
+
+
+            }
 
 
         }
 
-
-    });
-
+    );
 
 
 
@@ -537,19 +684,14 @@ export function afficherProduitVedette(
 
         "produitVedette",
 
-        meilleur
+        meilleurProduit
 
     );
 
 
 }
-
-
-
-
-
 // ===============================
-// CALCUL STOCK SIMPLE
+// CALCUL STOCK RESTANT
 // ===============================
 
 
@@ -560,23 +702,32 @@ export function calculerStockRestant(
 ){
 
 
+    produits =
+    tableauValide(produits);
+
+
+
     let total = 0;
 
 
 
-    produits.forEach((produit)=>{
+    produits.forEach(
+
+        (produit)=>{
 
 
-        total +=
+            total +=
 
-        nombreValide(
+            nombreValide(
 
-            produit.stockTotal
+                produit.stockTotal
 
-        );
+            );
 
 
-    });
+        }
+
+    );
 
 
 
@@ -588,6 +739,9 @@ export function calculerStockRestant(
         total
 
     );
+
+
+    return total;
 
 
 }
@@ -607,37 +761,53 @@ export function viderDashboard(){
     const valeurs = {
 
 
-        "nbProduits":0,
+        nbProduits:0,
 
-        "beneficeTotal":"0 FCFA",
 
-        "chiffreAffaires":"0 FCFA",
+        beneficeTotal:"0 FCFA",
 
-        "beneficeVentes":"0 FCFA",
 
-        "stockRestant":0,
+        chiffreAffaires:"0 FCFA",
 
-        "ventesJour":"0 FCFA",
 
-        "ventesMois":"0 FCFA",
+        beneficeVentes:"0 FCFA",
 
-        "produitVedette":"Aucun",
 
-        "unitesVendues":0,
+        stockRestant:0,
 
-        "nbTransactions":0,
 
-        "stockFaible":0,
+        ventesJour:"0 FCFA",
 
-        "resumeProduits":0,
 
-        "resumeStock":0,
+        ventesMois:"0 FCFA",
 
-        "resumeVentes":0,
 
-        "resumeCA":"0 FCFA",
+        produitVedette:"Aucun",
 
-        "resumeBenefice":"0 FCFA"
+
+        unitesVendues:0,
+
+
+        nbTransactions:0,
+
+
+        stockFaible:0,
+
+
+        resumeProduits:0,
+
+
+        resumeStock:0,
+
+
+        resumeVentes:0,
+
+
+        resumeCA:"0 FCFA",
+
+
+        resumeBenefice:"0 FCFA"
+
 
 
     };
@@ -646,21 +816,29 @@ export function viderDashboard(){
 
 
 
-    Object.keys(valeurs)
+    Object.entries(valeurs)
 
-    .forEach((id)=>{
+    .forEach(
 
-
-        afficherValeur(
-
-            id,
-
-            valeurs[id]
-
-        );
+        ([id,valeur])=>{
 
 
-    });
+            afficherValeur(
+
+                id,
+
+                valeur
+
+            );
+
+
+        }
+
+    );
+
+
+
+    detruireGraphique();
 
 
 }
@@ -669,8 +847,57 @@ export function viderDashboard(){
 
 
 
+
 // ===============================
-// GRAPHIQUE VENTES
+// DETRUIRE GRAPHIQUE EXISTANT
+// ===============================
+
+
+function detruireGraphique(){
+
+
+    if(graphiqueActuel){
+
+
+        try{
+
+
+            graphiqueActuel.destroy();
+
+
+        }
+
+
+        catch(error){
+
+
+            console.warn(
+
+                "Erreur destruction graphique:",
+
+                error
+
+            );
+
+
+        }
+
+
+        graphiqueActuel = null;
+
+
+    }
+
+
+}
+
+
+
+
+
+
+// ===============================
+// GRAPHIQUE VENTES SECURISE
 // ===============================
 
 
@@ -679,6 +906,11 @@ export function preparerGraphique(
     ventesGlobales = []
 
 ){
+
+
+    ventesGlobales =
+    tableauValide(ventesGlobales);
+
 
 
     const canvas =
@@ -699,9 +931,25 @@ export function preparerGraphique(
 
         typeof Chart === "undefined"
 
-    )
+    ){
+
+        console.warn(
+
+            "Graphique indisponible"
+
+        );
 
         return;
+
+
+    }
+
+
+
+
+
+    detruireGraphique();
+
 
 
 
@@ -709,63 +957,80 @@ export function preparerGraphique(
 
 
 
-    ventesGlobales.forEach((vente)=>{
 
 
-        let date = "Inconnu";
+    ventesGlobales.forEach(
+
+        (vente)=>{
+
+
+            let date =
+
+            "Inconnu";
 
 
 
-        if(
+            if(
 
-            vente.date
+                vente.date
 
-            &&
+                &&
 
-            typeof vente.date.toDate === "function"
+                typeof vente.date.toDate === "function"
 
-        ){
+            ){
 
 
-            date =
+                date =
 
-            vente.date
+                vente.date
 
-            .toDate()
+                .toDate()
 
-            .toLocaleDateString();
+                .toLocaleDateString(
+
+                    "fr-FR"
+
+                );
+
+
+            }
+
+
+
+
+
+            donnees[date] =
+
+            (
+
+                donnees[date]
+
+                ||
+
+                0
+
+            )
+
+            +
+
+            nombreValide(
+
+                vente.montantTotal
+
+            );
+
 
 
         }
 
-
-
-        donnees[date] =
-
-        (
-
-            donnees[date]
-
-            ||
-
-            0
-
-        )
-
-        +
-
-        nombreValide(
-
-            vente.montantTotal
-
-        );
-
-
-    });
+    );
 
 
 
 
+
+    graphiqueActuel =
 
     new Chart(
 
@@ -775,6 +1040,7 @@ export function preparerGraphique(
 
 
             type:"line",
+
 
 
             data:{
@@ -806,16 +1072,23 @@ export function preparerGraphique(
             },
 
 
+
             options:{
 
 
-                responsive:true
+                responsive:true,
+
+
+
+                maintainAspectRatio:false
+
 
 
             }
 
 
         }
+
 
     );
 
