@@ -87,6 +87,7 @@ getAuth(app);
 
 export const provider =
 new GoogleAuthProvider();
+auth.languageCode = "fr";
 
 
 
