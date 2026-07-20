@@ -15,11 +15,11 @@ import {
 
     connexionGoogle as lancerConnexionGoogle,
 
-    deconnexionGoogle as lancerDeconnexionGoogle
+    deconnexionGoogle as lancerDeconnexionGoogle,
+
+    verifierConnexionGoogle
 
 } from "./firebase.js";
-
-
 
 import {
 
@@ -100,6 +100,12 @@ console.log(
     "MAIN JS CHARGE"
 );
 
+
+(async()=>{
+
+    await verifierConnexionGoogle();
+
+})();
 
 
 
