@@ -11,7 +11,8 @@ import {
 import {
     getAuth,
     GoogleAuthProvider,
-    signInWithPopup,
+    signInWithRedirect,
+    getRedirectResult,
     signOut,
     onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
@@ -62,7 +63,7 @@ const firebaseConfig = {
 
 
 // ===============================
-// INITIALISATION
+// INITIALISATION FIREBASE
 // ===============================
 
 
@@ -81,13 +82,33 @@ export const db =
 getFirestore(app);
 
 
+
 export const auth =
 getAuth(app);
 
 
+
 export const provider =
 new GoogleAuthProvider();
+
+
+
 auth.languageCode = "fr";
+
+
+
+
+// ===============================
+// CONFIG GOOGLE
+// ===============================
+
+
+provider.setCustomParameters({
+
+    prompt: "select_account"
+
+});
+
 
 
 
@@ -112,9 +133,7 @@ export async function connexionGoogle(){
 
 
 
-        const resultat =
-
-        await signInWithPopup(
+        await signInWithRedirect(
 
             auth,
 
@@ -122,9 +141,6 @@ export async function connexionGoogle(){
 
         );
 
-
-
-        return resultat.user;
 
 
     }
@@ -135,7 +151,7 @@ export async function connexionGoogle(){
 
         console.error(
 
-            "Erreur connexion Google :",
+            "Erreur lancement connexion Google :",
 
             error
 
@@ -143,6 +159,72 @@ export async function connexionGoogle(){
 
 
         throw error;
+
+
+    }
+
+
+}
+
+
+
+
+// ===============================
+// VERIFICATION RETOUR GOOGLE
+// ===============================
+
+
+export async function verifierConnexionGoogle(){
+
+
+    try{
+
+
+        const resultat =
+
+        await getRedirectResult(auth);
+
+
+
+        if(resultat){
+
+
+            console.log(
+
+                "Connexion Google réussie :",
+
+                resultat.user.email
+
+            );
+
+
+
+            return resultat.user;
+
+
+        }
+
+
+
+        return null;
+
+
+    }
+
+
+    catch(error){
+
+
+        console.error(
+
+            "Erreur retour Google :",
+
+            error
+
+        );
+
+
+        return null;
 
 
     }
@@ -167,6 +249,13 @@ export async function deconnexionGoogle(){
         await signOut(auth);
 
 
+        console.log(
+
+            "Utilisateur déconnecté"
+
+        );
+
+
         return true;
 
 
@@ -178,7 +267,7 @@ export async function deconnexionGoogle(){
 
         console.error(
 
-            "Erreur déconnexion Google :",
+            "Erreur déconnexion :",
 
             error
 
@@ -192,3 +281,17 @@ export async function deconnexionGoogle(){
 
 
 }
+
+
+
+
+// ===============================
+// EXPORT AUTH STATE
+// ===============================
+
+
+export {
+
+    onAuthStateChanged
+
+};
