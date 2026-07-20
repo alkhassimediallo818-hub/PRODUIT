@@ -1,6 +1,13 @@
 // ===============================
-// IMPORTS
+// MAIN APPLICATION
+// VERSION RENFORCEE
 // ===============================
+
+
+// ===============================
+// IMPORT FIREBASE
+// ===============================
+
 
 import {
 
@@ -13,12 +20,19 @@ import {
 } from "./firebase.js";
 
 
+
 import {
 
     onAuthStateChanged
 
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
+
+
+
+// ===============================
+// IMPORT MODULES
+// ===============================
 
 
 import {
@@ -39,6 +53,7 @@ import {
 
 
 
+
 import {
 
     chargerVentes,
@@ -53,6 +68,7 @@ import {
 
 
 
+
 import {
 
     chargerHistorique,
@@ -60,6 +76,7 @@ import {
     viderHistorique as supprimerHistorique
 
 } from "./JS/historique.js";
+
 
 
 
@@ -77,12 +94,12 @@ import {
 
 
 
-console.log("MAIN JS CHARGE");
+
 
 console.log(
-    "connexionGoogle export firebase :",
-    typeof lancerConnexionGoogle
+    "MAIN JS CHARGE"
 );
+
 
 
 
@@ -103,32 +120,64 @@ let ventesGlobales = [];
 
 
 
+
 // ===============================
 // VERIFICATION MODULES
 // ===============================
 
 
-if(
-    typeof lancerConnexionGoogle !== "function"
+function verifierFonction(
+
+    nom,
+
+    fonction
+
 ){
 
-    console.error(
-        "connexionGoogle introuvable dans firebase.js"
-    );
+
+    if(typeof fonction !== "function"){
+
+
+        console.error(
+
+            "Module manquant :",
+
+            nom
+
+        );
+
+
+        return false;
+
+    }
+
+
+    return true;
+
 
 }
 
 
 
-if(
-    typeof lancerDeconnexionGoogle !== "function"
-){
 
-    console.error(
-        "deconnexionGoogle introuvable dans firebase.js"
-    );
 
-}
+verifierFonction(
+
+    "connexionGoogle",
+
+    lancerConnexionGoogle
+
+);
+
+
+verifierFonction(
+
+    "deconnexionGoogle",
+
+    lancerDeconnexionGoogle
+
+);
+
 
 
 
@@ -145,11 +194,15 @@ window.connexionGoogle = async function(){
 
 
         console.log(
+
             "Connexion Google..."
+
         );
 
 
+
         await lancerConnexionGoogle();
+
 
 
     }
@@ -159,13 +212,19 @@ window.connexionGoogle = async function(){
 
 
         console.error(
+
             "Erreur connexion Google :",
+
             error
+
         );
 
 
+
         alert(
+
             error.message
+
         );
 
 
@@ -173,6 +232,7 @@ window.connexionGoogle = async function(){
 
 
 };
+
 
 
 
@@ -191,6 +251,7 @@ window.deconnexionGoogle = async function(){
         await lancerDeconnexionGoogle();
 
 
+
     }
 
 
@@ -198,8 +259,11 @@ window.deconnexionGoogle = async function(){
 
 
         console.error(
+
             "Erreur déconnexion :",
+
             error
+
         );
 
 
@@ -211,8 +275,9 @@ window.deconnexionGoogle = async function(){
 
 
 
+
 // ===============================
-// AUTHENTIFICATION
+// AUTHENTIFICATION FIREBASE
 // ===============================
 
 
@@ -229,52 +294,83 @@ onAuthStateChanged(
             if(user){
 
 
+
                 utilisateurConnecte = true;
 
 
+
+
                 console.log(
-                    "Utilisateur connecté :",
+
+                    "Connecté :",
+
                     user.email
+
                 );
 
 
 
                 produits =
-                await chargerProduits()
+
+                await chargerProduits(
+
+                    utilisateurConnecte
+
+                )
+
                 || [];
+
 
 
 
                 ventesGlobales =
-                await chargerVentes()
+
+                await chargerVentes(
+
+                    utilisateurConnecte
+
+                )
+
                 || [];
 
 
 
-                await chargerHistorique();
+
+                await chargerHistorique(
+
+                    utilisateurConnecte
+
+                );
 
 
 
                 mettreAJourResume(
+
                     produits,
+
                     ventesGlobales
+
                 );
 
 
 
                 calculerStockRestant(
+
                     produits
+
                 );
 
 
 
                 preparerGraphique(
+
                     ventesGlobales
+
                 );
 
 
-            }
 
+            }
 
             else{
 
@@ -289,18 +385,14 @@ onAuthStateChanged(
 
 
 
-                if(
-                    typeof viderDashboard === "function"
-                ){
-
-                    viderDashboard();
-
-                }
+                viderDashboard();
 
 
 
                 console.log(
-                    "Aucune session active"
+
+                    "Aucun utilisateur connecté"
+
                 );
 
 
@@ -314,8 +406,11 @@ onAuthStateChanged(
 
 
             console.error(
-                "Erreur chargement session :",
+
+                "Erreur session Firebase :",
+
                 error
+
             );
 
 
@@ -324,9 +419,10 @@ onAuthStateChanged(
 
     }
 
+
 );
 // ===============================
-// GESTION VENTE
+// GESTION DES VENTES
 // ===============================
 
 
@@ -351,7 +447,13 @@ window.vendreProduit = function(id){
     try{
 
 
-        vendreProduit(id);
+        vendreProduit(
+
+            id,
+
+            produits
+
+        );
 
 
 
@@ -362,8 +464,11 @@ window.vendreProduit = function(id){
 
 
         console.error(
+
             "Erreur ouverture vente :",
+
             error
+
         );
 
 
@@ -376,7 +481,6 @@ window.vendreProduit = function(id){
 
 
 
-
 window.confirmerVente = async function(){
 
 
@@ -384,7 +488,9 @@ window.confirmerVente = async function(){
 
 
         alert(
+
             "Connectez-vous d'abord"
+
         );
 
 
@@ -400,7 +506,11 @@ window.confirmerVente = async function(){
 
         const resultat =
 
-        await confirmerVente();
+        await confirmerVente(
+
+            utilisateurConnecte
+
+        );
 
 
 
@@ -413,15 +523,27 @@ window.confirmerVente = async function(){
 
         produits =
 
-        await chargerProduits()
+        await chargerProduits(
+
+            utilisateurConnecte
+
+        )
+
         || [];
+
 
 
 
         ventesGlobales =
 
-        await chargerVentes()
+        await chargerVentes(
+
+            utilisateurConnecte
+
+        )
+
         || [];
+
 
 
 
@@ -436,6 +558,7 @@ window.confirmerVente = async function(){
 
 
 
+
         calculerStockRestant(
 
             produits
@@ -444,11 +567,13 @@ window.confirmerVente = async function(){
 
 
 
+
         preparerGraphique(
 
             ventesGlobales
 
         );
+
 
 
     }
@@ -482,7 +607,6 @@ window.confirmerVente = async function(){
 
 
 
-
 window.fermerVente = function(){
 
 
@@ -490,6 +614,7 @@ window.fermerVente = function(){
 
 
         fermerFenetreVente();
+
 
 
     }
@@ -519,11 +644,12 @@ window.fermerVente = function(){
 
 
 // ===============================
-// PRODUITS
+// GESTION PRODUITS
 // ===============================
 
 
 window.ajouterProduit = async function(){
+
 
 
     if(!utilisateurConnecte){
@@ -549,13 +675,13 @@ window.ajouterProduit = async function(){
         const donnees = {
 
 
-
             nom:
 
             document
+
             .getElementById("nom")
-            ?.value
-            ?.trim(),
+
+            ?.value,
 
 
 
@@ -564,10 +690,13 @@ window.ajouterProduit = async function(){
             Number(
 
                 document
+
                 .getElementById("prixGros")
+
                 ?.value
 
             ),
+
 
 
 
@@ -576,10 +705,13 @@ window.ajouterProduit = async function(){
             Number(
 
                 document
+
                 .getElementById("nombreCartons")
+
                 ?.value
 
             ),
+
 
 
 
@@ -588,10 +720,13 @@ window.ajouterProduit = async function(){
             Number(
 
                 document
+
                 .getElementById("produitsParCarton")
+
                 ?.value
 
             ),
+
 
 
 
@@ -600,7 +735,9 @@ window.ajouterProduit = async function(){
             Number(
 
                 document
+
                 .getElementById("prixRevente")
+
                 ?.value
 
             )
@@ -611,13 +748,18 @@ window.ajouterProduit = async function(){
 
 
 
+
         const resultat =
 
         await ajouterProduit(
 
+            utilisateurConnecte,
+
             donnees
 
         );
+
+
 
 
 
@@ -628,10 +770,18 @@ window.ajouterProduit = async function(){
 
 
 
+
         produits =
 
-        await chargerProduits()
+        await chargerProduits(
+
+            utilisateurConnecte
+
+        )
+
         || [];
+
+
 
 
 
@@ -645,6 +795,8 @@ window.ajouterProduit = async function(){
 
 
 
+
+
         calculerStockRestant(
 
             produits
@@ -653,8 +805,9 @@ window.ajouterProduit = async function(){
 
 
 
-        viderChamps();
 
+
+        viderChamps();
 
 
         resetModification();
@@ -676,6 +829,7 @@ window.ajouterProduit = async function(){
         );
 
 
+
         alert(
 
             "Impossible d'enregistrer le produit"
@@ -687,6 +841,7 @@ window.ajouterProduit = async function(){
 
 
 };
+
 
 
 
@@ -707,6 +862,7 @@ window.modifierProduit = function(id){
         const resultat =
 
         modifierProduit(id);
+
 
 
 
@@ -778,7 +934,13 @@ window.supprimerProduit = async function(id){
 
         const resultat =
 
-        await supprimerProduit(id);
+        await supprimerProduit(
+
+            utilisateurConnecte,
+
+            id
+
+        );
 
 
 
@@ -791,8 +953,15 @@ window.supprimerProduit = async function(id){
 
         produits =
 
-        await chargerProduits()
+        await chargerProduits(
+
+            utilisateurConnecte
+
+        )
+
         || [];
+
+
 
 
 
@@ -806,11 +975,13 @@ window.supprimerProduit = async function(id){
 
 
 
+
         calculerStockRestant(
 
             produits
 
         );
+
 
 
     }
@@ -833,7 +1004,7 @@ window.supprimerProduit = async function(id){
 
 };
 // ===============================
-// HISTORIQUE
+// GESTION HISTORIQUE
 // ===============================
 
 
@@ -844,7 +1015,9 @@ window.viderHistorique = async function(){
 
 
         alert(
+
             "Connectez-vous d'abord"
+
         );
 
 
@@ -858,7 +1031,11 @@ window.viderHistorique = async function(){
     try{
 
 
-        await supprimerHistorique();
+        await supprimerHistorique(
+
+            utilisateurConnecte
+
+        );
 
 
 
@@ -867,6 +1044,7 @@ window.viderHistorique = async function(){
             "Historique supprimé"
 
         );
+
 
 
     }
@@ -911,6 +1089,7 @@ window.annulerModification = function(){
         viderChamps();
 
 
+
     }
 
 
@@ -938,7 +1117,7 @@ window.annulerModification = function(){
 
 
 // ===============================
-// ACTUALISATION DONNEES
+// ACTUALISATION AUTOMATIQUE
 // ===============================
 
 
@@ -956,15 +1135,27 @@ async function actualiserDonnees(){
 
         produits =
 
-        await chargerProduits()
+        await chargerProduits(
+
+            utilisateurConnecte
+
+        )
+
         || [];
+
 
 
 
         ventesGlobales =
 
-        await chargerVentes()
+        await chargerVentes(
+
+            utilisateurConnecte
+
+        )
+
         || [];
+
 
 
 
@@ -979,6 +1170,8 @@ async function actualiserDonnees(){
 
 
 
+
+
         calculerStockRestant(
 
             produits
@@ -987,11 +1180,14 @@ async function actualiserDonnees(){
 
 
 
+
+
         preparerGraphique(
 
             ventesGlobales
 
         );
+
 
 
     }
@@ -1042,7 +1238,10 @@ window.addEventListener(
 
     }
 
+
 );
+
+
 
 
 
@@ -1065,6 +1264,7 @@ window.addEventListener(
 
     }
 
+
 );
 
 
@@ -1074,7 +1274,7 @@ window.addEventListener(
 
 
 // ===============================
-// SYNCHRONISATION AUTOMATIQUE
+// SYNCHRONISATION 5 MINUTES
 // ===============================
 
 
@@ -1100,9 +1300,12 @@ setInterval(
         }
 
 
+
     },
 
+
     300000
+
 
 );
 
@@ -1111,11 +1314,14 @@ setInterval(
 
 
 
+
 // ===============================
-// VERIFICATION FINAL
+// VERIFICATION FINALE
 // ===============================
 
 
 console.log(
+
     "Application prête"
+
 );
