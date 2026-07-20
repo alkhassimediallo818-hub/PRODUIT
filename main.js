@@ -411,6 +411,11 @@ window.deconnexionGoogle = async function(){
 // ===============================
 
 
+// ===============================
+// AUTHENTIFICATION FIREBASE
+// ===============================
+
+
 onAuthStateChanged(
 
     auth,
@@ -418,36 +423,40 @@ onAuthStateChanged(
     async(user)=>{
 
 
-
-        console.log(
-
-            "Etat Firebase :",
-
-            user
-
-        );
+        try{
 
 
+            // Mise à jour état connexion
 
+            mettreEtatUtilisateur(
 
+                user
 
-        mettreEtatUtilisateur(
-
-            user
-
-        );
+            );
 
 
 
 
-
-        if(user){
-
+            if(user){
 
 
-            try{
+
+                utilisateurConnecte = true;
 
 
+
+                console.log(
+
+                    "Utilisateur connecté :",
+
+                    user.email
+
+                );
+
+
+
+
+                // Chargement données utilisateur
 
                 produits =
 
@@ -457,9 +466,7 @@ onAuthStateChanged(
 
                 )
 
-                ||
-
-                [];
+                || [];
 
 
 
@@ -473,9 +480,7 @@ onAuthStateChanged(
 
                 )
 
-                ||
-
-                [];
+                || [];
 
 
 
@@ -490,6 +495,8 @@ onAuthStateChanged(
 
 
 
+
+                // Mise à jour tableau de bord
 
                 mettreAJourResume(
 
@@ -521,63 +528,57 @@ onAuthStateChanged(
 
 
 
+            }
+
+            else{
+
+
+
+                utilisateurConnecte = false;
+
+
+
+                produits = [];
+
+                ventesGlobales = [];
+
+
+
+
+
+                viderDashboard();
+
+
+
 
 
                 console.log(
 
-                    "Données chargées après connexion"
+                    "Aucun utilisateur connecté"
 
                 );
 
 
 
             }
-
-
-
-            catch(error){
-
-
-
-                console.error(
-
-                    "Erreur chargement données :",
-
-                    error
-
-                );
-
-
-            }
-
-
 
 
 
         }
 
 
-        else{
+        catch(error){
 
 
 
-            produits = [];
+            console.error(
 
+                "Erreur session Firebase :",
 
-
-            ventesGlobales = [];
-
-
-
-            viderDashboard();
-
-
-
-            console.log(
-
-                "Utilisateur déconnecté"
+                error
 
             );
+
 
 
         }
@@ -585,7 +586,6 @@ onAuthStateChanged(
 
 
     }
-
 
 );
 // ===============================
