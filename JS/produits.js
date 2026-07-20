@@ -1,5 +1,6 @@
 // ===============================
 // PRODUITS
+// VERSION RENFORCEE
 // ===============================
 
 
@@ -76,7 +77,7 @@ export function estEnModification(){
 
 
 // ===============================
-// CREATION PRODUIT
+// CREER PRODUIT
 // ===============================
 
 
@@ -93,12 +94,12 @@ function creerProduit(data){
 
 
 
-    const cartons =
+    const nombreCartons =
     nombreValide(data.nombreCartons);
 
 
 
-    const parCarton =
+    const produitsParCarton =
     nombreValide(data.produitsParCarton);
 
 
@@ -108,15 +109,22 @@ function creerProduit(data){
 
 
 
+
     const stockTotal =
 
-    cartons * parCarton;
+    nombreCartons *
+
+    produitsParCarton;
+
 
 
 
     const prixTotalStock =
 
-    prixGros * cartons;
+    prixGros *
+
+    nombreCartons;
+
 
 
 
@@ -134,17 +142,22 @@ function creerProduit(data){
 
 
 
+
     const benefice =
 
     (
 
-        prixRevente * stockTotal
+        prixRevente *
+
+        stockTotal
 
     )
 
     -
 
     prixTotalStock;
+
+
 
 
 
@@ -157,14 +170,10 @@ function creerProduit(data){
         prixGros,
 
 
-        nombreCartons:
-
-        cartons,
+        nombreCartons,
 
 
-        produitsParCarton:
-
-        parCarton,
+        produitsParCarton,
 
 
         prixTotalStock,
@@ -173,10 +182,16 @@ function creerProduit(data){
         stockTotal,
 
 
+        stockUnitaire:
+
+        prixUnitaire,
+
+
         prixUnitaire,
 
 
         prixRevente,
+
 
 
         benefice:
@@ -201,9 +216,8 @@ function creerProduit(data){
 
 
 
-
 // ===============================
-// CHARGER PRODUITS
+// CHARGER PRODUITS FIRESTORE
 // ===============================
 
 
@@ -230,7 +244,9 @@ export async function chargerProduits(
 
 
 
+
     try{
+
 
 
         const q = query(
@@ -261,9 +277,13 @@ export async function chargerProduits(
 
 
 
-        const snapshot =
+
+
+        const resultat =
 
         await getDocs(q);
+
+
 
 
 
@@ -271,7 +291,17 @@ export async function chargerProduits(
 
 
 
-        snapshot.forEach((docSnap)=>{
+
+
+        resultat.forEach((docSnap)=>{
+
+
+
+            const data =
+
+            docSnap.data();
+
+
 
 
             produits.push({
@@ -282,7 +312,8 @@ export async function chargerProduits(
                 docSnap.id,
 
 
-                ...docSnap.data(),
+
+                ...data,
 
 
 
@@ -290,7 +321,7 @@ export async function chargerProduits(
 
                 nombreValide(
 
-                    docSnap.data().stockTotal
+                    data.stockTotal
 
                 ),
 
@@ -300,9 +331,10 @@ export async function chargerProduits(
 
                 nombreValide(
 
-                    docSnap.data().benefice
+                    data.benefice
 
                 )
+
 
 
             });
@@ -313,6 +345,12 @@ export async function chargerProduits(
 
 
 
+
+
+        afficherProduits();
+
+
+
         return produits;
 
 
@@ -320,7 +358,9 @@ export async function chargerProduits(
     }
 
 
+
     catch(error){
+
 
 
         console.error(
@@ -332,13 +372,17 @@ export async function chargerProduits(
         );
 
 
+
         produits = [];
+
 
 
         return [];
 
 
+
     }
+
 
 
 }
@@ -372,6 +416,7 @@ export async function ajouterProduit(
 
 
 
+
     try{
 
 
@@ -392,19 +437,15 @@ export async function ajouterProduit(
 
         ){
 
-
             alert(
 
                 "Informations produit invalides"
 
             );
 
-
             return false;
 
-
         }
-
 
 
 
@@ -432,7 +473,8 @@ export async function ajouterProduit(
 
 
 
-            const ancienProduit =
+
+            const ancien =
 
             await getDoc(reference);
 
@@ -441,45 +483,31 @@ export async function ajouterProduit(
 
             if(
 
-                !ancienProduit.exists()
+                !ancien.exists()
 
                 ||
 
-                ancienProduit.data().userId
+                ancien.data().userId
 
                 !==
 
                 auth.currentUser.uid
 
-            ){
+            )
 
-
-                return false;
-
-
-            }
-
+            return false;
 
 
 
 
             await updateDoc(
 
-
                 reference,
-
 
                 {
 
 
                     ...produit,
-
-
-
-                    userId:
-
-                    auth.currentUser.uid,
-
 
 
                     dateModification:
@@ -503,7 +531,6 @@ export async function ajouterProduit(
 
 
 
-
         // ===============================
         // NOUVEAU PRODUIT
         // ===============================
@@ -515,7 +542,6 @@ export async function ajouterProduit(
 
             await addDoc(
 
-
                 collection(
 
                     db,
@@ -524,19 +550,15 @@ export async function ajouterProduit(
 
                 ),
 
-
-
                 {
 
 
                     ...produit,
 
 
-
                     userId:
 
                     auth.currentUser.uid,
-
 
 
                     dateAjout:
@@ -546,9 +568,7 @@ export async function ajouterProduit(
 
                 }
 
-
             );
-
 
 
         }
@@ -563,25 +583,21 @@ export async function ajouterProduit(
     }
 
 
+
     catch(error){
 
 
 
         console.error(
 
-
             "Erreur ajout produit:",
 
-
             error
-
 
         );
 
 
-
         return false;
-
 
 
     }
@@ -594,8 +610,9 @@ export async function ajouterProduit(
 
 
 
+
 // ===============================
-// SUPPRIMER PRODUIT
+// SUPPRESSION PRODUIT
 // ===============================
 
 
@@ -606,7 +623,6 @@ export async function supprimerProduit(
     id
 
 ){
-
 
 
     if(
@@ -664,14 +680,9 @@ export async function supprimerProduit(
 
             auth.currentUser.uid
 
-        ){
+        )
 
-
-            return false;
-
-
-        }
-
+        return false;
 
 
 
@@ -695,12 +706,16 @@ export async function supprimerProduit(
 
 
 
+        afficherProduits();
+
+
 
         return true;
 
 
 
     }
+
 
 
     catch(error){
@@ -716,15 +731,14 @@ export async function supprimerProduit(
         );
 
 
-
         return false;
-
 
 
     }
 
 
 }
+
 
 
 
@@ -761,36 +775,38 @@ export function modifierProduit(id){
     const champs = {
 
 
+
         nom:
 
-        produit.nom || "",
+        produit.nom,
 
 
 
         prixGros:
 
-        produit.prixGros || "",
+        produit.prixGros,
 
 
 
         nombreCartons:
 
-        produit.nombreCartons || "",
+        produit.nombreCartons,
 
 
 
         produitsParCarton:
 
-        produit.produitsParCarton || "",
+        produit.produitsParCarton,
 
 
 
         prixRevente:
 
-        produit.prixRevente || ""
+        produit.prixRevente
 
 
     };
+
 
 
 
@@ -808,17 +824,13 @@ export function modifierProduit(id){
 
 
 
-        if(element){
+        if(element)
 
+        element.value = champs[champ];
 
-            element.value = champs[champ];
-
-
-        }
 
 
     });
-
 
 
 
@@ -827,8 +839,118 @@ export function modifierProduit(id){
 
 
 
-
     return true;
+
+
+}
+
+
+
+
+
+// ===============================
+// AFFICHAGE TABLEAU PRODUITS
+// ===============================
+
+
+export function afficherProduits(){
+
+
+    const tableau =
+
+    document.getElementById(
+
+        "tableauProduits"
+
+    );
+
+
+
+    if(!tableau)
+
+    return;
+
+
+
+
+    tableau.innerHTML = "";
+
+
+
+
+
+    produits.forEach((produit)=>{
+
+
+
+        const ligne =
+
+        document.createElement(
+
+            "tr"
+
+        );
+
+
+
+
+        ligne.innerHTML = `
+
+
+        <td>${produit.nom}</td>
+
+
+        <td>${produit.stockTotal}</td>
+
+
+        <td>${produit.prixRevente} FCFA</td>
+
+
+        <td>${produit.benefice} FCFA</td>
+
+
+        <td>
+
+
+        <button onclick="vendreProduit('${produit.id}')">
+
+        Vendre
+
+        </button>
+
+
+
+        <button onclick="modifierProduit('${produit.id}')">
+
+        Modifier
+
+        </button>
+
+
+
+        <button onclick="supprimerProduit('${produit.id}')">
+
+        Supprimer
+
+        </button>
+
+
+        </td>
+
+
+        `;
+
+
+
+        tableau.appendChild(
+
+            ligne
+
+        );
+
+
+
+    });
 
 
 
@@ -851,12 +973,14 @@ export function annulerModification(){
 
 
 
+
 // ===============================
 // VIDER CHAMPS FORMULAIRE
 // ===============================
 
 
 export function viderChamps(){
+
 
 
     const champs = [
@@ -878,7 +1002,9 @@ export function viderChamps(){
 
 
 
+
     champs.forEach((id)=>{
+
 
 
         const element =
@@ -892,7 +1018,6 @@ export function viderChamps(){
 
 
             element.value = "";
-
 
         }
 
@@ -908,8 +1033,9 @@ export function viderChamps(){
 
 
 
+
 // ===============================
-// RECHARGEMENT LOCAL
+// REINITIALISER PRODUITS
 // ===============================
 
 
@@ -922,4 +1048,111 @@ export function nettoyerProduits(){
     produitModification = null;
 
 
+
+    afficherProduits();
+
+
 }
+
+
+
+
+
+
+
+// ===============================
+// RECHERCHER PRODUIT
+// ===============================
+
+
+export function rechercherProduit(
+
+    texte
+
+){
+
+
+
+    const recherche =
+
+    nettoyerTexte(texte)
+
+    .toLowerCase();
+
+
+
+
+    if(!recherche)
+
+    return produits;
+
+
+
+
+    return produits.filter(
+
+        (produit)=>
+
+
+        produit.nom
+
+        .toLowerCase()
+
+        .includes(recherche)
+
+
+    );
+
+
+}
+
+
+
+
+
+
+
+// ===============================
+// CALCUL STOCK TOTAL
+// ===============================
+
+
+export function calculerStockProduits(){
+
+
+    let total = 0;
+
+
+
+    produits.forEach((produit)=>{
+
+
+
+        total +=
+
+        nombreValide(
+
+            produit.stockTotal
+
+        );
+
+
+
+    });
+
+
+
+    return total;
+
+
+}
+
+
+
+
+
+
+
+// ===============================
+// FIN MODULE PRODUITS
+// ===============================
