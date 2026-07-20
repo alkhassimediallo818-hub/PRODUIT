@@ -3,24 +3,45 @@
 // ===============================
 
 
+// ===============================
+// IMPORTS
+// ===============================
+
+
 import {
+
     initializeApp
+
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
 
+
 import {
+
     getAuth,
+
     GoogleAuthProvider,
-    signInWithRedirect,
-    getRedirectResult,
+
+    signInWithPopup,
+
     signOut,
+
+    browserLocalPersistence,
+
+    setPersistence,
+
     onAuthStateChanged
+
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 
+
 import {
+
     getFirestore
+
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
 
 
 
@@ -62,34 +83,44 @@ const firebaseConfig = {
 
 
 
+
+
 // ===============================
-// INITIALISATION FIREBASE
+// INITIALISATION
 // ===============================
 
 
 const app =
+
 initializeApp(firebaseConfig);
 
 
 
 
+
+
 // ===============================
-// SERVICES
+// SERVICES FIREBASE
 // ===============================
 
 
 export const db =
+
 getFirestore(app);
 
 
 
 export const auth =
+
 getAuth(app);
 
 
 
 export const provider =
+
 new GoogleAuthProvider();
+
+
 
 
 
@@ -98,8 +129,9 @@ auth.languageCode = "fr";
 
 
 
+
 // ===============================
-// CONFIG GOOGLE
+// PARAMETRES GOOGLE
 // ===============================
 
 
@@ -108,6 +140,41 @@ provider.setCustomParameters({
     prompt: "select_account"
 
 });
+
+
+
+
+
+
+// ===============================
+// PERSISTANCE SESSION
+// ===============================
+
+
+setPersistence(
+
+    auth,
+
+    browserLocalPersistence
+
+)
+
+.catch((error)=>{
+
+
+    console.error(
+
+        "Erreur persistence Firebase:",
+
+        error
+
+    );
+
+
+});
+
+
+
 
 
 
@@ -123,6 +190,7 @@ export async function connexionGoogle(){
     try{
 
 
+
         if(auth.currentUser){
 
 
@@ -133,7 +201,12 @@ export async function connexionGoogle(){
 
 
 
-        await signInWithRedirect(
+
+
+
+        const resultat =
+
+        await signInWithPopup(
 
             auth,
 
@@ -143,24 +216,49 @@ export async function connexionGoogle(){
 
 
 
+
+
+
+        console.log(
+
+            "Connexion réussie:",
+
+            resultat.user.email
+
+        );
+
+
+
+
+
+
+        return resultat.user;
+
+
+
+
+
     }
 
 
     catch(error){
 
 
+
         console.error(
 
-            "Erreur lancement connexion Google :",
+            "Erreur connexion Google:",
 
             error
 
         );
+
 
 
         throw error;
 
 
+
     }
 
 
@@ -169,65 +267,51 @@ export async function connexionGoogle(){
 
 
 
+
+
+
 // ===============================
-// VERIFICATION RETOUR GOOGLE
+// VERIFICATION CONNEXION
 // ===============================
 
 
-export async function verifierConnexionGoogle(){
+export function verifierConnexionGoogle(){
 
 
-    try{
-
-
-        const resultat =
-
-        await getRedirectResult(auth);
+    if(auth.currentUser){
 
 
 
-        if(resultat){
+        console.log(
 
+            "Utilisateur actif:",
 
-            console.log(
-
-                "Connexion Google réussie :",
-
-                resultat.user.email
-
-            );
-
-
-
-            return resultat.user;
-
-
-        }
-
-
-
-        return null;
-
-
-    }
-
-
-    catch(error){
-
-
-        console.error(
-
-            "Erreur retour Google :",
-
-            error
+            auth.currentUser.email
 
         );
 
 
-        return null;
+
+        return auth.currentUser;
+
 
 
     }
+
+
+
+
+
+    console.log(
+
+        "Aucun utilisateur Firebase"
+
+    );
+
+
+
+    return null;
+
 
 
 }
@@ -235,8 +319,12 @@ export async function verifierConnexionGoogle(){
 
 
 
+
+
+
+
 // ===============================
-// DECONNEXION GOOGLE
+// DECONNEXION
 // ===============================
 
 
@@ -246,7 +334,9 @@ export async function deconnexionGoogle(){
     try{
 
 
+
         await signOut(auth);
+
 
 
         console.log(
@@ -256,7 +346,9 @@ export async function deconnexionGoogle(){
         );
 
 
+
         return true;
+
 
 
     }
@@ -265,16 +357,19 @@ export async function deconnexionGoogle(){
     catch(error){
 
 
+
         console.error(
 
-            "Erreur déconnexion :",
+            "Erreur déconnexion:",
 
             error
 
         );
 
 
+
         return false;
+
 
 
     }
@@ -285,8 +380,10 @@ export async function deconnexionGoogle(){
 
 
 
+
+
 // ===============================
-// EXPORT AUTH STATE
+// EXPORT
 // ===============================
 
 
