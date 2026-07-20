@@ -17,7 +17,7 @@ import {
 
     deconnexionGoogle as lancerDeconnexion
 
-} from "./firebase.js";
+} from "../firebase.js";
 
 
 
