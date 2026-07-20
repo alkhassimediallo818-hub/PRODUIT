@@ -6,7 +6,7 @@
 import {
     db,
     auth
-} from "./firebase.js";
+}from "../firebase.js";
 
 
 import {
@@ -359,29 +359,7 @@ export function afficherHistorique(
 
 
 
-        ligne.innerHTML = `
-
-
-        <td>
-
-        ${action.type || "Action"}
-
-        </td>
-
-
-        <td>
-
-        ${action.produit || "Produit"}
-
-        </td>
-
-
-        <td>
-
-        ${date}
-
-        </td>
-
+        lcell.textContent = action.type;
 
         `;
 
