@@ -1,6 +1,7 @@
 // ===============================
 // MAIN APPLICATION
-// VERSION RENFORCEE
+// VERSION RENFORCEE COMPLETE
+// PARTIE 1/3
 // ===============================
 
 
@@ -21,6 +22,8 @@ import {
 
 } from "./firebase.js";
 
+
+
 import {
 
     onAuthStateChanged
@@ -31,11 +34,12 @@ import {
 
 
 // ===============================
-// IMPORT MODULES
+// IMPORT PRODUITS
 // ===============================
 
 
 import {
+
 
     chargerProduits,
 
@@ -49,12 +53,20 @@ import {
 
     annulerModification as resetModification
 
+
 } from "./JS/produits.js";
 
 
 
 
+
+// ===============================
+// IMPORT VENTES
+// ===============================
+
+
 import {
+
 
     chargerVentes,
 
@@ -64,23 +76,39 @@ import {
 
     fermerVente as fermerFenetreVente
 
+
 } from "./JS/ventes.js";
 
 
 
 
+
+// ===============================
+// IMPORT HISTORIQUE
+// ===============================
+
+
 import {
+
 
     chargerHistorique,
 
     viderHistorique as supprimerHistorique
+
 
 } from "./JS/historique.js";
 
 
 
 
+
+// ===============================
+// IMPORT DASHBOARD
+// ===============================
+
+
 import {
+
 
     mettreAJourResume,
 
@@ -90,22 +118,24 @@ import {
 
     preparerGraphique
 
+
 } from "./JS/dashboard.js";
 
 
 
 
 
+
+
+
 console.log(
+
     "MAIN JS CHARGE"
+
 );
 
 
-(async()=>{
 
-    await verifierConnexionGoogle();
-
-})();
 
 
 
@@ -127,62 +157,156 @@ let ventesGlobales = [];
 
 
 
+
 // ===============================
-// VERIFICATION MODULES
+// AFFICHAGE UTILISATEUR
 // ===============================
 
 
-function verifierFonction(
-
-    nom,
-
-    fonction
-
-){
+function mettreEtatUtilisateur(user){
 
 
-    if(typeof fonction !== "function"){
+
+    const zone =
+
+    document.getElementById(
+
+        "userInfo"
+
+    );
 
 
-        console.error(
 
-            "Module manquant :",
+    const boutonConnexion =
 
-            nom
+    document.querySelector(
 
-        );
+        'button[onclick="connexionGoogle()"]'
+
+    );
 
 
-        return false;
+
+    const boutonDeconnexion =
+
+    document.querySelector(
+
+        'button[onclick="deconnexionGoogle()"]'
+
+    );
+
+
+
+
+
+
+    if(user){
+
+
+
+        utilisateurConnecte = true;
+
+
+
+        if(zone){
+
+
+            zone.textContent =
+
+            "Connecté : "
+
+            +
+
+            user.email;
+
+
+        }
+
+
+
+
+        if(boutonConnexion){
+
+
+            boutonConnexion.style.display =
+
+            "none";
+
+
+        }
+
+
+
+
+        if(boutonDeconnexion){
+
+
+            boutonDeconnexion.style.display =
+
+            "inline-block";
+
+
+        }
+
+
+
 
     }
 
+    else{
 
-    return true;
+
+
+        utilisateurConnecte = false;
+
+
+
+        if(zone){
+
+
+            zone.textContent =
+
+            "Non connecté";
+
+
+        }
+
+
+
+
+
+        if(boutonConnexion){
+
+
+            boutonConnexion.style.display =
+
+            "inline-block";
+
+
+        }
+
+
+
+
+
+        if(boutonDeconnexion){
+
+
+            boutonDeconnexion.style.display =
+
+            "none";
+
+
+        }
+
+
+    }
 
 
 }
 
 
 
-
-
-verifierFonction(
-
-    "connexionGoogle",
-
-    lancerConnexionGoogle
-
-);
-
-
-verifierFonction(
-
-    "deconnexionGoogle",
-
-    lancerDeconnexionGoogle
-
-);
 
 
 
@@ -207,7 +331,26 @@ window.connexionGoogle = async function(){
 
 
 
+        const user =
+
         await lancerConnexionGoogle();
+
+
+
+
+
+        if(user){
+
+
+            mettreEtatUtilisateur(
+
+                user
+
+            );
+
+
+        }
+
 
 
 
@@ -234,10 +377,14 @@ window.connexionGoogle = async function(){
         );
 
 
+
     }
 
 
 };
+
+
+
 
 
 
@@ -255,6 +402,18 @@ window.deconnexionGoogle = async function(){
 
 
         await lancerDeconnexionGoogle();
+
+
+
+        mettreEtatUtilisateur(
+
+            null
+
+        );
+
+
+
+        viderDashboard();
 
 
 
@@ -282,6 +441,8 @@ window.deconnexionGoogle = async function(){
 
 
 
+
+
 // ===============================
 // AUTHENTIFICATION FIREBASE
 // ===============================
@@ -297,12 +458,15 @@ onAuthStateChanged(
         try{
 
 
+            mettreEtatUtilisateur(
+
+                user
+
+            );
+
+
+
             if(user){
-
-
-
-                utilisateurConnecte = true;
-
 
 
 
@@ -320,11 +484,12 @@ onAuthStateChanged(
 
                 await chargerProduits(
 
-                    utilisateurConnecte
+                    true
 
                 )
 
                 || [];
+
 
 
 
@@ -333,7 +498,7 @@ onAuthStateChanged(
 
                 await chargerVentes(
 
-                    utilisateurConnecte
+                    true
 
                 )
 
@@ -342,11 +507,14 @@ onAuthStateChanged(
 
 
 
+
                 await chargerHistorique(
 
-                    utilisateurConnecte
+                    true
 
                 );
+
+
 
 
 
@@ -360,11 +528,15 @@ onAuthStateChanged(
 
 
 
+
+
                 calculerStockRestant(
 
                     produits
 
                 );
+
+
 
 
 
@@ -380,8 +552,6 @@ onAuthStateChanged(
 
             else{
 
-
-                utilisateurConnecte = false;
 
 
                 produits = [];
@@ -402,13 +572,16 @@ onAuthStateChanged(
                 );
 
 
+
             }
+
 
 
         }
 
 
         catch(error){
+
 
 
             console.error(
@@ -420,7 +593,9 @@ onAuthStateChanged(
             );
 
 
+
         }
+
 
 
     }
@@ -439,7 +614,9 @@ window.vendreProduit = function(id){
 
 
         alert(
+
             "Connectez-vous d'abord"
+
         );
 
 
@@ -462,7 +639,6 @@ window.vendreProduit = function(id){
         );
 
 
-
     }
 
 
@@ -482,6 +658,7 @@ window.vendreProduit = function(id){
 
 
 };
+
 
 
 
@@ -514,9 +691,10 @@ window.confirmerVente = async function(){
 
         await confirmerVente(
 
-            utilisateurConnecte
+            true
 
         );
+
 
 
 
@@ -527,15 +705,17 @@ window.confirmerVente = async function(){
 
 
 
+
         produits =
 
         await chargerProduits(
 
-            utilisateurConnecte
+            true
 
         )
 
         || [];
+
 
 
 
@@ -544,11 +724,21 @@ window.confirmerVente = async function(){
 
         await chargerVentes(
 
-            utilisateurConnecte
+            true
 
         )
 
         || [];
+
+
+
+
+
+        await chargerHistorique(
+
+            true
+
+        );
 
 
 
@@ -565,11 +755,13 @@ window.confirmerVente = async function(){
 
 
 
+
         calculerStockRestant(
 
             produits
 
         );
+
 
 
 
@@ -597,6 +789,7 @@ window.confirmerVente = async function(){
         );
 
 
+
         alert(
 
             "Erreur pendant la vente"
@@ -604,10 +797,12 @@ window.confirmerVente = async function(){
         );
 
 
+
     }
 
 
 };
+
 
 
 
@@ -649,6 +844,8 @@ window.fermerVente = function(){
 
 
 
+
+
 // ===============================
 // GESTION PRODUITS
 // ===============================
@@ -675,6 +872,8 @@ window.ajouterProduit = async function(){
 
 
 
+
+
     try{
 
 
@@ -683,51 +882,75 @@ window.ajouterProduit = async function(){
 
             nom:
 
+
             document
 
-            .getElementById("nom")
+            .getElementById(
+
+                "nom"
+
+            )
 
             ?.value,
 
 
 
+
+
             prixGros:
+
 
             Number(
 
                 document
 
-                .getElementById("prixGros")
+                .getElementById(
+
+                    "prixGros"
+
+                )
 
                 ?.value
 
             ),
+
 
 
 
 
             nombreCartons:
 
+
             Number(
 
                 document
 
-                .getElementById("nombreCartons")
+                .getElementById(
+
+                    "nombreCartons"
+
+                )
 
                 ?.value
 
             ),
+
 
 
 
 
             produitsParCarton:
 
+
             Number(
 
                 document
 
-                .getElementById("produitsParCarton")
+                .getElementById(
+
+                    "produitsParCarton"
+
+                )
 
                 ?.value
 
@@ -736,20 +959,29 @@ window.ajouterProduit = async function(){
 
 
 
+
             prixRevente:
+
 
             Number(
 
                 document
 
-                .getElementById("prixRevente")
+                .getElementById(
+
+                    "prixRevente"
+
+                )
 
                 ?.value
 
             )
 
 
+
         };
+
+
 
 
 
@@ -759,7 +991,7 @@ window.ajouterProduit = async function(){
 
         await ajouterProduit(
 
-            utilisateurConnecte,
+            true,
 
             donnees
 
@@ -777,15 +1009,17 @@ window.ajouterProduit = async function(){
 
 
 
+
         produits =
 
         await chargerProduits(
 
-            utilisateurConnecte
+            true
 
         )
 
         || [];
+
 
 
 
@@ -803,6 +1037,7 @@ window.ajouterProduit = async function(){
 
 
 
+
         calculerStockRestant(
 
             produits
@@ -813,10 +1048,12 @@ window.ajouterProduit = async function(){
 
 
 
+
         viderChamps();
 
 
         resetModification();
+
 
 
 
@@ -843,10 +1080,13 @@ window.ajouterProduit = async function(){
         );
 
 
+
     }
 
 
+
 };
+
 
 
 
@@ -867,7 +1107,11 @@ window.modifierProduit = function(id){
 
         const resultat =
 
-        modifierProduit(id);
+        modifierProduit(
+
+            id
+
+        );
 
 
 
@@ -883,6 +1127,7 @@ window.modifierProduit = function(id){
 
 
         }
+
 
 
     }
@@ -910,12 +1155,15 @@ window.modifierProduit = function(id){
 
 
 
+
+
 // ===============================
 // SUPPRIMER PRODUIT
 // ===============================
 
 
 window.supprimerProduit = async function(id){
+
 
 
     if(!utilisateurConnecte){
@@ -935,18 +1183,23 @@ window.supprimerProduit = async function(id){
 
 
 
+
+
     try{
+
 
 
         const resultat =
 
         await supprimerProduit(
 
-            utilisateurConnecte,
+            true,
 
             id
 
         );
+
+
 
 
 
@@ -957,15 +1210,19 @@ window.supprimerProduit = async function(id){
 
 
 
+
+
+
         produits =
 
         await chargerProduits(
 
-            utilisateurConnecte
+            true
 
         )
 
         || [];
+
 
 
 
@@ -978,6 +1235,8 @@ window.supprimerProduit = async function(id){
             ventesGlobales
 
         );
+
+
 
 
 
@@ -1008,7 +1267,9 @@ window.supprimerProduit = async function(id){
     }
 
 
+
 };
+
 // ===============================
 // GESTION HISTORIQUE
 // ===============================
@@ -1034,22 +1295,31 @@ window.viderHistorique = async function(){
 
 
 
+
     try{
 
 
+        const resultat =
+
         await supprimerHistorique(
 
-            utilisateurConnecte
+            true
 
         );
 
 
 
-        console.log(
+        if(resultat){
 
-            "Historique supprimé"
 
-        );
+            console.log(
+
+                "Historique supprimé"
+
+            );
+
+
+        }
 
 
 
@@ -1122,12 +1392,14 @@ window.annulerModification = function(){
 
 
 
+
 // ===============================
-// ACTUALISATION AUTOMATIQUE
+// ACTUALISATION DONNEES
 // ===============================
 
 
 async function actualiserDonnees(){
+
 
 
     if(!utilisateurConnecte)
@@ -1136,18 +1408,21 @@ async function actualiserDonnees(){
 
 
 
+
     try{
+
 
 
         produits =
 
         await chargerProduits(
 
-            utilisateurConnecte
+            true
 
         )
 
         || [];
+
 
 
 
@@ -1156,11 +1431,22 @@ async function actualiserDonnees(){
 
         await chargerVentes(
 
-            utilisateurConnecte
+            true
 
         )
 
         || [];
+
+
+
+
+
+        await chargerHistorique(
+
+            true
+
+        );
+
 
 
 
@@ -1178,11 +1464,13 @@ async function actualiserDonnees(){
 
 
 
+
         calculerStockRestant(
 
             produits
 
         );
+
 
 
 
@@ -1221,8 +1509,10 @@ async function actualiserDonnees(){
 
 
 
+
+
 // ===============================
-// PROTECTION ERREURS GLOBALES
+// PROTECTION ERREURS
 // ===============================
 
 
@@ -1246,7 +1536,6 @@ window.addEventListener(
 
 
 );
-
 
 
 
@@ -1280,7 +1569,7 @@ window.addEventListener(
 
 
 // ===============================
-// SYNCHRONISATION 5 MINUTES
+// SYNCHRONISATION AUTOMATIQUE
 // ===============================
 
 
@@ -1314,7 +1603,6 @@ setInterval(
 
 
 );
-
 
 
 
