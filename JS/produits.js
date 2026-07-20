@@ -634,36 +634,27 @@ export function annulerModification(){
 
 export function viderChamps(){
 
-
-    [
+    const champs = [
 
         "nom",
-
         "prixGros",
-
         "nombreCartons",
-
         "produitsParCarton",
-
         "prixRevente"
 
-    ]
-
-    .forEach((id)=>{
+    ];
 
 
-        const element =
+    champs.forEach((id)=>{
 
-        document.getElementById(id);
+        const element = document.getElementById(id);
 
+        if(element){
 
+            element.value = "";
 
-        if(element)
-
-        element.value = "";
-
+        }
 
     });
-
 
 }
