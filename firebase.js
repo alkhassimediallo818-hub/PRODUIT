@@ -3,45 +3,23 @@
 // ===============================
 
 
-// ===============================
-// IMPORTS
-// ===============================
-
-
 import {
-
     initializeApp
-
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
 
-
 import {
-
     getAuth,
-
     GoogleAuthProvider,
-
     signInWithPopup,
-
     signOut,
-
-    browserLocalPersistence,
-
-    setPersistence,
-
     onAuthStateChanged
-
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 
-
 import {
-
     getFirestore
-
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
 
 
 
@@ -83,56 +61,32 @@ const firebaseConfig = {
 
 
 
-
-
 // ===============================
 // INITIALISATION
 // ===============================
 
 
-const app =
-
-initializeApp(firebaseConfig);
-
-
+const app = initializeApp(firebaseConfig);
 
 
 
 
 // ===============================
-// SERVICES FIREBASE
+// SERVICES
 // ===============================
 
 
-export const db =
-
-getFirestore(app);
+export const db = getFirestore(app);
 
 
-
-export const auth =
-
-getAuth(app);
+export const auth = getAuth(app);
 
 
-
-export const provider =
-
-new GoogleAuthProvider();
-
-
-
+export const provider = new GoogleAuthProvider();
 
 
 auth.languageCode = "fr";
 
-
-
-
-
-// ===============================
-// PARAMETRES GOOGLE
-// ===============================
 
 
 provider.setCustomParameters({
@@ -140,41 +94,6 @@ provider.setCustomParameters({
     prompt: "select_account"
 
 });
-
-
-
-
-
-
-// ===============================
-// PERSISTANCE SESSION
-// ===============================
-
-
-setPersistence(
-
-    auth,
-
-    browserLocalPersistence
-
-)
-
-.catch((error)=>{
-
-
-    console.error(
-
-        "Erreur persistence Firebase:",
-
-        error
-
-    );
-
-
-});
-
-
-
 
 
 
@@ -190,8 +109,13 @@ export async function connexionGoogle(){
     try{
 
 
-
         if(auth.currentUser){
+
+
+            console.log(
+                "Utilisateur déjà connecté :",
+                auth.currentUser.email
+            );
 
 
             return auth.currentUser;
@@ -201,12 +125,7 @@ export async function connexionGoogle(){
 
 
 
-
-
-
-        const resultat =
-
-        await signInWithPopup(
+        const resultat = await signInWithPopup(
 
             auth,
 
@@ -216,12 +135,9 @@ export async function connexionGoogle(){
 
 
 
-
-
-
         console.log(
 
-            "Connexion réussie:",
+            "Connexion réussie :",
 
             resultat.user.email
 
@@ -229,12 +145,7 @@ export async function connexionGoogle(){
 
 
 
-
-
-
         return resultat.user;
-
-
 
 
 
@@ -244,79 +155,22 @@ export async function connexionGoogle(){
     catch(error){
 
 
-
         console.error(
 
-            "Erreur connexion Google:",
+            "Erreur connexion Google :",
 
             error
 
         );
 
 
-
         throw error;
 
 
-
     }
 
 
 }
-
-
-
-
-
-
-
-// ===============================
-// VERIFICATION CONNEXION
-// ===============================
-
-
-export function verifierConnexionGoogle(){
-
-
-    if(auth.currentUser){
-
-
-
-        console.log(
-
-            "Utilisateur actif:",
-
-            auth.currentUser.email
-
-        );
-
-
-
-        return auth.currentUser;
-
-
-
-    }
-
-
-
-
-
-    console.log(
-
-        "Aucun utilisateur Firebase"
-
-    );
-
-
-
-    return null;
-
-
-
-}
-
-
 
 
 
@@ -334,9 +188,7 @@ export async function deconnexionGoogle(){
     try{
 
 
-
         await signOut(auth);
-
 
 
         console.log(
@@ -346,9 +198,7 @@ export async function deconnexionGoogle(){
         );
 
 
-
         return true;
-
 
 
     }
@@ -357,19 +207,16 @@ export async function deconnexionGoogle(){
     catch(error){
 
 
-
         console.error(
 
-            "Erreur déconnexion:",
+            "Erreur déconnexion :",
 
             error
 
         );
 
 
-
         return false;
-
 
 
     }
@@ -377,6 +224,70 @@ export async function deconnexionGoogle(){
 
 }
 
+
+
+
+
+// ===============================
+// VERIFICATION CONNEXION
+// ===============================
+
+
+export function verifierConnexionGoogle(){
+
+
+    return new Promise((resolve)=>{
+
+
+        onAuthStateChanged(
+
+            auth,
+
+            (user)=>{
+
+
+                if(user){
+
+
+                    console.log(
+
+                        "Session active :",
+
+                        user.email
+
+                    );
+
+
+                    resolve(user);
+
+
+                }
+
+                else{
+
+
+                    console.log(
+
+                        "Aucune session"
+
+                    );
+
+
+                    resolve(null);
+
+
+                }
+
+
+            }
+
+        );
+
+
+    });
+
+
+}
 
 
 
