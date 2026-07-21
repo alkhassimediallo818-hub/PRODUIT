@@ -8,6 +8,27 @@ connexionGoogle
 
 } from "../firebase.js";
 
+// ===============================
+// PROTECTION ACCES APPLICATION
+// ===============================
+
+onAuthStateChanged(
+
+    auth,
+
+    (user)=>{
+
+        if(!user){
+
+            window.location.href =
+            "accueil.html";
+
+        }
+
+    }
+
+);
+
 import {
 
 ```
