@@ -421,3 +421,123 @@ td{
 
 
 }
+/* ===============================
+   CREATION PROFIL
+================================ */
+
+
+.profil-container{
+
+    min-height:100vh;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+}
+
+
+
+.profil-card{
+
+    width:90%;
+
+    max-width:400px;
+
+    padding:35px;
+
+    border-radius:20px;
+
+    text-align:center;
+
+    background:white;
+
+    box-shadow:0 10px 30px rgba(0,0,0,0.15);
+
+}
+
+
+
+.profil-logo{
+
+    font-size:50px;
+
+    margin-bottom:15px;
+
+}
+
+
+
+.profil-card h1{
+
+    margin-bottom:10px;
+
+}
+
+
+
+.profil-card p{
+
+    color:#666;
+
+}
+
+
+
+.profil-form input{
+
+    width:100%;
+
+    padding:15px;
+
+    margin:20px 0;
+
+    border-radius:10px;
+
+    border:1px solid #ddd;
+
+    font-size:16px;
+
+}
+
+
+
+.profil-form button{
+
+    width:100%;
+
+    padding:15px;
+
+    border:none;
+
+    border-radius:10px;
+
+    background:#2563eb;
+
+    color:white;
+
+    font-size:16px;
+
+    cursor:pointer;
+
+}
+
+
+
+.profil-form button:hover{
+
+    opacity:0.9;
+
+}
+
+
+
+.message{
+
+    margin-top:15px;
+
+    font-size:14px;
+
+}
