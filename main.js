@@ -3,6 +3,13 @@ import {
     getDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
+if(!auth.currentUser){
+
+    window.location.href =
+    "./accueil.html";
+
+}
+
 import {
 
     db,
