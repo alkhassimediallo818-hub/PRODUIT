@@ -4,21 +4,18 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 import {
-    db
+
+    db,
+
+    auth,
+
+    connexionGoogle as lancerConnexionGoogle,
+
+    deconnexionGoogle as lancerDeconnexionGoogle,
+
+    creerProfilUtilisateur
+
 } from "./firebase.js";
-
-import {
-
-auth,
-
-connexionGoogle as lancerConnexionGoogle,
-
-deconnexionGoogle as lancerDeconnexionGoogle,
-
-creerProfilUtilisateur
-
-}
-from "./firebase.js";
 
 
 
