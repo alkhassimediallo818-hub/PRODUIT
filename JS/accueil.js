@@ -1,51 +1,59 @@
 import {
 
-    auth,
+```
+auth,
 
-    connexionGoogle
+connexionGoogle
+```
 
 } from "../firebase.js";
 
+import {
+
+```
+onAuthStateChanged
+```
+
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 import {
 
-    doc,
+```
+doc,
 
-    getDoc
+getDoc
+```
 
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-
 import {
 
-    db
+```
+db
+```
 
 } from "../firebase.js";
 
+const bouton =
 
-
-
-
-const bouton = document.getElementById(
-    "btnConnexionAccueil"
+document.getElementById(
+"btnConnexionAccueil"
 );
 
+const message =
 
-const message = document.getElementById(
-    "messageAccueil"
+document.getElementById(
+"messageAccueil"
 );
 
+if(bouton){
 
-
-
-
-
+```
 bouton.addEventListener(
 
     "click",
 
     async()=>{
-
 
         try{
 
@@ -55,13 +63,14 @@ bouton.addEventListener(
 
 
 
-            const user = await connexionGoogle();
+            const user =
+            await connexionGoogle();
 
 
 
 
-
-            const profil = await getDoc(
+            const profil =
+            await getDoc(
 
                 doc(
 
@@ -101,9 +110,7 @@ bouton.addEventListener(
 
         }
 
-
         catch(error){
-
 
 
             console.error(
@@ -123,7 +130,86 @@ bouton.addEventListener(
         }
 
 
+    }
+
+);
+```
+
+}
+
+onAuthStateChanged(
+
+```
+auth,
+
+async(user)=>{
+
+
+    if(!user)
+        return;
+
+
+
+
+    try{
+
+
+        const profil =
+        await getDoc(
+
+            doc(
+
+                db,
+
+                "users",
+
+                user.uid
+
+            )
+
+        );
+
+
+
+
+        if(profil.exists()){
+
+
+            window.location.href =
+            "index.html";
+
+
+        }
+
+        else{
+
+
+            window.location.href =
+            "profil.html";
+
+
+        }
+
+
 
     }
+
+    catch(error){
+
+
+        console.error(
+
+            "Erreur session :",
+
+            error
+
+        );
+
+
+    }
+
+
+}
+```
 
 );
