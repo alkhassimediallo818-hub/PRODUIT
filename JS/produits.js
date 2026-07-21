@@ -51,7 +51,11 @@ import {
 
 } from "./utils.js";
 
+import {
 
+    enregistrerHistorique
+
+} from "./historique.js";
 
 
 
@@ -606,7 +610,11 @@ export async function ajouterProduit(
 
             );
 
-
+        await enregistrerHistorique(
+    true,
+    "Modification produit",
+    produit.nom
+);
 
 
 
@@ -669,7 +677,11 @@ export async function ajouterProduit(
 
 
         }
-
+await enregistrerHistorique(
+    true,
+    "Ajout produit",
+    produit.nom
+);
 
 
 
@@ -1012,7 +1024,7 @@ export async function supprimerProduit(
 
 
 
-
+const nomProduit = resultat.data().nom || "Produit";
 
 
 
@@ -1022,7 +1034,11 @@ export async function supprimerProduit(
 
         );
 
-
+  await enregistrerHistorique(
+    true,
+    "Suppression produit",
+    nomProduit
+);
 
 
 
