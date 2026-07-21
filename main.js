@@ -214,96 +214,53 @@ async function chargerNomUtilisateur(user){
 
 }
 
-function mettreEtatUtilisateur(user){
-
+async function mettreEtatUtilisateur(user){
 
 
     const zone =
-
     document.getElementById(
-
         "userInfo"
-
     );
-
 
 
     const boutonConnexion =
-
     document.getElementById(
-
         "btnConnexion"
-
     );
-
 
 
     const boutonDeconnexion =
-
     document.getElementById(
-
         "btnDeconnexion"
-
     );
-
-
-
-
-
 
 
     if(user){
 
-await chargerNomUtilisateur(user);
 
         utilisateurActuel = user;
-
 
 
         utilisateurConnecte = true;
 
 
-
-
-
-        if(zone){
-
-
-         zone.textContent =
-"Bienvenue";
-
-
-        }
-
-
-
-
+        await chargerNomUtilisateur(user);
 
 
         if(boutonConnexion){
 
-
             boutonConnexion.style.display =
-
             "none";
 
-
         }
-
-
-
 
 
         if(boutonDeconnexion){
 
-
             boutonDeconnexion.style.display =
-
             "inline-block";
 
-
         }
-
 
 
     }
