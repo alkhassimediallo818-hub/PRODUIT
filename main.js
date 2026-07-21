@@ -178,9 +178,21 @@ async function chargerNomUtilisateur(user){
 
         );
 
+        const photo =
+document.getElementById(
+    "photoProfil"
+);
 
+        
 
         if(resultat.exists() && zone){
+
+            if(photo && user.photoURL){
+
+    photo.src =
+    user.photoURL;
+
+}
 
 
             zone.textContent =
