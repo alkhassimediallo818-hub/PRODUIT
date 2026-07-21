@@ -2,6 +2,31 @@
    PAGE ACCUEIL
 ================================ */
 
+.sidebar button{
+
+    width:100%;
+    padding:12px;
+
+    margin-bottom:10px;
+
+    border:none;
+
+    border-radius:10px;
+
+    cursor:pointer;
+
+    font-size:15px;
+
+    transition:0.3s;
+
+}
+
+.sidebar button:hover{
+
+    transform:translateX(5px);
+
+}
+
 .app-layout{
 
     display:flex;
