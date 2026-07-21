@@ -473,15 +473,6 @@ window.deconnexionGoogle = async function(){
 
 
 
-
-
-
-
-// ===============================
-// AUTHENTIFICATION FIREBASE
-// ===============================
-
-
 // ===============================
 // AUTHENTIFICATION FIREBASE
 // ===============================
