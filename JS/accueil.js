@@ -4,7 +4,7 @@ import {
 
     connexionGoogle
 
-} from "./firebase.js";
+} from "../firebase.js";
 
 
 import {
@@ -20,7 +20,7 @@ import {
 
     db
 
-} from "./firebase.js";
+} from "../firebase.js";
 
 
 
