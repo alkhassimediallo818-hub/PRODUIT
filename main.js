@@ -121,15 +121,17 @@ onAuthStateChanged(
 
     auth,
 
-    (user)=>{
+    async(user)=>{
 
 
         if(!user){
 
-            window.location.href =
-            "accueil.html";
+    window.location.href =
+    "accueil.html";
 
-        }
+    return;
+
+}
 
 
     }
