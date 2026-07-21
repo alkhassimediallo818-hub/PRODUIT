@@ -113,30 +113,7 @@ import {
 } from "./JS/dashboard.js";
 
 
-// ===============================
-// PROTECTION ACCES APPLICATION
-// ===============================
 
-onAuthStateChanged(
-
-    auth,
-
-    async(user)=>{
-
-
-        if(!user){
-
-    window.location.href =
-    "accueil.html";
-
-    return;
-
-}
-
-
-    }
-
-);
 
 
 
