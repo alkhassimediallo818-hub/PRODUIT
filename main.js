@@ -588,96 +588,14 @@ onAuthStateChanged(
     async(user)=>{
 
 
-        if(!user){
-
-            window.location.href =
-            "accueil.html";
-
-            return;
-
-        }
-
-
         try{
 
 
-            const profilReference = doc(
-
-                db,
-
-                "users",
-
-                user.uid
-
-            );
-
-
-            const profil = await getDoc(
-
-                profilReference
-
-            );
-
-
-            if(!profil.exists()){
-
-
-                window.location.href =
-                "profil.html";
-
-
-                return;
-
-
-            }
-
-
-            // ICI ton chargement produits
-            // ventes
-            // historique
-            // dashboard
-
-
-
-        }
-
-
-        catch(error){
-
-
-            console.error(
-
-                "Erreur session :",
-
-                error
-
-            );
-
-
-        }
-
-
-    }
-
-);
-
-
-     
-
-
-            // Mise à jour état connexion
-
-            mettreEtatUtilisateur(
-
-                user
-
-            );
-
+            mettreEtatUtilisateur(user);
 
 
 
             if(user){
-
 
 
                 utilisateurConnecte = true;
@@ -694,48 +612,27 @@ onAuthStateChanged(
 
 
 
-
-                // Chargement données utilisateur
-
                 produits =
 
-                await chargerProduits(
-
-                    true
-
-                )
+                await chargerProduits(true)
 
                 || [];
-
 
 
 
 
                 ventesGlobales =
 
-                await chargerVentes(
-
-                    true
-
-                )
+                await chargerVentes(true)
 
                 || [];
 
 
 
 
-
-                await chargerHistorique(
-
-                    true
-
-                );
+                await chargerHistorique(true);
 
 
-
-
-
-                // Mise à jour tableau de bord
 
                 mettreAJourResume(
 
@@ -747,15 +644,11 @@ onAuthStateChanged(
 
 
 
-
-
                 calculerStockRestant(
 
                     produits
 
                 );
-
-
 
 
 
@@ -769,12 +662,11 @@ onAuthStateChanged(
 
             }
 
+
             else{
 
 
-
                 utilisateurConnecte = false;
-
 
 
                 produits = [];
@@ -783,11 +675,7 @@ onAuthStateChanged(
 
 
 
-
-
                 viderDashboard();
-
-
 
 
 
@@ -798,14 +686,18 @@ onAuthStateChanged(
                 );
 
 
+                window.location.href =
+                "accueil.html";
+
 
             }
 
 
 
+        }
+
 
         catch(error){
-
 
 
             console.error(
@@ -817,14 +709,14 @@ onAuthStateChanged(
             );
 
 
-
         }
-
 
 
     }
 
 );
+
+
 // ===============================
 // GESTION DES VENTES
 // ===============================
