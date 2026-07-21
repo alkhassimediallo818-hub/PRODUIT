@@ -1852,7 +1852,50 @@ window.rechercherProduit = function(){
 
 };
 
+window.afficherSection = function(section){
 
+    const dashboard =
+    document.getElementById("sectionDashboard");
+
+    const produits =
+    document.getElementById("sectionProduits");
+
+    const historique =
+    document.getElementById("sectionHistorique");
+
+    const profil =
+    document.getElementById("sectionProfil");
+
+
+    if(dashboard)
+        dashboard.style.display = "none";
+
+    if(produits)
+        produits.style.display = "none";
+
+    if(historique)
+        historique.style.display = "none";
+
+    if(profil)
+        profil.style.display = "none";
+
+
+    if(section === "dashboard")
+        dashboard.style.display = "grid";
+
+
+    if(section === "produits")
+        produits.style.display = "block";
+
+
+    if(section === "historique")
+        historique.style.display = "block";
+
+
+    if(section === "profil")
+        profil.style.display = "block";
+
+};
 
 // ===============================
 // VERIFICATION APPLICATION
