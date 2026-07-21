@@ -148,75 +148,114 @@ async function chargerProfilUtilisateur(user){
 
     try{
 
-        const role =
 
-document.getElementById(
-"roleUtilisateur"
-);
-
-
-if(
-resultat.exists()
-&&
-role
-){
-
-role.textContent =
-resultat.data().role;
-
-}
-        
         const photo =
         document.getElementById(
             "photoProfilPage"
         );
+
 
         const email =
         document.getElementById(
             "emailProfil"
         );
 
+
         const pseudo =
         document.getElementById(
             "pseudoProfil"
         );
 
-        if(photo && user.photoURL)
-            photo.src = user.photoURL;
 
-        if(email)
-            email.textContent = user.email;
+        const role =
+        document.getElementById(
+            "roleUtilisateur"
+        );
+
+
+
+        if(photo && user.photoURL){
+
+            photo.src =
+            user.photoURL;
+
+        }
+
+
+
+        if(email){
+
+            email.textContent =
+            user.email;
+
+        }
+
+
+
 
         const reference = doc(
+
             db,
+
             "users",
+
             user.uid
+
         );
+
+
 
         const resultat =
         await getDoc(reference);
 
-        if(
-            resultat.exists()
-            &&
-            pseudo
-        ){
 
-            pseudo.textContent =
-            resultat.data()
-            .nomUtilisateur;
+
+
+        if(resultat.exists()){
+
+
+            const donnees =
+            resultat.data();
+
+
+
+            if(pseudo){
+
+                pseudo.textContent =
+                donnees.nomUtilisateur;
+
+            }
+
+
+
+            if(role){
+
+                role.textContent =
+                donnees.role;
+
+            }
+
 
         }
+
+
 
     }
 
     catch(error){
 
+
         console.error(
+
+            "Erreur chargement profil :",
+
             error
+
         );
 
+
     }
+
 
 }
 
