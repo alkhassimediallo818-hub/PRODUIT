@@ -662,36 +662,7 @@ onAuthStateChanged(
 );
 
 
-        const profilReference = doc(
-
-            db,
-
-            "users",
-
-            user.uid
-
-        );
-
-
-
-        const profil = await getDoc(
-
-            profilReference
-
-        );
-
-
-
-        if(!profil.exists()){
-
-            window.location.href = "profil.html";
-
-            return;
-
-        }
-
-
-        try{
+     
 
 
             // Mise à jour état connexion
