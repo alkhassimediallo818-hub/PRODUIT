@@ -26,6 +26,10 @@
                 📊 Dashboard
             </button>
 
+            <button onclick="afficherSection('profil')">
+                👤 Profil
+            </button>
+
             <button onclick="afficherSection('produits')">
                 📦 Produits
             </button>
@@ -272,6 +276,40 @@ onclick="deconnexionGoogle()">
                 </div>
 
                 <div class="historique">
+
+                    <div id="sectionProfil" style="display:none;">
+
+    <div class="card-profil">
+
+        <h2>👤 Mon Profil</h2>
+
+        <img
+            id="photoProfilPage"
+            class="photo-profil-large"
+            src=""
+            alt="Photo Profil">
+
+        <p>
+            <strong>Pseudo :</strong>
+            <span id="pseudoProfil">
+                Chargement...
+            </span>
+        </p>
+
+        <p>
+            <strong>Email :</strong>
+            <span id="emailProfil">
+                Chargement...
+            </span>
+        </p>
+
+        <button onclick="ouvrirModificationPseudo()">
+            ✏️ Modifier le pseudo
+        </button>
+
+    </div>
+
+</div>
 
                     <h2>📊 Résumé Rapide</h2>
 
