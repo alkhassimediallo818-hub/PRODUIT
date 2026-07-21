@@ -9,15 +9,16 @@ import {
 
 import {
 
-    auth,
+auth,
 
-    connexionGoogle as lancerConnexionGoogle,
+connexionGoogle as lancerConnexionGoogle,
 
-    deconnexionGoogle as lancerDeconnexionGoogle,
+deconnexionGoogle as lancerDeconnexionGoogle,
 
-    verifierConnexionGoogle
+creerProfilUtilisateur
 
-} from "./firebase.js";
+}
+from "./firebase.js";
 
 
 
@@ -150,6 +151,24 @@ async function chargerProfilUtilisateur(user){
 
     try{
 
+        const role =
+
+document.getElementById(
+"roleUtilisateur"
+);
+
+
+if(
+resultat.exists()
+&&
+role
+){
+
+role.textContent =
+resultat.data().role;
+
+}
+        
         const photo =
         document.getElementById(
             "photoProfilPage"
@@ -318,7 +337,10 @@ async function mettreEtatUtilisateur(user){
         await chargerNomUtilisateur(user);
 
         await chargerProfilUtilisateur(
+
+        await creerProfilUtilisateur(
     user
+    
 );
 
 
