@@ -587,16 +587,33 @@ onAuthStateChanged(
 
     async(user)=>{
 
-        // Protection accès dashboard
 
         if(!user){
 
-            window.location.href = "accueil.html";
+            window.location.href =
+            "accueil.html";
 
             return;
 
         }
 
+
+        try{
+
+            // ton code actuel
+
+        }
+
+        catch(error){
+
+            console.error(error);
+
+        }
+
+
+    }
+
+);
 
 
         const profilReference = doc(
