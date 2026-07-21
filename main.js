@@ -361,23 +361,28 @@ async function mettreEtatUtilisateur(user){
     );
 
 
-    if(user){
+   if(user){
+
+    utilisateurActuel = user;
+
+    utilisateurConnecte = true;
 
 
-        utilisateurActuel = user;
+    await creerProfilUtilisateur(
+        user
+    );
 
 
-        utilisateurConnecte = true;
+    await chargerNomUtilisateur(
+        user
+    );
 
 
-        await chargerNomUtilisateur(user);
+    await chargerProfilUtilisateur(
+        user
+    );
 
-        await chargerProfilUtilisateur(
-
-        await creerProfilUtilisateur(
-    user
-    
-);
+}
 
 
         if(boutonConnexion){
