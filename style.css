@@ -1,4 +1,80 @@
 /* ===============================
+   PAGE ACCUEIL
+================================ */
+
+
+.accueil-container{
+
+    min-height:100vh;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+}
+
+
+
+.accueil-card{
+
+    width:90%;
+
+    max-width:450px;
+
+    text-align:center;
+
+    padding:40px;
+
+    border-radius:20px;
+
+    background:white;
+
+    box-shadow:0 10px 30px rgba(0,0,0,0.15);
+
+}
+
+
+
+.logo{
+
+    font-size:60px;
+
+}
+
+
+
+.accueil-card h1{
+
+    font-size:32px;
+
+}
+
+
+
+.accueil-card button{
+
+    width:100%;
+
+    padding:15px;
+
+    margin-top:25px;
+
+    border:none;
+
+    border-radius:10px;
+
+    background:#2563eb;
+
+    color:white;
+
+    font-size:16px;
+
+    cursor:pointer;
+
+}
+/* ===============================
    RESET GENERAL
 =============================== */
 
