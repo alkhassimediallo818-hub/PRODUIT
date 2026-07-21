@@ -361,28 +361,40 @@ async function mettreEtatUtilisateur(user){
     );
 
 
-   if(user){
 
-    utilisateurActuel = user;
-
-    utilisateurConnecte = true;
+    if(user){
 
 
-    await creerProfilUtilisateur(
-        user
-    );
+        utilisateurActuel = user;
 
 
-    await chargerNomUtilisateur(
-        user
-    );
+        utilisateurConnecte = true;
 
 
-    await chargerProfilUtilisateur(
-        user
-    );
 
-}
+        await creerProfilUtilisateur(
+            user
+        );
+
+
+        await chargerNomUtilisateur(
+            user
+        );
+
+
+        await chargerProfilUtilisateur(
+            user
+        );
+
+
+
+        if(zone){
+
+            zone.textContent =
+            "Bienvenue";
+
+        }
+
 
 
         if(boutonConnexion){
@@ -393,6 +405,7 @@ async function mettreEtatUtilisateur(user){
         }
 
 
+
         if(boutonDeconnexion){
 
             boutonDeconnexion.style.display =
@@ -401,64 +414,43 @@ async function mettreEtatUtilisateur(user){
         }
 
 
+
     }
-
-
 
     else{
 
 
-
         utilisateurActuel = null;
-
 
 
         utilisateurConnecte = false;
 
 
 
-
-
         if(zone){
 
-
             zone.textContent =
-
             "Non connecté";
 
-
         }
-
-
-
 
 
 
         if(boutonConnexion){
 
-
             boutonConnexion.style.display =
-
             "inline-block";
 
-
         }
-
-
-
 
 
 
         if(boutonDeconnexion){
 
-
             boutonDeconnexion.style.display =
-
             "none";
 
-
         }
-
 
 
     }
