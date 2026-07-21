@@ -2,6 +2,44 @@
    PAGE ACCUEIL
 ================================ */
 
+.profil-zone{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+}
+
+.photo-profil{
+
+    width:48px;
+
+    height:48px;
+
+    border-radius:50%;
+
+    object-fit:cover;
+
+    border:2px solid #2563eb;
+
+}
+
+#userInfo{
+
+    font-weight:bold;
+
+    font-size:15px;
+
+}
+
+#roleUtilisateur{
+
+    color:#666;
+
+}
+
 .sidebar button{
 
     width:100%;
