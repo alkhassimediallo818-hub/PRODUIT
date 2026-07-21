@@ -278,42 +278,51 @@ async function chargerNomUtilisateur(user){
 
 
 
-        const resultat = await getDoc(
+        const resultat =
 
-            reference
-
-        );
+        await getDoc(reference);
 
 
 
-        const zone = document.getElementById(
+        const zone =
+
+        document.getElementById(
 
             "userInfo"
 
         );
 
-        const photo =
-document.getElementById(
-    "photoProfil"
-);
 
-        
 
-        if(resultat.exists() && zone){
+        if(
+            resultat.exists()
+            &&
+            zone
+        ){
 
-            if(photo && user.photoURL){
 
-    photo.src =
-    user.photoURL;
+            const donnees =
 
-}
+            resultat.data();
+
 
 
             zone.textContent =
 
             "Bienvenue " +
 
-            resultat.data().nomUtilisateur;
+            donnees.nomUtilisateur;
+
+
+
+        }
+
+        else if(zone){
+
+
+            zone.textContent =
+
+            "Bienvenue utilisateur";
 
 
         }
@@ -328,7 +337,7 @@ document.getElementById(
 
         console.error(
 
-            "Erreur récupération profil :",
+            "Erreur nom utilisateur :",
 
             error
 
