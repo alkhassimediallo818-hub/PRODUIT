@@ -37,7 +37,11 @@ import {
 
 } from "./utils.js";
 
+import {
 
+    enregistrerHistorique
+
+} from "./historique.js";
 
 
 
@@ -868,7 +872,15 @@ export async function confirmerVente(
 
         );
 
+await enregistrerHistorique(
 
+    true,
+
+    "Vente produit",
+
+    produit.nom
+
+);
 
 
 
@@ -922,7 +934,19 @@ export async function confirmerVente(
 
         );
 
+if(nouveauStock <= 0){
 
+    await enregistrerHistorique(
+
+        true,
+
+        "Stock épuisé",
+
+        produit.nom
+
+    );
+
+}
 
 
 
