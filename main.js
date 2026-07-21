@@ -113,7 +113,28 @@ import {
 } from "./JS/dashboard.js";
 
 
+// ===============================
+// PROTECTION ACCES APPLICATION
+// ===============================
 
+onAuthStateChanged(
+
+    auth,
+
+    (user)=>{
+
+
+        if(!user){
+
+            window.location.href =
+            "accueil.html";
+
+        }
+
+
+    }
+
+);
 
 
 
