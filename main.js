@@ -1758,6 +1758,78 @@ window.addEventListener(
 );
 
 
+// ===============================
+// RECHERCHE PRODUITS
+// ===============================
+
+window.rechercherProduit = function(){
+
+
+    const recherche =
+
+    document
+
+    .getElementById(
+        "rechercheProduit"
+    )
+
+    .value
+
+    .toLowerCase();
+
+
+
+    const lignes =
+
+    document
+
+    .querySelectorAll(
+        "#tableauProduits tr"
+    );
+
+
+
+    lignes.forEach(
+
+        (ligne)=>{
+
+
+            const texte =
+
+            ligne
+
+            .textContent
+
+            .toLowerCase();
+
+
+
+            if(
+                texte.includes(
+                    recherche
+                )
+            ){
+
+                ligne.style.display =
+                "";
+
+            }
+
+            else{
+
+                ligne.style.display =
+                "none";
+
+            }
+
+
+        }
+
+    );
+
+
+};
+
 
 
 // ===============================
