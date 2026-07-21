@@ -317,6 +317,10 @@ async function mettreEtatUtilisateur(user){
 
         await chargerNomUtilisateur(user);
 
+        await chargerProfilUtilisateur(
+    user
+);
+
 
         if(boutonConnexion){
 
