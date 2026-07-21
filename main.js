@@ -803,8 +803,6 @@ onAuthStateChanged(
 
 
 
-        }
-
 
         catch(error){
 
