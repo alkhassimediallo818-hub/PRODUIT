@@ -2,6 +2,28 @@
    PAGE ACCUEIL
 ================================ */
 
+.recherche-produit{
+
+    margin:20px 0;
+
+}
+
+
+.recherche-produit input{
+
+    width:100%;
+
+    padding:14px;
+
+    border-radius:10px;
+
+    border:1px solid #ddd;
+
+    font-size:16px;
+
+}
+
+
 .card-profil{
 
     background:white;
