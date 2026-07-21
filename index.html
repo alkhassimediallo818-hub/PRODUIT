@@ -16,12 +16,72 @@
 <body>
 
 
-<div class="container">
+<div class="app-layout">
 
-<div id="userInfo">
-    Bienvenue <span id="nomUtilisateur">Utilisateur</span>
-</div>
 
+    <aside class="sidebar">
+
+
+        <h2>
+            📦 Gestion Pro
+        </h2>
+
+
+        <nav>
+
+
+            <button>
+                📊 Dashboard
+            </button>
+
+
+            <button>
+                📦 Produits
+            </button>
+
+
+            <button>
+                💰 Ventes
+            </button>
+
+
+            <button>
+                📜 Historique
+            </button>
+
+
+        </nav>
+
+
+    </aside>
+
+
+
+
+    <main class="main-content">
+
+
+        <header class="topbar">
+
+
+            <div id="userInfo">
+                Bienvenue
+            </div>
+
+
+            <button 
+            id="btnDeconnexion"
+            onclick="deconnexionGoogle()">
+
+                Déconnexion
+
+            </button>
+
+
+        </header>
+
+
+        <div class="container">
 
 <div id="userInfo">
     Bienvenue
@@ -223,5 +283,10 @@ console.log("HTML chargé");
 </script>
 
 <script type="module" src="./main.js"></script>
+</div>
+
+</main>
+
+</div>        
 </body>
 </html>
