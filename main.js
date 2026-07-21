@@ -146,6 +146,73 @@ let ventesGlobales = [];
 // AFFICHAGE ETAT UTILISATEUR
 // ===============================
 
+async function chargerNomUtilisateur(user){
+
+
+    try{
+
+
+        const reference = doc(
+
+            db,
+
+            "users",
+
+            user.uid
+
+        );
+
+
+
+        const resultat = await getDoc(
+
+            reference
+
+        );
+
+
+
+        const zone = document.getElementById(
+
+            "userInfo"
+
+        );
+
+
+
+        if(resultat.exists() && zone){
+
+
+            zone.textContent =
+
+            "Bienvenue " +
+
+            resultat.data().nomUtilisateur;
+
+
+        }
+
+
+
+    }
+
+
+    catch(error){
+
+
+        console.error(
+
+            "Erreur récupération profil :",
+
+            error
+
+        );
+
+
+    }
+
+
+}
 
 function mettreEtatUtilisateur(user){
 
@@ -187,7 +254,7 @@ function mettreEtatUtilisateur(user){
 
     if(user){
 
-
+await chargerNomUtilisateur(user);
 
         utilisateurActuel = user;
 
