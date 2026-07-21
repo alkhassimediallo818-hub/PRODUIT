@@ -1582,7 +1582,90 @@ setInterval(
 
 
 
+// ===============================
+// NAVIGATION MENU
+// ===============================
 
+window.afficherSection = function(section){
+
+    const dashboard =
+    document.getElementById(
+        "sectionDashboard"
+    );
+
+    const produits =
+    document.getElementById(
+        "sectionProduits"
+    );
+
+    const historique =
+    document.getElementById(
+        "sectionHistorique"
+    );
+
+
+
+    if(dashboard)
+        dashboard.style.display = "none";
+
+    if(produits)
+        produits.style.display = "none";
+
+    if(historique)
+        historique.style.display = "none";
+
+
+
+    switch(section){
+
+        case "dashboard":
+
+            if(dashboard)
+                dashboard.style.display = "grid";
+
+        break;
+
+
+
+        case "produits":
+
+            if(produits)
+                produits.style.display = "block";
+
+        break;
+
+
+
+        case "historique":
+
+            if(historique)
+                historique.style.display = "block";
+
+        break;
+
+    }
+
+};
+
+
+
+// ===============================
+// AFFICHAGE PAR DEFAUT
+// ===============================
+
+window.addEventListener(
+
+    "load",
+
+    ()=>{
+
+        afficherSection(
+            "dashboard"
+        );
+
+    }
+
+);
 
 
 
