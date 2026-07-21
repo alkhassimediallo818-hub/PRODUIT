@@ -1,4 +1,13 @@
 import {
+    doc,
+    getDoc
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+import {
+    db
+} from "./firebase.js";
+
+import {
 
     auth,
 
@@ -193,13 +202,8 @@ function mettreEtatUtilisateur(user){
         if(zone){
 
 
-            zone.textContent =
-
-            "Connecté : "
-
-            +
-
-            user.email;
+         zone.textContent =
+"Bienvenue";
 
 
         }
@@ -421,6 +425,46 @@ onAuthStateChanged(
     auth,
 
     async(user)=>{
+
+        // Protection accès dashboard
+
+        if(!user){
+
+            window.location.href = "accueil.html";
+
+            return;
+
+        }
+
+
+
+        const profilReference = doc(
+
+            db,
+
+            "users",
+
+            user.uid
+
+        );
+
+
+
+        const profil = await getDoc(
+
+            profilReference
+
+        );
+
+
+
+        if(!profil.exists()){
+
+            window.location.href = "profil.html";
+
+            return;
+
+        }
 
 
         try{
