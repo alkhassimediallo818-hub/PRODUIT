@@ -600,13 +600,59 @@ onAuthStateChanged(
 
         try{
 
-            // ton code actuel
+
+            const profilReference = doc(
+
+                db,
+
+                "users",
+
+                user.uid
+
+            );
+
+
+            const profil = await getDoc(
+
+                profilReference
+
+            );
+
+
+            if(!profil.exists()){
+
+
+                window.location.href =
+                "profil.html";
+
+
+                return;
+
+
+            }
+
+
+            // ICI ton chargement produits
+            // ventes
+            // historique
+            // dashboard
+
+
 
         }
 
+
         catch(error){
 
-            console.error(error);
+
+            console.error(
+
+                "Erreur session :",
+
+                error
+
+            );
+
 
         }
 
