@@ -2,6 +2,14 @@
 // FIREBASE CONFIGURATION
 // ===============================
 
+import {
+    doc,
+    setDoc,
+    getDoc,
+    serverTimestamp
+}
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
 
 import {
 
@@ -166,6 +174,58 @@ provider.setCustomParameters({
 // ===============================
 // CONNEXION GOOGLE
 // ===============================
+
+export async function creerProfilUtilisateur(user){
+
+    const reference = doc(
+        db,
+        "users",
+        user.uid
+    );
+
+
+    const profil = await getDoc(
+        reference
+    );
+
+
+    if(!profil.exists()){
+
+
+        await setDoc(
+
+            reference,
+
+            {
+
+                nomUtilisateur:
+                user.displayName || "Utilisateur",
+
+
+                email:
+                user.email,
+
+
+                photo:
+                user.photoURL || "",
+
+
+                role:
+                "admin",
+
+
+                dateCreation:
+                serverTimestamp()
+
+            }
+
+        );
+
+
+    }
+
+}
+
 
 
 export async function connexionGoogle(){
