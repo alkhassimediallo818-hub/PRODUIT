@@ -146,6 +146,65 @@ let ventesGlobales = [];
 // AFFICHAGE ETAT UTILISATEUR
 // ===============================
 
+async function chargerProfilUtilisateur(user){
+
+    try{
+
+        const photo =
+        document.getElementById(
+            "photoProfilPage"
+        );
+
+        const email =
+        document.getElementById(
+            "emailProfil"
+        );
+
+        const pseudo =
+        document.getElementById(
+            "pseudoProfil"
+        );
+
+        if(photo && user.photoURL)
+            photo.src = user.photoURL;
+
+        if(email)
+            email.textContent = user.email;
+
+        const reference = doc(
+            db,
+            "users",
+            user.uid
+        );
+
+        const resultat =
+        await getDoc(reference);
+
+        if(
+            resultat.exists()
+            &&
+            pseudo
+        ){
+
+            pseudo.textContent =
+            resultat.data()
+            .nomUtilisateur;
+
+        }
+
+    }
+
+    catch(error){
+
+        console.error(
+            error
+        );
+
+    }
+
+}
+
+
 async function chargerNomUtilisateur(user){
 
 
@@ -1600,6 +1659,11 @@ setInterval(
 
 window.afficherSection = function(section){
 
+    const profil =
+document.getElementById(
+    "sectionProfil"
+);
+
     const dashboard =
     document.getElementById(
         "sectionDashboard"
@@ -1615,7 +1679,8 @@ window.afficherSection = function(section){
         "sectionHistorique"
     );
 
-
+     if(profil)
+          profil.style.display = "none";
 
     if(dashboard)
         dashboard.style.display = "none";
@@ -1634,6 +1699,15 @@ window.afficherSection = function(section){
 
             if(dashboard)
                 dashboard.style.display = "grid";
+
+        break;
+
+
+
+       case "profil":
+
+           if(profil)
+                profil.style.display = "block";
 
         break;
 
