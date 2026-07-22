@@ -1838,7 +1838,134 @@ window.connexionGoogle = async function(){
 
 };
 
+// ===============================
+// GESTION DES SECTIONS
+// ===============================
 
+
+window.afficherSection = function(section){
+
+
+    const sections = document.querySelectorAll(
+        ".page-section"
+    );
+
+
+    sections.forEach((element)=>{
+
+        element.style.display =
+        "none";
+
+    });
+
+
+
+    switch(section){
+
+
+        case "profil":
+
+            document.getElementById(
+                "sectionProfil"
+            ).style.display = "block";
+
+            break;
+
+
+
+        case "parametres":
+
+            document.getElementById(
+                "sectionParametres"
+            ).style.display = "block";
+
+            break;
+
+
+
+        case "dashboard":
+
+            document.getElementById(
+                "dashboard"
+            ).style.display = "block";
+
+            break;
+
+
+
+        default:
+
+            console.log(
+                "Section inconnue :",
+                section
+            );
+
+    }
+
+};
+
+
+
+
+// ===============================
+// MODE SOMBRE
+// ===============================
+
+
+const boutonSombre =
+document.getElementById(
+    "btnModeSombre"
+);
+
+
+
+if(boutonSombre){
+
+
+    boutonSombre.addEventListener(
+
+        "click",
+
+        ()=>{
+
+
+            document.body.classList.toggle(
+                "dark-mode"
+            );
+
+
+            localStorage.setItem(
+
+                "modeSombre",
+
+                document.body.classList.contains(
+                    "dark-mode"
+                )
+
+            );
+
+
+        }
+
+    );
+
+}
+
+
+
+
+// CHARGER LE MODE AU DEMARRAGE
+
+if(
+localStorage.getItem("modeSombre")
+==="true"
+){
+
+    document.body.classList.add(
+        "dark-mode"
+    );
+
+}
 
 // ===============================
 // VERIFICATION APPLICATION
