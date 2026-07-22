@@ -74,59 +74,36 @@ if(bouton){
 
 
                 console.log(
-                    "Profil existe ?",
-                    profil.exists()
-                );
-
-
-                console.log(
-                    "UID =",
-                    user.uid
-                );
-
-
-                console.log(
-    "Profil trouvé =",
+    "PROFIL EXISTE ?",
     profil.exists()
 );
 
 console.log(
-    "UID recherche =",
+    "UID UTILISATEUR :",
     user.uid
 );
 
-                
 
-                if(profil.exists()){
+if(profil.exists()){
 
+    console.log(
+        "Redirection index"
+    );
 
-                    console.log(
-                        "Redirection index"
-                    );
+    window.location.href =
+    "index.html";
 
+}
+else{
 
-                    window.location.href =
-                    "index.html";
+    console.log(
+        "Redirection profil"
+    );
 
+    window.location.href =
+    "profil.html";
 
-                }
-
-                else{
-
-
-                    console.log(
-                        "Redirection profil"
-                    );
-
-
-                    window.location.href =
-                    "profil.html";
-
-
-                }
-
-
-            }
+}
 
 
             catch(error){
