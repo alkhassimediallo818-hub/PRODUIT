@@ -594,16 +594,11 @@ onAuthStateChanged(
             user
         );
 
-        console.log(
-    "UID CONNECTE =",
-    user.uid
-);
-
 
         if(!user){
 
             console.log(
-                "Pas encore connecté"
+                "Aucun utilisateur pour le moment"
             );
 
             return;
@@ -612,60 +607,27 @@ onAuthStateChanged(
 
 
 
+        console.log(
+            "UID CONNECTE =",
+            user.uid
+        );
+
+
         try{
-
-
-            utilisateurConnecte = true;
-
 
             mettreEtatUtilisateur(user);
 
 
-
-            console.log(
-                "Utilisateur connecté :",
-                user.email
-            );
-
-
-
-            produits = await chargerProduits(true) || [];
-
-
-            ventesGlobales = await chargerVentes(true) || [];
-
-
-            await chargerHistorique(true);
-
-
-
-            mettreAJourResume(
-                produits,
-                ventesGlobales
-            );
-
-
-            calculerStockRestant(
-                produits
-            );
-
-
-            preparerGraphique(
-                ventesGlobales
-            );
-
+            // reste du chargement
 
         }
 
-
         catch(error){
-
 
             console.error(
                 "Erreur session Firebase :",
                 error
             );
-
 
         }
 
