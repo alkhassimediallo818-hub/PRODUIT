@@ -686,8 +686,16 @@ onAuthStateChanged(
                 );
 
 
-                window.location.href =
-                "accueil.html";
+                if(
+    !window.location.pathname.includes(
+        "accueil.html"
+    )
+){
+
+    window.location.href =
+    "accueil.html";
+
+}
 
 
             }
