@@ -592,6 +592,11 @@ onAuthStateChanged(
             user
         );
 
+        console.log(
+    "UID CONNECTE =",
+    user.uid
+);
+
 
         if(!user){
 
