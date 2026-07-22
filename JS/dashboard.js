@@ -188,36 +188,35 @@ export function mettreAJourResume(
 
 
 
-    afficherValeur(
+  animerCompteur(
 
-        "nbProduits",
+    "nbProduits",
 
-        produits.length
+    produits.length
 
-    );
-
-
-
-
-    afficherValeur(
-
-        "stockRestant",
-
-        stockTotal
-
-    );
+);
 
 
 
 
-    afficherValeur(
+   animerCompteur(
 
-        "stockFaible",
+    "stockRestant",
 
-        stockFaible
+    stockTotal
 
-    );
+);
 
+
+
+
+   animerCompteur(
+
+    "stockFaible",
+
+    stockFaible
+
+);
 
 
 
@@ -235,24 +234,24 @@ export function mettreAJourResume(
 
 
 
-    afficherValeur(
+ animerCompteur(
 
-        "resumeProduits",
+    "resumeProduits",
 
-        produits.length
+    produits.length
 
-    );
-
-
+);
 
 
-    afficherValeur(
 
-        "resumeStock",
 
-        stockTotal
+   animerCompteur(
 
-    );
+    "resumeStock",
+
+    stockTotal
+
+);
 
 
 
