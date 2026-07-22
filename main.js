@@ -112,7 +112,22 @@ import {
 } from "./JS/dashboard.js";
 
 
+window.deconnexionGoogle = async function(){
 
+    const resultat = await lancerDeconnexionGoogle();
+
+    if(resultat){
+
+        console.log(
+            "Déconnexion réussie"
+        );
+
+        window.location.href =
+        "accueil.html";
+
+    }
+
+};
 
 
 
