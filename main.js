@@ -592,7 +592,7 @@ onAuthStateChanged(
             user
         );
 
-        ...
+        
 
         try{
 
