@@ -1,17 +1,8 @@
 import {
 
-    auth,
-
     connexionGoogle
 
 } from "../firebase.js";
-
-
-import {
-
-    onAuthStateChanged
-
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 
 import {
@@ -31,23 +22,14 @@ import {
 
 
 
-
-
-const bouton =
-
-document.getElementById(
+const bouton = document.getElementById(
     "btnConnexionAccueil"
 );
 
 
-
-const message =
-
-document.getElementById(
+const message = document.getElementById(
     "messageAccueil"
 );
-
-
 
 
 
@@ -68,10 +50,8 @@ if(bouton){
                 "Connexion en cours...";
 
 
-
                 const user =
                 await connexionGoogle();
-
 
 
 
@@ -94,36 +74,48 @@ if(bouton){
 
 
                 console.log(
-    "Profil existe ?",
-    profil.exists()
-);
-
-console.log(
-    "UID =",
-    user.uid
-);
+                    "Profil existe ?",
+                    profil.exists()
+                );
 
 
-              if(profil.exists()){
+                console.log(
+                    "UID =",
+                    user.uid
+                );
 
-    console.log(
-        "Redirection vers index"
-    );
 
-    window.location.href =
-    "index.html";
 
-}
-else{
+                if(profil.exists()){
 
-    console.log(
-        "Redirection vers profil"
-    );
 
-    window.location.href =
-    "profil.html";
+                    console.log(
+                        "Redirection index"
+                    );
 
-}
+
+                    window.location.href =
+                    "index.html";
+
+
+                }
+
+                else{
+
+
+                    console.log(
+                        "Redirection profil"
+                    );
+
+
+                    window.location.href =
+                    "profil.html";
+
+
+                }
+
+
+            }
 
 
             catch(error){
@@ -151,9 +143,3 @@ else{
 
 
 }
-
-console.log(
-    "UID Firebase =",
-    user.uid
-);
-
