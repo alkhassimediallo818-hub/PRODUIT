@@ -587,8 +587,13 @@ onAuthStateChanged(
 
     async(user)=>{
 
+        console.log(
+            "AUTH STATE =",
+            user
+        );
 
         try{
+
 
 
             mettreEtatUtilisateur(user);
@@ -665,6 +670,11 @@ onAuthStateChanged(
 
             else{
 
+
+                console.log(
+    "PATH =",
+    window.location.pathname
+);
 
                 utilisateurConnecte = false;
 
