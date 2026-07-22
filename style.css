@@ -332,6 +332,123 @@
 }
 
 
+/* ===============================
+   OUTILS PRODUITS
+=============================== */
+
+
+.produits-tools{
+
+    display:flex;
+    justify-content:space-between;
+    gap:20px;
+    margin-bottom:25px;
+
+}
+
+
+
+.produits-tools input{
+
+    flex:1;
+    padding:15px;
+    border-radius:12px;
+    border:1px solid #ddd;
+
+}
+
+
+
+.produits-tools button{
+
+    background:#2563eb;
+    color:white;
+    border:none;
+    padding:15px 25px;
+    border-radius:12px;
+    cursor:pointer;
+
+}
+
+
+
+
+/* ===============================
+   TABLE MODERNE
+=============================== */
+
+
+.table-produit{
+
+    width:100%;
+    border-collapse:collapse;
+    background:white;
+    border-radius:15px;
+    overflow:hidden;
+
+}
+
+
+
+.table-produit th{
+
+    background:#111827;
+    color:white;
+    padding:18px;
+    text-align:left;
+
+}
+
+
+
+.table-produit td{
+
+    padding:15px;
+    border-bottom:1px solid #eee;
+
+}
+
+
+
+.table-produit tr:hover{
+
+    background:#f3f4f6;
+
+}
+
+
+
+/* ===============================
+   BADGES
+=============================== */
+
+
+.badge{
+
+    padding:6px 12px;
+    border-radius:20px;
+    font-size:13px;
+
+}
+
+
+
+.stock-ok{
+
+    background:#dcfce7;
+    color:#166534;
+
+}
+
+
+
+.stock-faible{
+
+    background:#fee2e2;
+    color:#991b1b;
+
+}
+
 
 /* =========================
    PROFIL
