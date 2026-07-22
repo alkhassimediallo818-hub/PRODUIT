@@ -370,6 +370,70 @@ async function chargerNomUtilisateur(user){
 
 }
 
+// ===============================
+// ANIMATION DES COMPTEURS DASHBOARD
+// ===============================
+
+function animerCompteur(elementId, valeurFinale){
+
+
+    const element =
+    document.getElementById(
+        elementId
+    );
+
+
+    if(!element)
+        return;
+
+
+
+    let valeur = 0;
+
+
+    const increment =
+    Math.max(
+        1,
+        Math.ceil(
+            valeurFinale / 50
+        )
+    );
+
+
+
+    const timer =
+    setInterval(()=>{
+
+
+        valeur += increment;
+
+
+
+        if(valeur >= valeurFinale){
+
+
+            valeur = valeurFinale;
+
+
+            clearInterval(timer);
+
+
+        }
+
+
+
+        element.textContent =
+        valeur.toLocaleString(
+            "fr-FR"
+        );
+
+
+
+    },20);
+
+
+}
+
 async function mettreEtatUtilisateur(user){
 
      console.log("ETAT UTILISATEUR TERMINE");
