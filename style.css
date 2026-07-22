@@ -1441,3 +1441,254 @@ footer{
 
 
 }
+
+/* ===============================
+   PAGE ACCUEIL SAAS
+================================ */
+
+
+.accueil-saas{
+
+    min-height:100vh;
+    background:#f8fafc;
+    color:#111827;
+
+}
+
+
+
+/* ===============================
+   HERO
+================================ */
+
+
+.hero{
+
+    min-height:90vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    padding:40px;
+
+}
+
+
+
+.hero-content{
+
+    max-width:700px;
+
+}
+
+
+
+.logo-saas{
+
+    font-size:70px;
+    margin-bottom:20px;
+
+}
+
+
+
+.hero h1{
+
+    font-size:55px;
+    margin-bottom:15px;
+
+}
+
+
+
+.hero h2{
+
+    font-size:28px;
+    color:#2563eb;
+    margin-bottom:20px;
+
+}
+
+
+
+.hero p{
+
+    font-size:18px;
+    line-height:1.7;
+    color:#6b7280;
+    margin-bottom:35px;
+
+}
+
+
+
+#btnConnexionAccueil{
+
+    background:#2563eb;
+    color:white;
+    border:none;
+    padding:18px 40px;
+    border-radius:15px;
+    font-size:18px;
+    cursor:pointer;
+    transition:.3s;
+
+}
+
+
+
+#btnConnexionAccueil:hover{
+
+    transform:translateY(-3px);
+    background:#1d4ed8;
+
+}
+
+
+
+
+#messageAccueil{
+
+    margin-top:20px;
+
+}
+
+
+
+
+
+/* ===============================
+   FONCTIONNALITES
+================================ */
+
+
+.fonctionnalites,
+.avantages{
+
+    padding:70px 40px;
+    text-align:center;
+
+}
+
+
+
+.fonctionnalites h2,
+.avantages h2{
+
+    font-size:35px;
+    margin-bottom:40px;
+
+}
+
+
+
+.features-grid{
+
+    display:grid;
+    grid-template-columns:
+    repeat(auto-fit,minmax(250px,1fr));
+    gap:25px;
+
+}
+
+
+
+.feature-card{
+
+    background:white;
+    padding:30px;
+    border-radius:20px;
+    box-shadow:
+    0 10px 30px rgba(0,0,0,.08);
+    transition:.3s;
+
+}
+
+
+
+.feature-card:hover{
+
+    transform:translateY(-8px);
+
+}
+
+
+
+.feature-card h3{
+
+    font-size:22px;
+
+}
+
+
+
+.feature-card p{
+
+    color:#6b7280;
+    line-height:1.6;
+
+}
+
+
+
+
+
+/* ===============================
+   AVANTAGES
+================================ */
+
+
+.avantages-list{
+
+    background:white;
+    max-width:600px;
+    margin:auto;
+    padding:30px;
+    border-radius:20px;
+    box-shadow:
+    0 10px 30px rgba(0,0,0,.08);
+
+}
+
+
+
+.avantages-list p{
+
+    font-size:18px;
+    padding:10px;
+
+}
+
+
+
+
+/* ===============================
+   MOBILE
+================================ */
+
+
+@media(max-width:700px){
+
+
+.hero h1{
+
+    font-size:40px;
+
+}
+
+
+.hero h2{
+
+    font-size:22px;
+
+}
+
+
+.hero{
+
+    padding:20px;
+
+}
+
+
+}
