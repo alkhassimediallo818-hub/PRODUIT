@@ -85,6 +85,17 @@ if(bouton){
                 );
 
 
+                console.log(
+    "Profil trouvé =",
+    profil.exists()
+);
+
+console.log(
+    "UID recherche =",
+    user.uid
+);
+
+                
 
                 if(profil.exists()){
 
