@@ -1772,16 +1772,30 @@ window.rechercherProduit = function(){
 window.afficherSection = function(section){
 
     const dashboard =
-    document.getElementById("sectionDashboard");
+    document.getElementById(
+        "sectionDashboard"
+    );
 
     const produits =
-    document.getElementById("sectionProduits");
+    document.getElementById(
+        "sectionProduits"
+    );
 
     const historique =
-    document.getElementById("sectionHistorique");
+    document.getElementById(
+        "sectionHistorique"
+    );
 
     const profil =
-    document.getElementById("sectionProfil");
+    document.getElementById(
+        "sectionProfil"
+    );
+
+    const parametres =
+    document.getElementById(
+        "sectionParametres"
+    );
+
 
 
     if(dashboard)
@@ -1796,21 +1810,44 @@ window.afficherSection = function(section){
     if(profil)
         profil.style.display = "none";
 
+    if(parametres)
+        parametres.style.display = "none";
 
-    if(section === "dashboard")
+
+
+    if(section === "dashboard" && dashboard){
+
         dashboard.style.display = "grid";
 
+    }
 
-    if(section === "produits")
+
+    else if(section === "produits" && produits){
+
         produits.style.display = "block";
 
+    }
 
-    if(section === "historique")
+
+    else if(section === "historique" && historique){
+
         historique.style.display = "block";
 
+    }
 
-    if(section === "profil")
+
+    else if(section === "profil" && profil){
+
         profil.style.display = "block";
+
+    }
+
+
+    else if(section === "parametres" && parametres){
+
+        parametres.style.display = "block";
+
+    }
 
 };
 
