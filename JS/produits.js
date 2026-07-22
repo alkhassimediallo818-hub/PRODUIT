@@ -797,6 +797,14 @@ export function afficherProduits(){
 
 
 
+       <td>
+
+${obtenirStatutStock(
+    produit.stock
+)}
+
+</td>
+
 
         <td>
 
@@ -1361,7 +1369,110 @@ export function nettoyerProduits(){
 
 
 
+// ===============================
+// RECHERCHE PRODUITS
+// ===============================
 
+
+const rechercheProduit =
+document.getElementById(
+    "rechercheProduit"
+);
+
+
+
+if(rechercheProduit){
+
+
+    rechercheProduit.addEventListener(
+
+        "input",
+
+        ()=>{
+
+
+            const texte =
+            rechercheProduit.value
+            .toLowerCase();
+
+
+
+            const lignes =
+            document.querySelectorAll(
+                "#tableauProduits tr"
+            );
+
+
+
+            lignes.forEach((ligne)=>{
+
+
+                const contenu =
+                ligne.textContent
+                .toLowerCase();
+
+
+
+                if(contenu.includes(texte)){
+
+                    ligne.style.display =
+                    "";
+
+                }
+
+                else{
+
+                    ligne.style.display =
+                    "none";
+
+                }
+
+
+            });
+
+
+        }
+
+    );
+
+
+}
+
+
+
+
+// ===============================
+// STATUT STOCK
+// ===============================
+
+
+export function obtenirStatutStock(stock){
+
+
+    if(stock <= 5){
+
+
+        return `
+        <span class="badge stock-faible">
+        Stock faible
+        </span>
+        `;
+
+
+    }
+
+
+
+    return `
+
+    <span class="badge stock-ok">
+    Disponible
+    </span>
+
+    `;
+
+
+}
 
 
 
