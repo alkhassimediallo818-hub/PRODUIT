@@ -4,7 +4,10 @@
 
 
 import {
-    nombreValide
+
+    nombreValide,
+    animerCompteur
+
 } from "./utils.js";
 
 
