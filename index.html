@@ -41,23 +41,37 @@
 
         <nav>
 
-            <button onclick="afficherSection('dashboard')">
-                📊 Dashboard
-            </button>
 
-            <button onclick="afficherSection('profil')">
-                👤 Profil
-            </button>
+<button onclick="afficherSection('dashboard')">
+📊 Dashboard
+</button>
 
-            <button onclick="afficherSection('produits')">
-                📦 Produits
-            </button>
 
-            <button onclick="afficherSection('historique')">
-                📜 Historique
-            </button>
+<button onclick="afficherSection('produits')">
+📦 Produits
+</button>
 
-        </nav>
+
+<button onclick="afficherSection('ventes')">
+💰 Ventes
+</button>
+
+
+<button onclick="afficherSection('historique')">
+📜 Historique
+</button>
+
+<button onclick="afficherSection('profil')">
+👤 Profil
+</button>
+
+
+<button onclick="afficherSection('parametres')">
+⚙️ Paramètres
+</button>
+
+
+</nav>
 
     </aside>
 
@@ -393,6 +407,105 @@ onclick="deconnexionGoogle()">
 
 </div>
 
+   <!-- =========================
+     SECTION PROFIL
+========================= -->
+
+<section id="sectionProfil" class="page-section">
+
+    <div class="profil-card">
+
+        <img 
+        id="photoProfilPage"
+        src=""
+        alt="Photo profil">
+
+
+        <div class="profil-info">
+
+            <h2 id="pseudoProfil">
+                Utilisateur
+            </h2>
+
+
+            <p id="emailProfil">
+                Email
+            </p>
+
+
+            <p>
+                Rôle :
+                <span id="roleUtilisateur">
+                    Utilisateur
+                </span>
+            </p>
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================
+     SECTION PARAMETRES
+========================= -->
+
+<section id="sectionParametres" class="page-section">
+
+
+    <div class="settings-card">
+
+
+        <h2>
+            ⚙️ Paramètres
+        </h2>
+
+
+
+        <div class="setting-item">
+
+            <span>
+                🌙 Mode sombre
+            </span>
+
+
+            <button id="btnModeSombre">
+
+                Activer
+
+            </button>
+
+        </div>
+
+
+
+
+        <div class="setting-item">
+
+            <span>
+                🔔 Notifications
+            </span>
+
+
+            <button>
+
+                Activer
+
+            </button>
+
+        </div>
+
+
+
+    </div>
+
+
+</section>
+
+    
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
