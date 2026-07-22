@@ -1629,40 +1629,49 @@ document.getElementById(
 
     switch(section){
 
-        case "dashboard":
+       case "dashboard":
 
-            if(dashboard)
-                dashboard.style.display = "grid";
+    document.getElementById(
+        "sectionDashboard"
+    ).style.display = "block";
 
-        break;
-
-
-
-       case "profil":
-
-           if(profil)
-                profil.style.display = "block";
-
-        break;
+break;
 
 
+      case "produits":
 
-        case "produits":
+document.getElementById(
+"sectionProduits"
+).style.display="block";
 
-            if(produits)
-                produits.style.display = "block";
-
-        break;
-
+break;
 
 
-        case "historique":
+case "historique":
 
-            if(historique)
-                historique.style.display = "block";
+document.getElementById(
+"sectionHistorique"
+).style.display="block";
 
-        break;
+break;
 
+
+case "profil":
+
+document.getElementById(
+"sectionProfil"
+).style.display="block";
+
+break;
+
+
+case "parametres":
+
+document.getElementById(
+"sectionParametres"
+).style.display="block";
+
+break;
     }
 
 };
