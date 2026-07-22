@@ -35,16 +35,13 @@ const message = document.getElementById(
 
 if(bouton){
 
-
     bouton.addEventListener(
 
         "click",
 
         async()=>{
 
-
             try{
-
 
                 message.textContent =
                 "Connexion en cours...";
@@ -55,9 +52,7 @@ if(bouton){
 
 
 
-                const profil =
-
-                await getDoc(
+                const profil = await getDoc(
 
                     doc(
 
@@ -74,40 +69,42 @@ if(bouton){
 
 
                 console.log(
-    "PROFIL EXISTE ?",
-    profil.exists()
-);
+                    "PROFIL EXISTE ?",
+                    profil.exists()
+                );
 
-console.log(
-    "UID UTILISATEUR :",
-    user.uid
-);
+                console.log(
+                    "UID UTILISATEUR :",
+                    user.uid
+                );
 
 
-if(profil.exists()){
 
-    console.log(
-        "Redirection index"
-    );
+                if(profil.exists()){
 
-    window.location.href =
-    "index.html";
+                    console.log(
+                        "Redirection index"
+                    );
 
-}
-else{
+                    window.location.href =
+                    "index.html";
 
-    console.log(
-        "Redirection profil"
-    );
+                }
 
-    window.location.href =
-    "profil.html";
+                else{
 
-}
+                    console.log(
+                        "Redirection profil"
+                    );
 
+                    window.location.href =
+                    "profil.html";
+
+                }
+
+            }
 
             catch(error){
-
 
                 console.error(
 
@@ -117,17 +114,13 @@ else{
 
                 );
 
-
                 message.textContent =
                 "Erreur de connexion";
 
-
             }
-
 
         }
 
     );
-
 
 }
