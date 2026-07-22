@@ -588,9 +588,11 @@ onAuthStateChanged(
     async(user)=>{
 
         console.log(
-            "AUTH STATE =",
+            "AUTH USER =",
             user
         );
+
+        ...
 
         try{
 
