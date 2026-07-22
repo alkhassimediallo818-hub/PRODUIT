@@ -1921,62 +1921,47 @@ window.connexionGoogle = async function(){
 
 window.afficherSection = function(section){
 
+    const dashboard =
+    document.getElementById("sectionDashboard");
 
-    const sections = document.querySelectorAll(
-        ".page-section"
-    );
+    const produits =
+    document.getElementById("sectionProduits");
+
+    const historique =
+    document.getElementById("sectionHistorique");
+
+    const profil =
+    document.getElementById("sectionProfil");
+
+    const parametres =
+    document.getElementById("sectionParametres");
 
 
-    sections.forEach((element)=>{
 
-        element.style.display =
-        "none";
+    [dashboard, produits, historique, profil, parametres]
+    .forEach(element=>{
+
+        if(element)
+            element.style.display = "none";
 
     });
 
 
 
-    switch(section){
+    if(section === "dashboard" && dashboard)
+        dashboard.style.display = "grid";
 
+    if(section === "produits" && produits)
+        produits.style.display = "block";
 
-        case "profil":
+    if(section === "historique" && historique)
+        historique.style.display = "block";
 
-            document.getElementById(
-                "sectionProfil"
-            ).style.display = "block";
+    if(section === "profil" && profil)
+        profil.style.display = "block";
 
-            break;
-
-
-
-        case "parametres":
-
-            document.getElementById(
-                "sectionParametres"
-            ).style.display = "block";
-
-            break;
-
-
-
-        case "dashboard":
-
-            document.getElementById(
-                "dashboard"
-            ).style.display = "block";
-
-            break;
-
-
-
-        default:
-
-            console.log(
-                "Section inconnue :",
-                section
-            );
-
-    }
+    if(section === "parametres" && parametres)
+        parametres.style.display = "block";
 
 };
 
