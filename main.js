@@ -158,7 +158,56 @@ let ventesGlobales = [];
 
 
 
+// ===============================
+// MISE A JOUR DASHBOARD
+// ===============================
 
+function mettreAJourDashboard(
+    produits,
+    ventes
+){
+
+    const nombreProduits =
+    produits.length;
+
+
+    const stock =
+    produits.reduce(
+        (total, produit)=>{
+
+            return total +
+            (produit.stockTotal || 0);
+
+        },
+        0
+    );
+
+
+    const transactions =
+    ventes.length;
+
+
+
+    animerCompteur(
+        "nbProduits",
+        nombreProduits
+    );
+
+
+    animerCompteur(
+        "stockRestant",
+        stock
+    );
+
+
+    animerCompteur(
+        "nbTransactions",
+        transactions
+    );
+
+
+
+}
 
 
 // ===============================
