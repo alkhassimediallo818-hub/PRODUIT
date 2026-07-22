@@ -152,5 +152,8 @@ else{
 
 }
 
-
+console.log(
+    "UID Firebase =",
+    user.uid
+);
 
