@@ -797,10 +797,10 @@ export function afficherProduits(){
 
 
 
-       <td>
+      <td>
 
 ${obtenirStatutStock(
-    produit.stock
+    produit.stockTotal
 )}
 
 </td>
