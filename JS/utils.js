@@ -172,6 +172,7 @@ export function formaterArgent(
 
     );
 
+    }
 // ===============================
 // ANIMATION COMPTEURS
 // ===============================
@@ -234,4 +235,4 @@ export function animerCompteur(
 
 
 }
-}
+
