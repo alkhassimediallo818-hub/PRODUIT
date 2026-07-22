@@ -93,29 +93,37 @@ if(bouton){
 
 
 
+                console.log(
+    "Profil existe ?",
+    profil.exists()
+);
+
+console.log(
+    "UID =",
+    user.uid
+);
 
 
-                if(profil.exists()){
+              if(profil.exists()){
 
+    console.log(
+        "Redirection vers index"
+    );
 
-                    window.location.href =
-                    "index.html";
+    window.location.href =
+    "index.html";
 
+}
+else{
 
-                }
+    console.log(
+        "Redirection vers profil"
+    );
 
-                else{
+    window.location.href =
+    "profil.html";
 
-
-                    window.location.href =
-                    "profil.html";
-
-
-                }
-
-
-
-            }
+}
 
 
             catch(error){
