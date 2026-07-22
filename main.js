@@ -1473,13 +1473,10 @@ async function actualiserDonnees(){
 
 
 
-        mettreAJourResume(
-
-            produits,
-
-            ventesGlobales
-
-        );
+       mettreAJourDashboard(
+    produits,
+    ventesGlobales
+);
 
 
 
