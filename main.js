@@ -1587,94 +1587,6 @@ setInterval(
 
 
 
-// ===============================
-// NAVIGATION MENU
-// ===============================
-
-window.afficherSection = function(section){
-
-    const profil =
-document.getElementById(
-    "sectionProfil"
-);
-
-    const dashboard =
-    document.getElementById(
-        "sectionDashboard"
-    );
-
-    const produits =
-    document.getElementById(
-        "sectionProduits"
-    );
-
-    const historique =
-    document.getElementById(
-        "sectionHistorique"
-    );
-
-     if(profil)
-          profil.style.display = "none";
-
-    if(dashboard)
-        dashboard.style.display = "none";
-
-    if(produits)
-        produits.style.display = "none";
-
-    if(historique)
-        historique.style.display = "none";
-
-
-
-    switch(section){
-
-       case "dashboard":
-
-    document.getElementById(
-        "sectionDashboard"
-    ).style.display = "block";
-
-break;
-
-
-      case "produits":
-
-document.getElementById(
-"sectionProduits"
-).style.display="block";
-
-break;
-
-
-case "historique":
-
-document.getElementById(
-"sectionHistorique"
-).style.display="block";
-
-break;
-
-
-case "profil":
-
-document.getElementById(
-"sectionProfil"
-).style.display="block";
-
-break;
-
-
-case "parametres":
-
-document.getElementById(
-"sectionParametres"
-).style.display="block";
-
-break;
-    }
-
-};
 
 
 
@@ -1769,6 +1681,40 @@ window.rechercherProduit = function(){
 
 };
 
+
+window.deconnexionGoogle = async function(){
+
+    try{
+
+        await lancerDeconnexionGoogle();
+
+        console.log(
+            "Déconnexion réussie"
+        );
+
+        window.location.href =
+        "accueil.html";
+
+    }
+
+    catch(error){
+
+        console.error(
+            "Erreur déconnexion :",
+            error
+        );
+
+    }
+
+};
+
+
+window.connexionGoogle = async function(){
+
+    await lancerConnexionGoogle();
+
+};
+
 // ===============================
 // GESTION DES SECTIONS
 // ===============================
@@ -1801,29 +1747,27 @@ window.afficherSection = function(section){
     );
 
 
+    [
+        dashboard,
+        produits,
+        historique,
+        profil,
+        parametres
 
-    // Masquer toutes les sections
+    ].forEach((element)=>{
 
-    if(dashboard)
-        dashboard.style.display = "none";
+        if(element){
 
-    if(produits)
-        produits.style.display = "none";
+            element.style.display = "none";
 
-    if(historique)
-        historique.style.display = "none";
+        }
 
-    if(profil)
-        profil.style.display = "none";
-
-    if(parametres)
-        parametres.style.display = "none";
-
+    });
 
 
-    // Afficher la section demandée
 
     switch(section){
+
 
         case "dashboard":
 
@@ -1869,10 +1813,9 @@ window.afficherSection = function(section){
         break;
 
 
-
         default:
 
-            console.warn(
+            console.log(
                 "Section inconnue :",
                 section
             );
@@ -1880,91 +1823,6 @@ window.afficherSection = function(section){
     }
 
 };
-
-window.deconnexionGoogle = async function(){
-
-    try{
-
-        await lancerDeconnexionGoogle();
-
-        console.log(
-            "Déconnexion réussie"
-        );
-
-        window.location.href =
-        "accueil.html";
-
-    }
-
-    catch(error){
-
-        console.error(
-            "Erreur déconnexion :",
-            error
-        );
-
-    }
-
-};
-
-
-window.connexionGoogle = async function(){
-
-    await lancerConnexionGoogle();
-
-};
-
-// ===============================
-// GESTION DES SECTIONS
-// ===============================
-
-
-window.afficherSection = function(section){
-
-    const dashboard =
-    document.getElementById("sectionDashboard");
-
-    const produits =
-    document.getElementById("sectionProduits");
-
-    const historique =
-    document.getElementById("sectionHistorique");
-
-    const profil =
-    document.getElementById("sectionProfil");
-
-    const parametres =
-    document.getElementById("sectionParametres");
-
-
-
-    [dashboard, produits, historique, profil, parametres]
-    .forEach(element=>{
-
-        if(element)
-            element.style.display = "none";
-
-    });
-
-
-
-    if(section === "dashboard" && dashboard)
-        dashboard.style.display = "grid";
-
-    if(section === "produits" && produits)
-        produits.style.display = "block";
-
-    if(section === "historique" && historique)
-        historique.style.display = "block";
-
-    if(section === "profil" && profil)
-        profil.style.display = "block";
-
-    if(section === "parametres" && parametres)
-        parametres.style.display = "block";
-
-};
-
 
 
 
