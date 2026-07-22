@@ -4,547 +4,1190 @@
 <head>
 
 <meta charset="UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Gestion des Produits</title>
+<title>Gestion Pro</title>
 
 <link rel="stylesheet" href="style.css">
 
 </head>
 
+
 <body>
 
-    <div id="sectionProfil">
 
-    <img id="photoProfilPage">
-
-    <h2 id="pseudoProfil">
-        Utilisateur
-    </h2>
-
-    <p id="emailProfil"></p>
-
-    <p>
-        Rôle :
-        <span id="roleUtilisateur">
-            Utilisateur
-        </span>
-    </p>
-
-</div>
-    
 <div class="app-layout">
 
-    <aside class="sidebar">
 
-        <h2>📦 Gestion Pro</h2>
-
-        <nav>
-
-
-<button onclick="afficherSection('dashboard')">
-📊 Dashboard
-</button>
+<!-- ===============================
+     SIDEBAR
+================================ -->
 
 
-<button onclick="afficherSection('produits')">
-📦 Produits
-</button>
+<aside class="sidebar">
 
 
-<button onclick="afficherSection('ventes')">
-💰 Ventes
-</button>
+    <h2>
+        📦 Gestion Pro
+    </h2>
 
 
-<button onclick="afficherSection('historique')">
-📜 Historique
-</button>
 
-<button onclick="afficherSection('profil')">
-👤 Profil
-</button>
+    <nav>
 
 
-<button onclick="afficherSection('parametres')">
-⚙️ Paramètres
-</button>
+        <button onclick="afficherSection('dashboard')">
+            📊 Dashboard
+        </button>
 
 
-</nav>
 
-    </aside>
+        <button onclick="afficherSection('produits')">
+            📦 Produits
+        </button>
 
-    <main class="main-content">
 
-        <header class="topbar">
 
-          <div class="profil-zone">
+        <button onclick="afficherSection('ventes')">
+            💰 Ventes
+        </button>
 
-    <img
-        id="photoProfil"
-        src=""
-        alt="Photo"
-        class="photo-profil">
 
-    <div>
 
-        <div id="userInfo">
-            Bienvenue
-        </div>
+        <button onclick="afficherSection('historique')">
+            📜 Historique
+        </button>
 
-        <small id="roleUtilisateur">
-            Administrateur
-        </small>
 
-    </div>
+
+        <button onclick="afficherSection('profil')">
+            👤 Profil
+        </button>
+
+
+
+        <button onclick="afficherSection('parametres')">
+            ⚙️ Paramètres
+        </button>
+
+
+    </nav>
+
+
+</aside>
+
+
+
+
+
+<!-- ===============================
+     CONTENU PRINCIPAL
+================================ -->
+
+
+<main class="main-content">
+
+
+
+<header class="topbar">
+
+
+
+<div class="profil-zone">
+
+
+<img
+
+id="photoProfil"
+
+src=""
+
+alt="Photo"
+
+class="photo-profil"
+
+
+
+>
+
+
+
+<div>
+
+
+<div id="userInfo">
+
+Bienvenue
 
 </div>
 
-<button
-id="btnDeconnexion"
-onclick="deconnexionGoogle()">
 
-    Déconnexion
+
+<small id="roleUtilisateur">
+
+Administrateur
+
+</small>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+<button
+
+id="btnDeconnexion"
+
+onclick="deconnexionGoogle()"
+
+>
+
+
+Déconnexion
+
 
 </button>
 
-        </header>
-
-        <div class="container">
-
-            <!-- DASHBOARD -->
-
-            <div class="dashboard" id="sectionDashboard">
-
-                <div class="card">
-                    <h3>📦 Produits</h3>
-                    <span id="nbProduits">0</span>
-                </div>
-
-                <div class="card">
-                    <h3>💰 Bénéfice Stock</h3>
-                    <span id="beneficeTotal">0 FCFA</span>
-                </div>
-
-                <div class="card">
-                    <h3>📈 Chiffre d'affaires</h3>
-                    <span id="chiffreAffaires">0 FCFA</span>
-                </div>
-
-                <div class="card">
-                    <h3>💵 Bénéfice Réel</h3>
-                    <span id="beneficeVentes">0 FCFA</span>
-                </div>
-
-                <div class="card">
-                    <h3>📦 Stock Restant</h3>
-                    <span id="stockRestant">0</span>
-                </div>
-
-                <div class="card">
-                    <h3>📅 Ventes Aujourd'hui</h3>
-                    <span id="ventesJour">0 FCFA</span>
-                </div>
-
-                <div class="card">
-                    <h3>📆 Ventes du Mois</h3>
-                    <span id="ventesMois">0 FCFA</span>
-                </div>
-
-                <div class="card">
-                    <h3>🏆 Produit Vedette</h3>
-                    <span id="produitVedette">Aucun</span>
-                </div>
-
-                <div class="card">
-                    <h3>📦 Unités Vendues</h3>
-                    <span id="unitesVendues">0</span>
-                </div>
-
-                <div class="card">
-                    <h3>🧾 Transactions</h3>
-                    <span id="nbTransactions">0</span>
-                </div>
-
-                <div class="card">
-                    <h3>🚨 Stock Faible</h3>
-                    <span id="stockFaible">0</span>
-                </div>
-
-                <div class="card graphique">
-                    <h3>📊 Evolution des ventes</h3>
-                    <canvas id="graphiqueVentes"></canvas>
-                </div>
-
-            </div>
-
-            <!-- PRODUITS -->
-
-            <div id="sectionProduits">
-
-                <div class="formulaire">
-
-                    <input type="text" id="nom" placeholder="Nom du produit">
-
-                    <input type="number" id="prixGros" placeholder="Prix en gros">
-
-                    <input type="number" id="nombreCartons" placeholder="Nombre de cartons">
-
-                    <input type="number" id="produitsParCarton" placeholder="Produits par carton">
-
-                    <input type="number" id="prixRevente" placeholder="Prix de revente unitaire">
-
-                    <button onclick="ajouterProduit()">
-                        Ajouter le produit
-                    </button>
-
-                </div>
 
 
- <!-- ===============================
-     OUTILS PRODUITS
+</header>
+
+
+
+
+
+<div class="container">
+
+
+
+
+
+<!-- ===============================
+     DASHBOARD
 ================================ -->
+
+
+<div
+
+class="dashboard"
+
+id="sectionDashboard"
+
+
+
+>
+
+
+
+<div class="card">
+
+
+<h3>
+📦 Produits
+</h3>
+
+
+<span id="nbProduits">
+0
+</span>
+
+
+</div>
+
+
+
+
+<div class="card">
+
+
+<h3>
+💰 Bénéfice Stock
+</h3>
+
+
+<span id="beneficeTotal">
+0 FCFA
+</span>
+
+
+</div>
+
+
+
+
+<div class="card">
+
+
+<h3>
+📈 Chiffre d'affaires
+</h3>
+
+
+<span id="chiffreAffaires">
+0 FCFA
+</span>
+
+
+</div>
+
+
+
+
+<div class="card">
+
+
+<h3>
+💵 Bénéfice Réel
+</h3>
+
+
+<span id="beneficeVentes">
+0 FCFA
+</span>
+
+
+</div>
+
+
+
+
+<div class="card">
+
+
+<h3>
+📦 Stock Restant
+</h3>
+
+
+<span id="stockRestant">
+0
+</span>
+
+
+</div>
+
+
+
+
+<div class="card">
+
+
+<h3>
+📅 Ventes Aujourd'hui
+</h3>
+
+
+<span id="ventesJour">
+0 FCFA
+</span>
+
+
+</div>
+
+
+
+
+<div class="card">
+
+
+<h3>
+📆 Ventes du Mois
+</h3>
+
+
+<span id="ventesMois">
+0 FCFA
+</span>
+
+
+</div>
+
+
+
+
+<div class="card">
+
+
+<h3>
+🏆 Produit Vedette
+</h3>
+
+
+<span id="produitVedette">
+Aucun
+</span>
+
+
+</div>
+
+
+
+
+<div class="card">
+
+
+<h3>
+📦 Unités Vendues
+</h3>
+
+
+<span id="unitesVendues">
+0
+</span>
+
+
+</div>
+
+
+
+
+<div class="card">
+
+
+<h3>
+🧾 Transactions
+</h3>
+
+
+<span id="nbTransactions">
+0
+</span>
+
+
+</div>
+
+
+
+
+<div class="card">
+
+
+<h3>
+🚨 Stock Faible
+</h3>
+
+
+<span id="stockFaible">
+0
+</span>
+
+
+</div>
+
+
+
+
+<div class="card graphique">
+
+
+<h3>
+📊 Evolution des ventes
+</h3>
+
+
+<canvas id="graphiqueVentes"></canvas>
+
+
+</div>
+
+
+
+
+</div>
+
+<!-- ===============================
+     PRODUITS
+================================ -->
+
+
+<div id="sectionProduits">
+
+
+
+<div class="formulaire">
+
+
+<input 
+type="text"
+id="nom"
+placeholder="Nom du produit">
+
+
+
+<input 
+type="number"
+id="prixGros"
+placeholder="Prix en gros">
+
+
+
+<input 
+type="number"
+id="nombreCartons"
+placeholder="Nombre de cartons">
+
+
+
+<input 
+type="number"
+id="produitsParCarton"
+placeholder="Produits par carton">
+
+
+
+<input 
+type="number"
+id="prixRevente"
+placeholder="Prix de revente unitaire">
+
+
+
+<button onclick="ajouterProduit()">
+
+Ajouter le produit
+
+</button>
+
+
+</div>
+
+
+
+
+
+<!-- OUTILS PRODUITS -->
+
 
 <div class="produits-tools">
 
 
-    <input 
-    type="text"
-    id="rechercheProduit"
-    placeholder="🔎 Rechercher un produit...">
+<input
+
+type="text"
+
+id="rechercheProduit"
+
+placeholder="🔎 Rechercher un produit..."
+
+>
 
 
-    <button id="btnActualiserProduits">
 
-        🔄 Actualiser
+<button id="btnActualiserProduits">
 
-    </button>
+🔄 Actualiser
+
+</button>
 
 
-</div>               
 
-            <table class="table-produit">
+</div>
+
+
+
+
+
+
+
+<!-- TABLE PRODUITS -->
+
+
+<table class="table-produit">
+
 
 <thead>
 
+
 <tr>
 
-<th>Produit</th>
-<th>Stock</th>
-<th>Prix Achat</th>
-<th>Prix Vente</th>
-<th>Bénéfice</th>
-<th>Statut</th>
-<th>Actions</th>
+
+<th>
+Produit
+</th>
+
+
+<th>
+Prix Achat
+</th>
+
+
+<th>
+Statut
+</th>
+
+
+<th>
+Cartons
+</th>
+
+
+<th>
+Produits / Carton
+</th>
+
+
+<th>
+Stock Total
+</th>
+
+
+<th>
+Prix Unitaire
+</th>
+
+
+<th>
+Prix Vente
+</th>
+
+
+<th>
+Bénéfice
+</th>
+
+
+<th>
+Actions
+</th>
+
+
 
 </tr>
+
 
 </thead>
 
 
+
+
 <tbody id="tableauProduits">
+
 
 </tbody>
 
 
+
 </table>
-                    <div class="recherche-produit">
 
-    <input 
-    type="text"
-    id="rechercheProduit"
-    placeholder="🔎 Rechercher un produit..."
-    oninput="rechercherProduit()">
 
-</div>
-                    
-
-                    <tbody id="tableauProduits"></tbody>
-
-                </table>
-
-            </div>
-
-            <!-- FENÊTRE VENTE -->
-
-            <div id="modalVente" class="modal" style="display:none;">
-
-                <div class="modal-content">
-
-                    <h2>💰 Effectuer une vente</h2>
-
-                    <p id="nomProduitVente">
-                        Produit sélectionné
-                    </p>
-
-                    <input
-                        type="number"
-                        id="quantiteVente"
-                        placeholder="Quantité vendue"
-                        min="1">
-
-                    <div class="modal-actions">
-
-                        <button onclick="confirmerVente()">
-                            ✅ Confirmer la vente
-                        </button>
-
-                        <button onclick="fermerVente()">
-                            ❌ Annuler
-                        </button>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-            <!-- HISTORIQUE -->
-
-            <div id="sectionHistorique">
-
-                <div class="historique">
-
-                    <h2>📜 Historique des actions</h2>
-
-                    <button onclick="viderHistorique()">
-                        🧹 Vider tout l'historique
-                    </button>
-
-                    <table>
-
-                        <thead>
-                            <tr>
-                                <th>Action</th>
-                                <th>Produit</th>
-                                <th>Date</th>
-                            </tr>
-                        </thead>
-
-                        <tbody id="tableauHistorique"></tbody>
-
-                    </table>
-
-                </div>
-
-                <div class="historique">
-
-                    <h2>💰 Historique des ventes</h2>
-
-                    <table>
-
-                        <thead>
-                            <tr>
-                                <th>Produit</th>
-                                <th>Quantité vendue</th>
-                                <th>Montant</th>
-                                <th>Bénéfice</th>
-                                <th>Statut</th>
-                                <th>Date</th>
-                            </tr>
-                        </thead>
-
-                        <tbody id="tableauVentes"></tbody>
-
-                    </table>
-
-                </div>
-
-                <div class="historique">
-
-                    <div id="sectionProfil" style="display:none;">
-
-    <div class="card-profil">
-
-        <h2>👤 Mon Profil</h2>
-
-        <img
-            id="photoProfilPage"
-            class="photo-profil-large"
-            src=""
-            alt="Photo Profil">
-
-        <p>
-            <strong>Pseudo :</strong>
-            <span id="pseudoProfil">
-                Chargement...
-            </span>
-        </p>
-
-        <p>
-            <strong>Email :</strong>
-            <span id="emailProfil">
-                Chargement...
-            </span>
-        </p>
-
-        <button onclick="ouvrirModificationPseudo()">
-            ✏️ Modifier le pseudo
-        </button>
-
-    </div>
 
 </div>
 
-                    <h2>📊 Résumé Rapide</h2>
 
-                    <table>
 
-                        <thead>
-                            <tr>
-                                <th>Indicateur</th>
-                                <th>Valeur</th>
-                            </tr>
-                        </thead>
 
-                        <tbody>
 
-                            <tr>
-                                <td>Produits enregistrés</td>
-                                <td id="resumeProduits">0</td>
-                            </tr>
 
-                            <tr>
-                                <td>Stock restant</td>
-                                <td id="resumeStock">0</td>
-                            </tr>
 
-                            <tr>
-                                <td>Unités vendues</td>
-                                <td id="resumeVentes">0</td>
-                            </tr>
 
-                            <tr>
-                                <td>Chiffre d'affaires</td>
-                                <td id="resumeCA">0 FCFA</td>
-                            </tr>
+<!-- ===============================
+     FENETRE VENTE
+================================ -->
 
-                            <tr>
-                                <td>Bénéfice réel</td>
-                                <td id="resumeBenefice">0 FCFA</td>
-                            </tr>
 
-                        </tbody>
+<div
 
-                    </table>
+id="modalVente"
 
-                </div>
+class="modal"
 
-            </div>
+style="display:none;"
 
-        </div>
 
-    </main>
+
+>
+
+
+
+<div class="modal-content">
+
+
+
+<h2>
+
+💰 Effectuer une vente
+
+</h2>
+
+
+
+
+<p id="nomProduitVente">
+
+Produit sélectionné
+
+</p>
+
+
+
+
+<input
+
+type="number"
+
+id="quantiteVente"
+
+placeholder="Quantité vendue"
+
+min="1"
+
+
+
+>
+
+
+
+
+<div class="modal-actions">
+
+
+
+<button onclick="confirmerVente()">
+
+✅ Confirmer la vente
+
+</button>
+
+
+
+<button onclick="fermerVente()">
+
+❌ Annuler
+
+</button>
+
+
 
 </div>
 
-   <!-- =========================
-     SECTION PROFIL
-========================= -->
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- ===============================
+     HISTORIQUE
+================================ -->
+
+
+
+<div id="sectionHistorique">
+
+
+
+<div class="historique">
+
+
+<h2>
+
+📜 Historique des actions
+
+</h2>
+
+
+
+
+<button onclick="viderHistorique()">
+
+🧹 Vider tout l'historique
+
+</button>
+
+
+
+
+<table>
+
+
+<thead>
+
+
+<tr>
+
+
+<th>
+Action
+</th>
+
+
+<th>
+Produit
+</th>
+
+
+<th>
+Date
+</th>
+
+
+</tr>
+
+
+</thead>
+
+
+
+<tbody id="tableauHistorique">
+
+
+</tbody>
+
+
+
+</table>
+
+
+
+</div>
+
+
+
+
+
+
+
+<div class="historique">
+
+
+
+<h2>
+
+💰 Historique des ventes
+
+</h2>
+
+
+
+
+<table>
+
+
+<thead>
+
+
+<tr>
+
+
+<th>
+Produit
+</th>
+
+
+<th>
+Quantité vendue
+</th>
+
+
+<th>
+Montant
+</th>
+
+
+<th>
+Bénéfice
+</th>
+
+
+<th>
+Statut
+</th>
+
+
+<th>
+Date
+</th>
+
+
+
+</tr>
+
+
+</thead>
+
+
+
+
+<tbody id="tableauVentes">
+
+
+</tbody>
+
+
+
+</table>
+
+
+
+</div>
+
+
+
+
+
+
+
+<div class="historique">
+
+
+
+<h2>
+
+📊 Résumé Rapide
+
+</h2>
+
+
+
+
+<table>
+
+
+
+<thead>
+
+
+<tr>
+
+
+<th>
+Indicateur
+</th>
+
+
+<th>
+Valeur
+</th>
+
+
+</tr>
+
+
+</thead>
+
+
+
+
+<tbody>
+
+
+
+<tr>
+
+<td>
+Produits enregistrés
+</td>
+
+
+<td id="resumeProduits">
+0
+</td>
+
+
+</tr>
+
+
+
+
+
+<tr>
+
+<td>
+Stock restant
+</td>
+
+
+<td id="resumeStock">
+0
+</td>
+
+
+</tr>
+
+
+
+
+
+<tr>
+
+<td>
+Unités vendues
+</td>
+
+
+<td id="resumeVentes">
+0
+</td>
+
+
+</tr>
+
+
+
+
+
+<tr>
+
+<td>
+Chiffre d'affaires
+</td>
+
+
+<td id="resumeCA">
+0 FCFA
+</td>
+
+
+</tr>
+
+
+
+
+
+<tr>
+
+<td>
+Bénéfice réel
+</td>
+
+
+<td id="resumeBenefice">
+0 FCFA
+</td>
+
+
+</tr>
+
+
+
+</tbody>
+
+
+
+</table>
+
+
+
+
+</div>
+
+
+
+</div>
+
+<!-- ===============================
+     PROFIL UTILISATEUR
+================================ -->
+
 
 <section id="sectionProfil" class="page-section">
 
-    <div class="profil-card">
 
-        <img 
-        id="photoProfilPage"
-        src=""
-        alt="Photo profil">
+<div class="profil-card">
 
 
-        <div class="profil-info">
 
-            <h2 id="pseudoProfil">
-                Utilisateur
-            </h2>
+<img
 
+id="photoProfilPage"
 
-            <p id="emailProfil">
-                Email
-            </p>
+src=""
+
+alt="Photo profil"
 
 
-            <p>
-                Rôle :
-                <span id="roleUtilisateur">
-                    Utilisateur
-                </span>
-            </p>
 
-        </div>
+>
 
 
-    </div>
+
+<div class="profil-info">
+
+
+<h2 id="pseudoProfil">
+
+Utilisateur
+
+</h2>
+
+
+
+<p id="emailProfil">
+
+Email
+
+</p>
+
+
+
+
+<p>
+
+Rôle :
+
+<span id="roleUtilisateurProfil">
+
+Utilisateur
+
+</span>
+
+
+</p>
+
+
+
+</div>
+
+
+
+</div>
+
+
 
 </section>
 
 
 
-<!-- =========================
-     SECTION PARAMETRES
-========================= -->
+
+
+
+
+
+
+<!-- ===============================
+     PARAMETRES
+================================ -->
+
 
 <section id="sectionParametres" class="page-section">
 
 
-    <div class="settings-card">
+
+<div class="settings-card">
 
 
-        <h2>
-            ⚙️ Paramètres
-        </h2>
+<h2>
 
+⚙️ Paramètres
 
-
-        <div class="setting-item">
-
-            <span>
-                🌙 Mode sombre
-            </span>
-
-
-            <button id="btnModeSombre">
-
-                Activer
-
-            </button>
-
-        </div>
+</h2>
 
 
 
 
-        <div class="setting-item">
-
-            <span>
-                🔔 Notifications
-            </span>
+<div class="setting-item">
 
 
-            <button>
+<span>
 
-                Activer
+🌙 Mode sombre
 
-            </button>
-
-        </div>
+</span>
 
 
 
-    </div>
+<button id="btnModeSombre">
+
+Activer
+
+</button>
+
+
+
+</div>
+
+
+
+
+
+
+<div class="setting-item">
+
+
+<span>
+
+🔔 Notifications
+
+</span>
+
+
+
+<button>
+
+Activer
+
+</button>
+
+
+
+</div>
+
+
+
+</div>
+
 
 
 </section>
 
-    
+
+
+
+
+</div>
+
+
+</main>
+
+
+</div>
+
+
+
+
+
+
+
+<!-- ===============================
+     BIBLIOTHEQUE GRAPHIQUE
+================================ -->
+
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+
+
+
 <script>
-console.log("HTML chargé");
+
+console.log(
+"HTML chargé"
+);
+
 </script>
+
+
+
 
 <script type="module" src="./main.js"></script>
 
+
+
 </body>
-</html>
+
+</html>    
