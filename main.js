@@ -357,7 +357,9 @@ async function chargerNomUtilisateur(user){
 
 async function mettreEtatUtilisateur(user){
 
-
+     console.log("ETAT UTILISATEUR TERMINE");
+    
+    
     const zone =
     document.getElementById(
         "userInfo"
