@@ -1716,45 +1716,34 @@ window.connexionGoogle = async function(){
 };
 
 // ===============================
-// GESTION DES SECTIONS
+// GESTION DES SECTIONS + MENU ACTIF
 // ===============================
 
 window.afficherSection = function(section){
 
-    const dashboard =
-    document.getElementById(
-        "sectionDashboard"
-    );
 
-    const produits =
-    document.getElementById(
-        "sectionProduits"
-    );
+    const sections = [
 
-    const historique =
-    document.getElementById(
-        "sectionHistorique"
-    );
+        "sectionDashboard",
 
-    const profil =
-    document.getElementById(
-        "sectionProfil"
-    );
+        "sectionProduits",
 
-    const parametres =
-    document.getElementById(
+        "sectionHistorique",
+
+        "sectionProfil",
+
         "sectionParametres"
-    );
+
+    ];
 
 
-    [
-        dashboard,
-        produits,
-        historique,
-        profil,
-        parametres
 
-    ].forEach((element)=>{
+    sections.forEach((id)=>{
+
+
+        const element =
+        document.getElementById(id);
+
 
         if(element){
 
@@ -1762,68 +1751,134 @@ window.afficherSection = function(section){
 
         }
 
+
     });
+
+
+
+
+
+    const boutonsMenu =
+    document.querySelectorAll(
+        ".sidebar nav button"
+    );
+
+
+
+    boutonsMenu.forEach((bouton)=>{
+
+
+        bouton.classList.remove(
+            "active"
+        );
+
+
+    });
+
+
 
 
 
     switch(section){
 
 
+
         case "dashboard":
 
-            if(dashboard)
-                dashboard.style.display = "grid";
+
+            document.getElementById(
+                "sectionDashboard"
+            ).style.display = "grid";
+
 
         break;
+
 
 
 
         case "produits":
 
-            if(produits)
-                produits.style.display = "block";
+
+            document.getElementById(
+                "sectionProduits"
+            ).style.display = "block";
+
 
         break;
+
 
 
 
         case "historique":
 
-            if(historique)
-                historique.style.display = "block";
+
+            document.getElementById(
+                "sectionHistorique"
+            ).style.display = "block";
+
 
         break;
+
 
 
 
         case "profil":
 
-            if(profil)
-                profil.style.display = "block";
+
+            document.getElementById(
+                "sectionProfil"
+            ).style.display = "block";
+
 
         break;
+
 
 
 
         case "parametres":
 
-            if(parametres)
-                parametres.style.display = "block";
+
+            document.getElementById(
+                "sectionParametres"
+            ).style.display = "block";
+
 
         break;
 
 
-        default:
-
-            console.log(
-                "Section inconnue :",
-                section
-            );
-
     }
 
-};
 
+
+
+
+    // Activation bouton correspondant
+
+
+    boutonsMenu.forEach((bouton)=>{
+
+
+        if(
+            bouton
+            .getAttribute("onclick")
+            .includes(section)
+
+        ){
+
+
+            bouton.classList.add(
+                "active"
+            );
+
+
+        }
+
+
+    });
+
+
+
+};
 
 
 // ===============================
