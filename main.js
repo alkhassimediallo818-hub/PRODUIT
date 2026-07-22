@@ -1769,6 +1769,10 @@ window.rechercherProduit = function(){
 
 };
 
+// ===============================
+// GESTION DES SECTIONS
+// ===============================
+
 window.afficherSection = function(section){
 
     const dashboard =
@@ -1798,6 +1802,8 @@ window.afficherSection = function(section){
 
 
 
+    // Masquer toutes les sections
+
     if(dashboard)
         dashboard.style.display = "none";
 
@@ -1815,37 +1821,61 @@ window.afficherSection = function(section){
 
 
 
-    if(section === "dashboard" && dashboard){
+    // Afficher la section demandée
 
-        dashboard.style.display = "grid";
+    switch(section){
 
-    }
+        case "dashboard":
 
+            if(dashboard)
+                dashboard.style.display = "grid";
 
-    else if(section === "produits" && produits){
-
-        produits.style.display = "block";
-
-    }
+        break;
 
 
-    else if(section === "historique" && historique){
 
-        historique.style.display = "block";
+        case "produits":
 
-    }
+            if(produits)
+                produits.style.display = "block";
 
-
-    else if(section === "profil" && profil){
-
-        profil.style.display = "block";
-
-    }
+        break;
 
 
-    else if(section === "parametres" && parametres){
 
-        parametres.style.display = "block";
+        case "historique":
+
+            if(historique)
+                historique.style.display = "block";
+
+        break;
+
+
+
+        case "profil":
+
+            if(profil)
+                profil.style.display = "block";
+
+        break;
+
+
+
+        case "parametres":
+
+            if(parametres)
+                parametres.style.display = "block";
+
+        break;
+
+
+
+        default:
+
+            console.warn(
+                "Section inconnue :",
+                section
+            );
 
     }
 
