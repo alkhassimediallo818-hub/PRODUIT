@@ -297,6 +297,90 @@
     cursor:pointer;
 
 }
+
+/* =========================
+   DARK MODE
+========================= */
+
+
+.dark-mode{
+
+    background:#111827;
+    color:white;
+
+}
+
+
+
+.dark-mode .card,
+.dark-mode .profil-card,
+.dark-mode .settings-card,
+.dark-mode table{
+
+    background:#1f2937;
+    color:white;
+
+}
+
+
+
+.dark-mode input{
+
+    background:#374151;
+    color:white;
+
+}
+
+
+
+/* =========================
+   PROFIL
+========================= */
+
+
+.profil-card{
+
+    background:white;
+    padding:30px;
+    border-radius:20px;
+    display:flex;
+    gap:25px;
+    align-items:center;
+
+}
+
+
+
+#photoProfilPage{
+
+    width:100px;
+    height:100px;
+    border-radius:50%;
+    object-fit:cover;
+
+}
+
+
+
+.settings-card{
+
+    background:white;
+    padding:30px;
+    border-radius:20px;
+
+}
+
+
+
+.setting-item{
+
+    display:flex;
+    justify-content:space-between;
+    padding:20px 0;
+
+}
+
+
 /* ===============================
    RESET GENERAL
 =============================== */
