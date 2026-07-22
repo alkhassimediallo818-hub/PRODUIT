@@ -1790,6 +1790,41 @@ window.afficherSection = function(section){
 
 };
 
+window.deconnexionGoogle = async function(){
+
+    try{
+
+        await lancerDeconnexionGoogle();
+
+        console.log(
+            "Déconnexion réussie"
+        );
+
+        window.location.href =
+        "accueil.html";
+
+    }
+
+    catch(error){
+
+        console.error(
+            "Erreur déconnexion :",
+            error
+        );
+
+    }
+
+};
+
+
+window.connexionGoogle = async function(){
+
+    await lancerConnexionGoogle();
+
+};
+
+
+
 // ===============================
 // VERIFICATION APPLICATION
 // ===============================
