@@ -5,8 +5,7 @@ import {
 
 if(!auth.currentUser){
 
-    window.location.href =
-    "./accueil.html";
+   
 
 }
 
@@ -587,131 +586,66 @@ onAuthStateChanged(
 
     async(user)=>{
 
+
         console.log(
             "AUTH USER =",
             user
         );
 
-        
+
+        if(!user){
+
+            console.log(
+                "Pas encore connecté"
+            );
+
+            return;
+
+        }
+
+
 
         try{
 
+
+            utilisateurConnecte = true;
 
 
             mettreEtatUtilisateur(user);
 
 
 
-            if(user){
+            console.log(
+                "Utilisateur connecté :",
+                user.email
+            );
 
 
-                utilisateurConnecte = true;
 
+            produits = await chargerProduits(true) || [];
 
 
-                console.log(
+            ventesGlobales = await chargerVentes(true) || [];
 
-                    "Utilisateur connecté :",
 
-                    user.email
+            await chargerHistorique(true);
 
-                );
 
 
+            mettreAJourResume(
+                produits,
+                ventesGlobales
+            );
 
-                produits =
 
-                await chargerProduits(true)
+            calculerStockRestant(
+                produits
+            );
 
-                || [];
 
-
-
-
-                ventesGlobales =
-
-                await chargerVentes(true)
-
-                || [];
-
-
-
-
-                await chargerHistorique(true);
-
-
-
-                mettreAJourResume(
-
-                    produits,
-
-                    ventesGlobales
-
-                );
-
-
-
-                calculerStockRestant(
-
-                    produits
-
-                );
-
-
-
-                preparerGraphique(
-
-                    ventesGlobales
-
-                );
-
-
-
-            }
-
-
-            else{
-
-
-                console.log(
-    "PATH =",
-    window.location.pathname
-);
-
-                utilisateurConnecte = false;
-
-
-                produits = [];
-
-                ventesGlobales = [];
-
-
-
-                viderDashboard();
-
-
-
-                console.log(
-
-                    "Aucun utilisateur connecté"
-
-                );
-
-
-                if(
-    !window.location.pathname.includes(
-        "accueil.html"
-    )
-){
-
-    window.location.href =
-    "accueil.html";
-
-}
-
-
-            }
-
+            preparerGraphique(
+                ventesGlobales
+            );
 
 
         }
@@ -721,11 +655,8 @@ onAuthStateChanged(
 
 
             console.error(
-
                 "Erreur session Firebase :",
-
                 error
-
             );
 
 
