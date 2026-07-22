@@ -201,22 +201,54 @@ onclick="deconnexionGoogle()">
 
                 </div>
 
-                <table>
 
-                    <thead>
-                        <tr>
-                            <th>Produit</th>
-                            <th>Prix Gros</th>
-                            <th>Cartons</th>
-                            <th>Produits/Carton</th>
-                            <th>Stock Total</th>
-                            <th>Prix Unitaire</th>
-                            <th>Prix Revente</th>
-                            <th>Bénéfice / Perte</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
+ <!-- ===============================
+     OUTILS PRODUITS
+================================ -->
 
+<div class="produits-tools">
+
+
+    <input 
+    type="text"
+    id="rechercheProduit"
+    placeholder="🔎 Rechercher un produit...">
+
+
+    <button id="btnActualiserProduits">
+
+        🔄 Actualiser
+
+    </button>
+
+
+</div>               
+
+            <table class="table-produit">
+
+<thead>
+
+<tr>
+
+<th>Produit</th>
+<th>Stock</th>
+<th>Prix Achat</th>
+<th>Prix Vente</th>
+<th>Bénéfice</th>
+<th>Statut</th>
+<th>Actions</th>
+
+</tr>
+
+</thead>
+
+
+<tbody id="tableauProduits">
+
+</tbody>
+
+
+</table>
                     <div class="recherche-produit">
 
     <input 
