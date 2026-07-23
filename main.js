@@ -65,23 +65,20 @@ import {
 
 import {
 
-    chargerVentes,
-
-    afficherVentes,
-
-    vendreProduit,
-
-    confirmerVente,
-
-    fermerVente as fermerFenetreVente,
-
-    chargerProduitsVente,
-
-    selectionnerProduitVente
+chargerVentes,
+afficherVentes,
+vendreProduit,
+confirmerVente,
+fermerVente as fermerFenetreVente,
+chargerProduitsVente,
+selectionnerProduitVente,
+calculerVente
 
 } from "./JS/ventes.js";
 
+window.selectionnerProduitVente = selectionnerProduitVente;
 
+window.calculerVente = calculerVente;
 
 // ===============================
 // IMPORT HISTORIQUE
@@ -124,7 +121,7 @@ import {
 console.log("MAIN JS CHARGE");
 
 
-window.selectionnerProduitVente = selectionnerProduitVente;
+
 
 
 
