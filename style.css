@@ -331,6 +331,29 @@
 
 }
 
+/* ===============================
+   STOCK FAIBLE
+================================ */
+
+.stock-faible{
+
+    background:
+    rgba(
+        239,
+        68,
+        68,
+        0.12
+    );
+
+}
+
+
+.stock-faible td{
+
+    color:#b91c1c;
+    font-weight:bold;
+
+}
 
 /* ===============================
    OUTILS PRODUITS
