@@ -1307,15 +1307,11 @@ async function actualiserDonnees(){
 
 
         produits =
+await chargerProduits(true)
+|| [];
 
-        await chargerProduits(
 
-            true
-
-        )
-            chargerProduitsVente(produits);
-
-        || [];
+chargerProduitsVente(produits);
 
 
 
