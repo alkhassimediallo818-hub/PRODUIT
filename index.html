@@ -4,7 +4,7 @@
 <head>
 
 <link rel="icon" href="assets/favicon.ico">
-     
+
 <meta charset="UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,27 +15,16 @@
 <!-- CSS -->
 
 <link rel="stylesheet" href="assets/css/variables.css">
-
 <link rel="stylesheet" href="assets/css/base.css">
-
 <link rel="stylesheet" href="assets/css/layout.css">
-
 <link rel="stylesheet" href="assets/css/sidebar.css">
-
 <link rel="stylesheet" href="assets/css/topbar.css">
-
 <link rel="stylesheet" href="assets/css/dashboard.css">
-
 <link rel="stylesheet" href="assets/css/forms.css">
-
 <link rel="stylesheet" href="assets/css/tables.css">
-
 <link rel="stylesheet" href="assets/css/modal.css">
-
 <link rel="stylesheet" href="assets/css/responsive.css">
-
 <link rel="stylesheet" href="assets/css/animations.css">
-
 <link rel="stylesheet" href="style.css">
 
 
@@ -45,9 +34,7 @@
 <body>
 
 
-
 <div class="app-layout">
-
 
 
 <!-- ===============================
@@ -61,7 +48,6 @@
 <h2>
 📦 Gestion Pro
 </h2>
-
 
 
 <nav>
@@ -114,7 +100,6 @@
 </button>
 
 
-
 </nav>
 
 
@@ -137,9 +122,7 @@
 <header class="topbar">
 
 
-
 <div class="profil-zone">
-
 
 
 <img
@@ -153,9 +136,7 @@ alt="Photo"
 class="photo-profil"
 
 
-
 >
-
 
 
 <div>
@@ -166,7 +147,6 @@ class="photo-profil"
 Bienvenue
 
 </div>
-
 
 
 <small id="roleUtilisateur">
@@ -197,9 +177,7 @@ Déconnexion
 </button>
 
 
-
 </header>
-
 
 
 
@@ -221,11 +199,9 @@ Déconnexion
 
 class="dashboard"
 
-id="sectionDashboard"
+id="dashboard"
 
 >
-
-
 
 
 <div class="card">
@@ -239,7 +215,6 @@ id="sectionDashboard"
 </span>
 
 </div>
-
 
 
 
@@ -259,7 +234,6 @@ id="sectionDashboard"
 
 
 
-
 <div class="card">
 
 <h3>
@@ -271,7 +245,6 @@ id="sectionDashboard"
 </span>
 
 </div>
-
 
 
 
@@ -291,7 +264,6 @@ id="sectionDashboard"
 
 
 
-
 <div class="card">
 
 <h3>
@@ -303,7 +275,6 @@ id="sectionDashboard"
 </span>
 
 </div>
-
 
 
 
@@ -323,7 +294,6 @@ id="sectionDashboard"
 
 
 
-
 <div class="card">
 
 <h3>
@@ -335,7 +305,6 @@ id="sectionDashboard"
 </span>
 
 </div>
-
 
 
 
@@ -366,7 +335,6 @@ Aucun
 
 
 
-
 <div class="card">
 
 <h3>
@@ -381,7 +349,6 @@ Aucun
 
 
 </div>
-
 
 
 
@@ -404,7 +371,6 @@ Aucun
 
 
 
-
 <div class="card">
 
 <h3>
@@ -419,7 +385,6 @@ Aucun
 
 
 </div>
-
 
 
 
@@ -453,8 +418,7 @@ Aucun
 ================================ -->
 
 
-<div id="sectionProduits">
-
+<div id="produits">
 
 
 <div class="formulaire">
@@ -471,8 +435,6 @@ placeholder="Nom du produit"
 >
 
 
-
-
 <input
 
 type="number"
@@ -482,8 +444,6 @@ id="prixGros"
 placeholder="Prix en gros"
 
 >
-
-
 
 
 <input
@@ -497,8 +457,6 @@ placeholder="Nombre de cartons"
 >
 
 
-
-
 <input
 
 type="number"
@@ -508,8 +466,6 @@ id="produitsParCarton"
 placeholder="Produits par carton"
 
 >
-
-
 
 
 <input
@@ -523,8 +479,6 @@ placeholder="Prix de revente unitaire"
 >
 
 
-
-
 <button onclick="ajouterProduit()">
 
 Ajouter le produit
@@ -532,15 +486,9 @@ Ajouter le produit
 </button>
 
 
-
 </div>
 
-
-
-
-
-<div class="produits-tools">
-
+     <div class="produits-tools">
 
 <input
 
@@ -552,15 +500,11 @@ placeholder="🔎 Rechercher un produit..."
 
 >
 
-
-
 <button id="btnActualiserProduits">
 
 🔄 Actualiser
 
 </button>
-
-
 
 </div>
 
@@ -569,9 +513,7 @@ placeholder="🔎 Rechercher un produit..."
 
 <table class="table-produit">
 
-
 <thead>
-
 
 <tr>
 
@@ -615,29 +557,17 @@ Bénéfice
 Actions
 </th>
 
-
 </tr>
-
 
 </thead>
 
-
-
 <tbody id="tableauProduits">
-
 
 </tbody>
 
-
-
 </table>
 
-
-
 </div>
-
-
-
 
 
 
@@ -646,8 +576,7 @@ Actions
 ================================ -->
 
 
-<section id="sectionVentes" class="page-section">
-
+<section id="ventes" class="page-section">
 
 <h2>
 
@@ -655,9 +584,7 @@ Actions
 
 </h2>
 
-
 <table>
-
 
 <thead>
 
@@ -683,29 +610,17 @@ Bénéfice
 Date
 </th>
 
-
 </tr>
 
 </thead>
 
-
-
 <tbody id="tableauVentesDirectes">
-
 
 </tbody>
 
-
-
 </table>
 
-
-
 </section>
-
-
-
-
 
 
 
@@ -722,13 +637,9 @@ class="modal"
 
 style="display:none;"
 
-
-
 >
 
-
 <div class="modal-content">
-
 
 <h2>
 
@@ -736,16 +647,11 @@ style="display:none;"
 
 </h2>
 
-
-
 <p id="nomProduitVente">
 
 Produit sélectionné
 
 </p>
-
-
-
 
 <input
 
@@ -757,16 +663,9 @@ placeholder="Quantité vendue"
 
 min="1"
 
-
-
 >
 
-
-
-
 <div class="modal-actions">
-
-
 
 <button onclick="confirmerVente()">
 
@@ -774,52 +673,32 @@ min="1"
 
 </button>
 
-
-
-
 <button onclick="fermerVente()">
 
 ❌ Annuler
 
 </button>
 
-
+</div>
 
 </div>
 
-
-
 </div>
 
-
-</div>
-
-
-
-
-
-
-
-
-<!-- ===============================
+     <!-- ===============================
      HISTORIQUE
 ================================ -->
 
-
-<div id="sectionHistorique">
-
+<div id="historique">
 
 
 <div class="historique">
-
 
 <h2>
 
 📜 Historique des actions
 
 </h2>
-
-
 
 
 <button onclick="viderHistorique()">
@@ -829,10 +708,7 @@ min="1"
 </button>
 
 
-
-
 <table>
-
 
 <thead>
 
@@ -850,32 +726,21 @@ Produit
 Date
 </th>
 
-
 </tr>
 
 </thead>
 
-
-
 <tbody id="tableauHistorique">
-
 
 </tbody>
 
-
-
 </table>
-
 
 </div>
 
 
 
-
-
-
 <div class="historique">
-
 
 <h2>
 
@@ -884,10 +749,7 @@ Date
 </h2>
 
 
-
-
 <table>
-
 
 <thead>
 
@@ -917,33 +779,21 @@ Statut
 Date
 </th>
 
-
 </tr>
-
 
 </thead>
 
-
-
 <tbody id="tableauVentes">
-
 
 </tbody>
 
-
-
 </table>
-
 
 </div>
 
 
 
-
-
-
 <div class="historique">
-
 
 <h2>
 
@@ -952,10 +802,7 @@ Date
 </h2>
 
 
-
-
 <table>
-
 
 <thead>
 
@@ -969,15 +816,11 @@ Indicateur
 Valeur
 </th>
 
-
 </tr>
 
 </thead>
 
-
-
 <tbody>
-
 
 <tr>
 
@@ -991,8 +834,6 @@ Produits enregistrés
 
 </tr>
 
-
-
 <tr>
 
 <td>
@@ -1004,8 +845,6 @@ Stock restant
 </td>
 
 </tr>
-
-
 
 <tr>
 
@@ -1019,8 +858,6 @@ Unités vendues
 
 </tr>
 
-
-
 <tr>
 
 <td>
@@ -1032,8 +869,6 @@ Chiffre d'affaires
 </td>
 
 </tr>
-
-
 
 <tr>
 
@@ -1047,21 +882,13 @@ Bénéfice réel
 
 </tr>
 
-
 </tbody>
-
 
 </table>
 
-
 </div>
 
-
 </div>
-
-
-
-
 
 
 
@@ -1070,11 +897,9 @@ Bénéfice réel
 ================================ -->
 
 
-<section id="sectionProfil" class="page-section">
-
+<section id="profil" class="page-section">
 
 <div class="profil-card">
-
 
 <img
 
@@ -1084,14 +909,9 @@ src=""
 
 alt="Photo profil"
 
-
-
 >
 
-
-
 <div class="profil-info">
-
 
 <h2 id="pseudoProfil">
 
@@ -1099,16 +919,11 @@ Utilisateur
 
 </h2>
 
-
-
 <p id="emailProfil">
 
 Email
 
 </p>
-
-
-
 
 <p>
 
@@ -1120,23 +935,13 @@ Utilisateur
 
 </span>
 
-
 </p>
 
-
-
 </div>
 
-
 </div>
-
 
 </section>
-
-
-
-
-
 
 
 
@@ -1145,11 +950,9 @@ Utilisateur
 ================================ -->
 
 
-<section id="sectionParametres" class="page-section">
-
+<section id="parametres" class="page-section">
 
 <div class="settings-card">
-
 
 <h2>
 
@@ -1157,10 +960,7 @@ Utilisateur
 
 </h2>
 
-
-
 <div class="setting-item">
-
 
 <span>
 
@@ -1168,23 +968,15 @@ Utilisateur
 
 </span>
 
-
-
 <button id="btnModeSombre">
 
 Activer
 
 </button>
 
-
 </div>
 
-
-
-
-
 <div class="setting-item">
-
 
 <span>
 
@@ -1192,49 +984,30 @@ Activer
 
 </span>
 
-
 <button>
 
 Activer
 
 </button>
 
-
 </div>
 
-
-
 </div>
-
 
 </section>
 
-
-
-
-
-
-</div>
-
+     </div>
 
 </main>
 
-
 </div>
-
-
-
-
 
 
 <!-- ===============================
      SCRIPTS
 ================================ -->
 
-
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-
 
 <script>
 
@@ -1244,12 +1017,7 @@ console.log(
 
 </script>
 
-
-
-
 <script type="module" src="./main.js"></script>
-
-
 
 </body>
 
