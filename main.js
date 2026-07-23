@@ -1847,7 +1847,6 @@ window.afficherSection = function(section){
 
 
 
-};
 
 
 // ===============================
