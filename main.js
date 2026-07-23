@@ -598,42 +598,31 @@ async function mettreEtatUtilisateur(user){
 
 
 onAuthStateChanged(
-
     auth,
-
     async(user)=>{
-
 
         console.log(
             "AUTH USER =",
             user
         );
 
-
         if(!user){
-
             console.log(
                 "Aucun utilisateur pour le moment"
             );
-
             return;
-
         }
-
-
 
         console.log(
             "UID CONNECTE =",
             user.uid
         );
 
-
         try{
 
             mettreEtatUtilisateur(user);
 
-
-            // reste du chargement
+            await actualiserDonnees(); // <-- ajouter ici
 
         }
 
@@ -646,9 +635,7 @@ onAuthStateChanged(
 
         }
 
-
     }
-
 );
 
 
