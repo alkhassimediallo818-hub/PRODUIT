@@ -1115,12 +1115,13 @@ export function fermerVente(){
 export function afficherVentes(){
 
 
+const tableau =
 
-    const tableau =
+document.getElementById(
 
-    document.getElementById(
+    "tableauVentesDirectes"
 
-        "tableauVentes"
+);
 
     );
 
