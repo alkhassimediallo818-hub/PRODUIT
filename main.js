@@ -153,8 +153,10 @@ function mettreAJourDashboard(
     ventes
 ){
 
+
     const nombreProduits =
     produits.length;
+
 
 
     const stock =
@@ -162,15 +164,106 @@ function mettreAJourDashboard(
         (total, produit)=>{
 
             return total +
-            (produit.stockTotal || 0);
+            Number(produit.stockTotal || 0);
 
         },
         0
     );
 
 
+
     const transactions =
     ventes.length;
+
+
+
+    const chiffreAffaires =
+    ventes.reduce(
+        (total, vente)=>{
+
+            return total +
+            Number(
+                vente.montantTotal || 0
+            );
+
+        },
+        0
+    );
+
+
+
+    const benefice =
+    ventes.reduce(
+        (total, vente)=>{
+
+            return total +
+            Number(
+                vente.benefice || 0
+            );
+
+        },
+        0
+    );
+
+
+
+    const unitesVendues =
+    ventes.reduce(
+        (total, vente)=>{
+
+            return total +
+            Number(
+                vente.quantiteVendue || 0
+            );
+
+        },
+        0
+    );
+
+
+
+
+    const aujourdHui =
+    new Date()
+    .toDateString();
+
+
+
+    const ventesJour =
+    ventes.reduce(
+        (total, vente)=>{
+
+
+            if(
+                vente.date &&
+                vente.date.toDate
+            ){
+
+                const date =
+                vente.date
+                .toDate()
+                .toDateString();
+
+
+                if(date === aujourdHui){
+
+                    return total +
+                    Number(
+                        vente.montantTotal || 0
+                    );
+
+                }
+
+            }
+
+
+            return total;
+
+
+        },
+        0
+    );
+
 
 
 
@@ -191,6 +284,33 @@ function mettreAJourDashboard(
         transactions
     );
 
+
+
+    document.getElementById(
+        "chiffreAffaires"
+    ).textContent =
+    chiffreAffaires + " FCFA";
+
+
+
+    document.getElementById(
+        "beneficeVentes"
+    ).textContent =
+    benefice + " FCFA";
+
+
+
+    document.getElementById(
+        "unitesVendues"
+    ).textContent =
+    unitesVendues;
+
+
+
+    document.getElementById(
+        "ventesJour"
+    ).textContent =
+    ventesJour + " FCFA";
 
 
 }
