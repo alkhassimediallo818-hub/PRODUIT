@@ -575,50 +575,165 @@ Actions
      VENTES
 ================================ -->
 
-
 <section id="ventes" class="page-section">
+
 
 <h2>
 
-💰 Gestion des ventes
+💰 Nouvelle vente
 
 </h2>
 
-<table>
+
+
+<div class="formulaire">
+
+
+<select id="produitVenteSelect">
+
+<option value="">
+
+Choisir un produit
+
+</option>
+
+</select>
+
+
+
+<input
+
+type="number"
+
+id="quantiteVente"
+
+placeholder="Quantité vendue"
+
+min="1"
+
+>
+
+
+
+<input
+
+type="number"
+
+id="prixVente"
+
+placeholder="Prix de vente"
+
+>
+
+
+
+<div class="vente-resume">
+
+
+<p>
+
+Montant total :
+
+<strong id="montantVente">
+
+0 FCFA
+
+</strong>
+
+</p>
+
+
+
+<p>
+
+Bénéfice :
+
+<strong id="beneficeVente">
+
+0 FCFA
+
+</strong>
+
+</p>
+
+
+</div>
+
+
+
+
+<button onclick="confirmerVente()">
+
+✅ Confirmer la vente
+
+</button>
+
+
+
+</div>
+
+
+
+
+
+
+<h2>
+
+📋 Ventes récentes
+
+</h2>
+
+
+
+
+<table class="table-vente">
+
 
 <thead>
 
 <tr>
 
+
 <th>
 Produit
 </th>
+
 
 <th>
 Quantité
 </th>
 
+
 <th>
 Montant
 </th>
+
 
 <th>
 Bénéfice
 </th>
 
+
 <th>
 Date
 </th>
+
 
 </tr>
 
 </thead>
 
+
+
 <tbody id="tableauVentesDirectes">
+
 
 </tbody>
 
+
+
 </table>
+
 
 </section>
 
