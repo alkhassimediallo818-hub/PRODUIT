@@ -56,6 +56,7 @@ let produitVenteActuel = null;
 
 let traitementVente = false;
 
+let produitsDisponibles = [];
 
 
 
@@ -78,6 +79,52 @@ export function getVentes(){
 
 
 
+
+export function chargerProduitsVente(produits){
+
+
+    produitsDisponibles = produits;
+
+
+    const select = document.getElementById(
+        "produitVenteSelect"
+    );
+
+
+    if(!select)
+        return;
+
+
+    select.innerHTML = `
+        <option value="">
+            Choisir un produit
+        </option>
+    `;
+
+
+    produits.forEach((produit)=>{
+
+
+        const option = document.createElement("option");
+
+
+        option.value = produit.id;
+
+
+        option.textContent =
+        produit.nom +
+        " (Stock: " +
+        produit.stockTotal +
+        ")";
+
+
+        select.appendChild(option);
+
+
+    });
+
+
+}
 
 
 
@@ -234,7 +281,22 @@ export async function chargerVentes(
 
 
 
+export function selectionnerProduitVente(){
 
+
+    const select =
+    document.getElementById(
+        "produitVenteSelect"
+    );
+
+
+    produitVenteActuel =
+    produitsDisponibles.find(
+        p => p.id === select.value
+    );
+
+
+}
 
 
 // ===============================
