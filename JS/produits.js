@@ -763,14 +763,19 @@ export function afficherProduits(){
 
 
 
-        const ligne =
+       if(
 
-        document.createElement(
+    nombreValide(
+        produit.stockTotal
+    ) <= 10
 
-            "tr"
+){
 
-        );
+    ligne.classList.add(
+        "stock-faible"
+    );
 
+}
 
 
 
