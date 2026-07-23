@@ -1110,36 +1110,25 @@ export function preparerGraphique(
 
 
     const canvas =
-
     document.getElementById(
-
         "graphiqueVentes"
-
     );
 
 
 
     if(
-
         !canvas
-
         ||
-
         typeof Chart === "undefined"
-
     ){
 
         console.warn(
-
             "Graphique indisponible"
-
         );
 
         return;
 
-
     }
-
 
 
 
@@ -1153,15 +1142,12 @@ export function preparerGraphique(
 
 
 
-
-
     ventesGlobales.forEach(
 
         (vente)=>{
 
 
             let date =
-
             "Inconnu";
 
 
@@ -1169,56 +1155,65 @@ export function preparerGraphique(
             if(
 
                 vente.date
-
                 &&
-
                 typeof vente.date.toDate === "function"
 
             ){
 
-
                 date =
-
                 vente.date
-
                 .toDate()
-
                 .toLocaleDateString(
-
                     "fr-FR"
-
                 );
 
-
             }
-
-
 
 
 
             donnees[date] =
 
             (
-
                 donnees[date]
-
                 ||
-
                 0
-
             )
 
             +
 
             nombreValide(
-
                 vente.montantTotal
-
             );
 
 
+        }
+
+    );
+
+
+
+
+
+    const labels =
+    Object.keys(donnees)
+    .sort(
+        (a,b)=>{
+
+            return new Date(a)
+            -
+            new Date(b);
 
         }
+    );
+
+
+
+
+    const valeurs =
+    labels.map(
+
+        (date)=>
+        donnees[date]
 
     );
 
@@ -1242,9 +1237,7 @@ export function preparerGraphique(
             data:{
 
 
-                labels:
-
-                Object.keys(donnees),
+                labels:labels,
 
 
 
@@ -1252,17 +1245,32 @@ export function preparerGraphique(
 
 
                     label:
-
-                    "Ventes",
+                    "Evolution des ventes",
 
 
 
                     data:
+                    valeurs,
 
-                    Object.values(donnees)
+
+
+                    tension:
+                    0.4,
+
+
+
+                    fill:
+                    true,
+
+
+
+                    pointRadius:
+                    5
+
 
 
                 }]
+
 
 
             },
@@ -1275,18 +1283,53 @@ export function preparerGraphique(
                 responsive:true,
 
 
+                maintainAspectRatio:false,
 
-                maintainAspectRatio:false
+
+                plugins:{
+
+
+                    legend:{
+
+
+                        display:true
+
+
+                    }
+
+
+                },
+
+
+
+                scales:{
+
+
+                    y:{
+
+
+                        beginAtZero:true
+
+
+                    }
+
+
+                }
 
 
 
             }
 
 
+
         }
 
 
     );
+
+
+
+}
 
 
 }
