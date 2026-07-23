@@ -1712,6 +1712,10 @@ window.connexionGoogle = async function(){
 
 };
 
+const boutonsMenu = document.querySelectorAll(
+    ".sidebar button"
+);
+
 // ===============================
 // GESTION DES SECTIONS + MENU ACTIF
 // ===============================
