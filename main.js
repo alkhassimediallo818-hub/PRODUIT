@@ -73,10 +73,13 @@ import {
 
     confirmerVente,
 
-    fermerVente as fermerFenetreVente
+    fermerVente as fermerFenetreVente,
+
+    chargerProduitsVente,
+
+    selectionnerProduitVente
 
 } from "./JS/ventes.js";
-
 
 
 
@@ -1313,6 +1316,7 @@ async function actualiserDonnees(){
             true
 
         )
+            chargerProduitsVente(produits);
 
         || [];
 
