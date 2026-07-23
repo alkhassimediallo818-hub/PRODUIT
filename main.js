@@ -124,7 +124,7 @@ import {
 console.log("MAIN JS CHARGE");
 
 
-
+window.selectionnerProduitVente = selectionnerProduitVente;
 
 
 
