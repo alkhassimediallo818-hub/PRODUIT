@@ -730,53 +730,34 @@ await enregistrerHistorique(
 
 export function afficherProduits(){
 
-
-
-    const tableau =
-
-    document.getElementById(
-
+    const tableau = document.getElementById(
         "tableauProduits"
-
     );
 
-
-
-
-
     if(!tableau)
-
-    return;
-
-
-
-
+        return;
 
     tableau.innerHTML = "";
 
-
-
-
-
-
     produits.forEach((produit)=>{
 
+        const ligne = document.createElement("tr");
 
+        ligne.innerHTML = `
+            <td>${produit.nom}</td>
+            <td>${produit.stockTotal}</td>
+        `;
 
-       if(
+        if(
+            nombreValide(produit.stockTotal) <= 10
+        ){
+            ligne.classList.add("stock-faible");
+        }
 
-    nombreValide(
-        produit.stockTotal
-    ) <= 10
+        tableau.appendChild(ligne);
 
-){
-
-    ligne.classList.add(
-        "stock-faible"
-    );
-
+    });
 }
-
 
 
 
