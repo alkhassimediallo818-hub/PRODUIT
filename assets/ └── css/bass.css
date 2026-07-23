@@ -1,0 +1,154 @@
+/* =====================================
+   GESTION PRO
+   BASE
+===================================== */
+
+/* Police */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+
+
+*{
+
+    margin:0;
+
+    padding:0;
+
+    box-sizing:border-box;
+
+}
+
+
+
+/* Scroll fluide */
+
+html{
+
+    scroll-behavior:smooth;
+
+}
+
+
+
+/* Corps */
+
+body{
+
+    font-family:'Inter',sans-serif;
+
+    background:var(--background);
+
+    color:var(--text);
+
+    line-height:1.5;
+
+}
+
+
+
+/* Images */
+
+img{
+
+    max-width:100%;
+
+    display:block;
+
+}
+
+
+
+/* Liens */
+
+a{
+
+    text-decoration:none;
+
+    color:inherit;
+
+}
+
+
+
+/* Boutons */
+
+button{
+
+    font-family:inherit;
+
+    cursor:pointer;
+
+    transition:var(--transition);
+
+    border:none;
+
+}
+
+
+
+/* Inputs */
+
+input,
+select,
+textarea{
+
+    font-family:inherit;
+
+    outline:none;
+
+}
+
+
+
+/* Table */
+
+table{
+
+    width:100%;
+
+    border-collapse:collapse;
+
+}
+
+
+
+/* Scrollbar */
+
+::-webkit-scrollbar{
+
+    width:10px;
+
+}
+
+::-webkit-scrollbar-track{
+
+    background:var(--background);
+
+}
+
+::-webkit-scrollbar-thumb{
+
+    background:var(--primary);
+
+    border-radius:999px;
+
+}
+
+::-webkit-scrollbar-thumb:hover{
+
+    background:var(--primary-dark);
+
+}
+
+
+
+/* Sélection de texte */
+
+::selection{
+
+    background:var(--primary);
+
+    color:white;
+
+}
