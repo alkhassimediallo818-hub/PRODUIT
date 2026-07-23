@@ -1715,21 +1715,19 @@ window.afficherSection = function(section){
 
     const sections = {
 
-        dashboard: "sectionDashboard",
+        dashboard: "dashboard",
 
-        produits: "sectionProduits",
+        produits: "produits",
 
-        ventes: "sectionVentes",
+        ventes: "ventes",
 
-        historique: "sectionHistorique",
+        historique: "historique",
 
-        profil: "sectionProfil",
+        profil: "profil",
 
-        parametres: "sectionParametres"
+        parametres: "parametres"
 
     };
-
-
 
     Object.values(sections).forEach((id)=>{
 
@@ -1742,8 +1740,6 @@ window.afficherSection = function(section){
         }
 
     });
-
-
 
     const sectionActive = sections[section];
 
@@ -1758,8 +1754,6 @@ window.afficherSection = function(section){
 
     }
 
-
-
     const element = document.getElementById(sectionActive);
 
     if(!element){
@@ -1773,34 +1767,23 @@ window.afficherSection = function(section){
 
     }
 
-
-
     if(section === "dashboard"){
 
         element.style.display = "grid";
 
-    }
-
-    else{
+    }else{
 
         element.style.display = "block";
 
     }
-
-
-
-    // Activation bouton correspondant
 
     boutonsMenu.forEach((bouton)=>{
 
         bouton.classList.remove("active");
 
         if(
-
-            bouton
-            .getAttribute("onclick")
+            bouton.getAttribute("onclick")
             ?.includes(section)
-
         ){
 
             bouton.classList.add("active");
@@ -1810,7 +1793,6 @@ window.afficherSection = function(section){
     });
 
 };
-
 
 
 
