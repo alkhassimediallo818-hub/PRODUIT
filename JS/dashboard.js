@@ -342,6 +342,11 @@ calculerProduitVedette(
 );
 
 
+  calculerTopProduits(
+    ventesGlobales
+);
+
+    
     calculerResumeVentes(
 
         ventesGlobales
@@ -350,6 +355,113 @@ calculerProduitVedette(
 
 
 }
+
+function calculerTopProduits(
+
+    ventesGlobales = []
+
+){
+
+    const classement = {};
+
+
+
+    ventesGlobales.forEach(
+
+        (vente)=>{
+
+            const nom =
+
+            vente.nomProduit
+            ||
+            vente.produit
+            ||
+            "Inconnu";
+
+
+
+            const quantite =
+
+            nombreValide(
+                vente.quantite
+            );
+
+
+
+            classement[nom] =
+
+            (classement[nom] || 0)
+            +
+            quantite;
+
+        }
+
+    );
+
+
+
+    const top =
+
+    Object.entries(
+        classement
+    )
+
+    .sort(
+        (a,b)=>
+
+        b[1]-a[1]
+    )
+
+    .slice(0,5);
+
+
+
+    const zone =
+
+    document.getElementById(
+        "topProduits"
+    );
+
+
+
+    if(!zone)
+        return;
+
+
+
+    if(top.length === 0){
+
+        zone.innerHTML =
+        "Aucune vente";
+
+        return;
+
+    }
+
+
+
+    zone.innerHTML =
+
+    top.map(
+
+        ([nom,total],index)=>`
+
+        <p>
+
+        ${index+1}.
+        ${nom}
+
+        (${total})
+
+        </p>
+
+        `
+
+    ).join("");
+
+}
+
+
 // ===============================
 // RESUME DES VENTES
 // ===============================
