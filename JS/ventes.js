@@ -1382,7 +1382,7 @@ export function totalBeneficeVentes(){
 
 
 
-
+console.log("Module ventes chargé");
 
 
 // ===============================
