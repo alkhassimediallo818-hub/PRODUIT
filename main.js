@@ -1723,32 +1723,30 @@ window.connexionGoogle = async function(){
 window.afficherSection = function(section){
 
 
-    const sections = [
+    const sections = {
 
-        "sectionDashboard",
+        dashboard: "sectionDashboard",
 
-        "sectionProduits",
+        produits: "sectionProduits",
 
-        "sectionVentes",
+        ventes: "sectionVentes",
 
-        "sectionHistorique",
+        historique: "sectionHistorique",
 
-        "sectionProfil",
+        profil: "sectionProfil",
 
-        "sectionParametres"
+        parametres: "sectionParametres"
 
-    ];
-
-
-
-    // Cacher toutes les sections
-
-    sections.forEach((id)=>{
+    };
 
 
-        const element = 
-        document.getElementById(id);
 
+    // cacher toutes les sections
+
+    Object.values(sections).forEach((id)=>{
+
+
+        const element = document.getElementById(id);
 
 
         if(element){
@@ -1764,99 +1762,57 @@ window.afficherSection = function(section){
 
 
 
-    // Afficher la section demandée
+    const sectionActive = sections[section];
 
 
-    switch(section){
+    if(!sectionActive){
 
+        console.log(
+            "Section inconnue :",
+            section
+        );
 
-        case "dashboard":
-
-
-            document.getElementById(
-                "sectionDashboard"
-            ).style.display = "grid";
-
-
-        break;
-
-
-
-
-        case "produits":
-
-
-            document.getElementById(
-                "sectionProduits"
-            ).style.display = "block";
-
-
-        break;
-
-
-
-
-        case "ventes":
-
-
-            document.getElementById(
-                "sectionVentes"
-            ).style.display = "block";
-
-
-        break;
-
-
-
-
-        case "historique":
-
-
-            document.getElementById(
-                "sectionHistorique"
-            ).style.display = "block";
-
-
-        break;
-
-
-
-
-        case "profil":
-
-
-            document.getElementById(
-                "sectionProfil"
-            ).style.display = "block";
-
-
-        break;
-
-
-
-
-        case "parametres":
-
-
-            document.getElementById(
-                "sectionParametres"
-            ).style.display = "block";
-
-
-        break;
-
-
-
-
-        default:
-
-
-            console.log(
-                "Section inconnue :",
-                section
-            );
+        return;
 
     }
+
+
+
+
+
+    const element = document.getElementById(
+        sectionActive
+    );
+
+
+
+    if(!element){
+
+        console.error(
+            "Section introuvable :",
+            sectionActive
+        );
+
+        return;
+
+    }
+
+
+
+
+
+    if(section === "dashboard"){
+
+        element.style.display = "grid";
+
+    }
+
+    else{
+
+        element.style.display = "block";
+
+    }
+
 
 
 };
