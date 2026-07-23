@@ -1,0 +1,179 @@
+
+/* =====================================
+   GESTION PRO V3
+   DASHBOARD PREMIUM
+===================================== */
+
+
+/* Conteneur dashboard */
+
+.dashboard{
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(auto-fit,minmax(240px,1fr));
+
+    gap:var(--space-md);
+
+}
+
+
+
+/* Cartes KPI */
+
+.card{
+
+    background:var(--surface);
+
+    border:1px solid var(--border);
+
+    border-radius:var(--radius-lg);
+
+    padding:var(--space-lg);
+
+    box-shadow:var(--shadow-sm);
+
+    transition:var(--transition);
+
+}
+
+
+
+.card:hover{
+
+    transform:translateY(-5px);
+
+    box-shadow:var(--shadow-md);
+
+}
+
+
+
+/* Titres des cartes */
+
+.card h3{
+
+    color:var(--text-light);
+
+    font-size:15px;
+
+    font-weight:500;
+
+    margin-bottom:15px;
+
+}
+
+
+
+/* Valeurs */
+
+.card span{
+
+    display:block;
+
+    color:var(--text);
+
+    font-size:30px;
+
+    font-weight:700;
+
+}
+
+
+
+/* Cartes spéciales */
+
+.card:nth-child(2) span{
+
+    color:var(--success);
+
+}
+
+
+
+.card:nth-child(3) span{
+
+    color:var(--primary);
+
+}
+
+
+
+.card:nth-child(11) span{
+
+    color:var(--danger);
+
+}
+
+
+
+/* Graphique */
+
+.graphique{
+
+    grid-column:
+
+    span 2;
+
+    min-height:350px;
+
+}
+
+
+
+.graphique canvas{
+
+    width:100%!important;
+
+    max-height:280px;
+
+}
+
+
+
+/* Produit vedette */
+
+#produitVedette{
+
+    color:var(--warning);
+
+}
+
+
+
+/* Top produits */
+
+#topProduits{
+
+    color:var(--text);
+
+}
+
+
+
+#topProduits p{
+
+    padding:8px 0;
+
+    border-bottom:1px solid var(--border);
+
+}
+
+
+
+/* Responsive */
+
+@media(max-width:800px){
+
+
+    .graphique{
+
+        grid-column:
+
+        span 1;
+
+    }
+
+
+}
