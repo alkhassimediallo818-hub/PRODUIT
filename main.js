@@ -67,6 +67,8 @@ import {
 
     chargerVentes,
 
+    afficherVentes,
+
     vendreProduit,
 
     confirmerVente,
