@@ -1345,7 +1345,7 @@ async function actualiserDonnees(){
 
 
 
-
+afficherVentes();
 
 
 
