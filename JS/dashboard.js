@@ -61,7 +61,87 @@ function afficherValeur(
 }
 
 
+function calculerProduitVedette(
+    ventesGlobales = []
+){
 
+    const statistiques = {};
+
+
+
+    ventesGlobales.forEach((vente)=>{
+
+        const nom =
+
+        vente.nomProduit
+        ||
+        vente.produit
+        ||
+        "Inconnu";
+
+
+
+        const quantite =
+
+        nombreValide(
+            vente.quantite
+        );
+
+
+
+        statistiques[nom] =
+
+        (statistiques[nom] || 0)
+        +
+        quantite;
+
+    });
+
+
+
+    let meilleurProduit =
+    "Aucun";
+
+
+    let meilleurScore =
+    0;
+
+
+
+    Object.entries(
+        statistiques
+    ).forEach(
+
+        ([nom, total])=>{
+
+            if(
+                total >
+                meilleurScore
+            ){
+
+                meilleurScore =
+                total;
+
+                meilleurProduit =
+                nom;
+
+            }
+
+        }
+
+    );
+
+
+
+    afficherValeur(
+
+        "produitVedette",
+
+        meilleurProduit
+
+    );
+
+}
 
 // ===============================
 // FORMAT FCFA
@@ -257,7 +337,9 @@ export function mettreAJourResume(
 );
 
 
-
+calculerProduitVedette(
+    ventesGlobales
+);
 
 
     calculerResumeVentes(
