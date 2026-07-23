@@ -1240,36 +1240,92 @@ export function preparerGraphique(
                 labels:labels,
 
 
+datasets:[{
 
-                datasets:[{
+    label:
+    "Evolution des ventes",
 
-
-                    label:
-                    "Evolution des ventes",
-
-
-
-                    data:
-                    valeurs,
+    data:
+    valeurs,
 
 
-
-                    tension:
-                    0.4,
-
+    tension:
+    0.4,
 
 
-                    fill:
-                    true,
+    fill:
+    true,
 
 
-
-                    pointRadius:
-                    5
-
+    pointRadius:
+    5,
 
 
-                }]
+    segment:{
+
+        borderColor:
+        (ctx)=>{
+
+            const index =
+            ctx.p0DataIndex;
+
+
+            if(index === 0){
+
+                return "gray";
+
+            }
+
+
+            return valeurs[index]
+            >=
+            valeurs[index - 1]
+
+            ?
+
+            "green"
+
+            :
+
+            "red";
+
+        }
+
+    },
+
+
+    pointBackgroundColor:
+    (ctx)=>{
+
+
+        const index =
+        ctx.dataIndex;
+
+
+        if(index === 0){
+
+            return "gray";
+
+        }
+
+
+        return valeurs[index]
+        >=
+        valeurs[index - 1]
+
+        ?
+
+        "green"
+
+        :
+
+        "red";
+
+
+    }
+
+
+}]
 
 
 
