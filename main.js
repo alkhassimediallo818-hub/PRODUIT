@@ -1722,7 +1722,6 @@ window.connexionGoogle = async function(){
 
 window.afficherSection = function(section){
 
-
     const sections = {
 
         dashboard: "sectionDashboard",
@@ -1741,13 +1740,9 @@ window.afficherSection = function(section){
 
 
 
-    // cacher toutes les sections
-
     Object.values(sections).forEach((id)=>{
 
-
         const element = document.getElementById(id);
-
 
         if(element){
 
@@ -1755,15 +1750,11 @@ window.afficherSection = function(section){
 
         }
 
-
     });
 
 
 
-
-
     const sectionActive = sections[section];
-
 
     if(!sectionActive){
 
@@ -1778,13 +1769,7 @@ window.afficherSection = function(section){
 
 
 
-
-
-    const element = document.getElementById(
-        sectionActive
-    );
-
-
+    const element = document.getElementById(sectionActive);
 
     if(!element){
 
@@ -1796,8 +1781,6 @@ window.afficherSection = function(section){
         return;
 
     }
-
-
 
 
 
@@ -1815,35 +1798,27 @@ window.afficherSection = function(section){
 
 
 
-};
-
-
-
-
-
     // Activation bouton correspondant
-
 
     boutonsMenu.forEach((bouton)=>{
 
+        bouton.classList.remove("active");
 
         if(
+
             bouton
             .getAttribute("onclick")
-            .includes(section)
+            ?.includes(section)
 
         ){
 
-
-            bouton.classList.add(
-                "active"
-            );
-
+            bouton.classList.add("active");
 
         }
 
-
     });
+
+};
 
 
 
