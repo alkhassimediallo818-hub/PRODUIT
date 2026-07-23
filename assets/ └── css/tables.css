@@ -1,1 +1,198 @@
 
+/* =====================================
+   GESTION PRO V3
+   TABLEAUX PREMIUM
+===================================== */
+
+
+/* Conteneur tableau */
+
+.table-produit,
+.historique table{
+
+    background:var(--surface);
+
+    border-radius:var(--radius-lg);
+
+    overflow:hidden;
+
+    box-shadow:var(--shadow-sm);
+
+    border:1px solid var(--border);
+
+}
+
+
+
+/* En-tête */
+
+.table-produit thead,
+.historique thead{
+
+    background:var(--secondary);
+
+    color:white;
+
+}
+
+
+
+.table-produit th,
+.historique th{
+
+    padding:15px;
+
+    text-align:left;
+
+    font-size:14px;
+
+    font-weight:600;
+
+}
+
+
+
+/* Cellules */
+
+.table-produit td,
+.historique td{
+
+    padding:14px 15px;
+
+    border-bottom:
+
+    1px solid var(--border);
+
+    color:var(--text);
+
+}
+
+
+
+/* Lignes */
+
+.table-produit tbody tr,
+.historique tbody tr{
+
+    transition:var(--transition);
+
+}
+
+
+
+.table-produit tbody tr:hover,
+.historique tbody tr:hover{
+
+    background:var(--surface-hover);
+
+}
+
+
+
+/* Dernière ligne */
+
+.table-produit tbody tr:last-child td,
+.historique tbody tr:last-child td{
+
+    border-bottom:none;
+
+}
+
+
+
+/* Boutons actions tableau */
+
+.table-produit button{
+
+    padding:8px 12px;
+
+    border-radius:var(--radius-sm);
+
+    font-size:13px;
+
+    font-weight:600;
+
+    margin-right:5px;
+
+}
+
+
+
+/* Modifier */
+
+.table-produit button:first-child{
+
+    background:var(--warning);
+
+    color:white;
+
+}
+
+
+
+/* Supprimer */
+
+.table-produit button:nth-child(2){
+
+    background:var(--danger);
+
+    color:white;
+
+}
+
+
+
+/* Vente */
+
+.table-produit button:nth-child(3){
+
+    background:var(--success);
+
+    color:white;
+
+}
+
+
+
+/* Hover boutons */
+
+.table-produit button:hover{
+
+    opacity:.85;
+
+    transform:translateY(-2px);
+
+}
+
+
+
+/* Statut stock */
+
+.stock-faible{
+
+    background:
+
+    rgba(239,68,68,.08);
+
+}
+
+
+
+/* Responsive tableau */
+
+@media(max-width:800px){
+
+
+    .table-produit,
+    .historique table{
+
+        display:block;
+
+        overflow-x:auto;
+
+        white-space:nowrap;
+
+    }
+
+
+}
