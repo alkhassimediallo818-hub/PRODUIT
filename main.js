@@ -1829,6 +1829,10 @@ window.connexionGoogle = async function(){
 // GESTION DES SECTIONS + MENU ACTIF
 // ===============================
 
+// ===============================
+// NAVIGATION ENTRE LES SECTIONS
+// ===============================
+
 window.afficherSection = function(section){
 
 
@@ -1837,6 +1841,8 @@ window.afficherSection = function(section){
         "sectionDashboard",
 
         "sectionProduits",
+
+        "sectionVentes",
 
         "sectionHistorique",
 
@@ -1848,11 +1854,14 @@ window.afficherSection = function(section){
 
 
 
+    // Cacher toutes les sections
+
     sections.forEach((id)=>{
 
 
-        const element =
+        const element = 
         document.getElementById(id);
+
 
 
         if(element){
@@ -1868,29 +1877,10 @@ window.afficherSection = function(section){
 
 
 
-    const boutonsMenu =
-    document.querySelectorAll(
-        ".sidebar nav button"
-    );
-
-
-
-    boutonsMenu.forEach((bouton)=>{
-
-
-        bouton.classList.remove(
-            "active"
-        );
-
-
-    });
-
-
-
+    // Afficher la section demandée
 
 
     switch(section){
-
 
 
         case "dashboard":
@@ -1911,6 +1901,19 @@ window.afficherSection = function(section){
 
             document.getElementById(
                 "sectionProduits"
+            ).style.display = "block";
+
+
+        break;
+
+
+
+
+        case "ventes":
+
+
+            document.getElementById(
+                "sectionVentes"
             ).style.display = "block";
 
 
@@ -1956,7 +1959,20 @@ window.afficherSection = function(section){
         break;
 
 
+
+
+        default:
+
+
+            console.log(
+                "Section inconnue :",
+                section
+            );
+
     }
+
+
+};
 
 
 
