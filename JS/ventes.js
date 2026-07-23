@@ -61,6 +61,75 @@ let produitsDisponibles = [];
 
 
 
+// ===============================
+// CALCUL AUTOMATIQUE VENTE
+// ===============================
+
+export function calculerVente(){
+
+
+    if(!produitVenteActuel)
+        return;
+
+
+    const quantite = nombreValide(
+        document.getElementById(
+            "quantiteVente"
+        )?.value
+    );
+
+
+    const prix = nombreValide(
+        produitVenteActuel.prixRevente
+    );
+
+
+    const montant = prix * quantite;
+
+
+    const prixUnitaire = nombreValide(
+        produitVenteActuel.prixUnitaire
+    );
+
+
+    const benefice =
+    (prix - prixUnitaire) * quantite;
+
+
+
+    const montantElement =
+    document.getElementById(
+        "montantVente"
+    );
+
+
+    const beneficeElement =
+    document.getElementById(
+        "beneficeVente"
+    );
+
+
+
+    if(montantElement){
+
+        montantElement.textContent =
+        montant + " FCFA";
+
+    }
+
+
+
+    if(beneficeElement){
+
+        beneficeElement.textContent =
+        benefice + " FCFA";
+
+    }
+
+
+}
+
+
 
 
 // ===============================
