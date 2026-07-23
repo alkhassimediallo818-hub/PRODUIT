@@ -739,14 +739,81 @@ export function afficherProduits(){
 
     tableau.innerHTML = "";
 
+
     produits.forEach((produit)=>{
 
         const ligne = document.createElement("tr");
 
+
         ligne.innerHTML = `
-            <td>${produit.nom}</td>
-            <td>${produit.stockTotal}</td>
+
+        <td>
+        ${produit.nom || "Produit"}
+        </td>
+
+
+        <td>
+        ${nombreValide(produit.prixGros)}
+        FCFA
+        </td>
+
+
+        <td>
+        ${obtenirStatutStock(produit.stockTotal)}
+        </td>
+
+
+        <td>
+        ${nombreValide(produit.nombreCartons)}
+        </td>
+
+
+        <td>
+        ${nombreValide(produit.produitsParCarton)}
+        </td>
+
+
+        <td>
+        ${nombreValide(produit.stockTotal)}
+        </td>
+
+
+        <td>
+        ${nombreValide(produit.prixUnitaire)}
+        FCFA
+        </td>
+
+
+        <td>
+        ${nombreValide(produit.prixRevente)}
+        FCFA
+        </td>
+
+
+        <td>
+        ${nombreValide(produit.benefice)}
+        FCFA
+        </td>
+
+
+        <td>
+
+        <button onclick="modifierProduit('${produit.id}')">
+        Modifier
+        </button>
+
+        <button onclick="supprimerProduit('${produit.id}')">
+        Supprimer
+        </button>
+
+        <button onclick="vendreProduit('${produit.id}')">
+        Vendre
+        </button>
+
+        </td>
+
         `;
+
 
         if(
             nombreValide(produit.stockTotal) <= 10
@@ -754,178 +821,11 @@ export function afficherProduits(){
             ligne.classList.add("stock-faible");
         }
 
+
         tableau.appendChild(ligne);
 
-    });
-}
-
-
-
-        ligne.innerHTML = `
-
-
-
-        <td>
-
-        ${produit.nom || "Produit"}
-
-        </td>
-
-
-
-        <td>
-
-        ${nombreValide(produit.prixGros)}
-
-        FCFA
-
-        </td>
-
-
-
-      <td>
-
-${obtenirStatutStock(
-    produit.stockTotal
-)}
-
-</td>
-
-
-        <td>
-
-        ${nombreValide(produit.nombreCartons)}
-
-        </td>
-
-
-
-
-        <td>
-
-        ${nombreValide(produit.produitsParCarton)}
-
-        </td>
-
-
-
-
-        <td>
-
-        ${nombreValide(produit.stockTotal)}
-
-        </td>
-
-
-
-
-        <td>
-
-        ${
-
-        nombreValide(
-
-            produit.prixUnitaire
-
-        )
-
-        }
-
-        FCFA
-
-        </td>
-
-
-
-
-        <td>
-
-        ${
-
-        nombreValide(
-
-            produit.prixRevente
-
-        )
-
-        }
-
-        FCFA
-
-        </td>
-
-
-
-
-        <td>
-
-        ${
-
-        nombreValide(
-
-            produit.benefice
-
-        )
-
-        }
-
-        FCFA
-
-        </td>
-
-
-
-
-
-        <td>
-
-
-
-        <button onclick="modifierProduit('${produit.id}')">
-
-        Modifier
-
-        </button>
-
-
-
-        <button onclick="supprimerProduit('${produit.id}')">
-
-        Supprimer
-
-        </button>
-
-
-
-        <button onclick="vendreProduit('${produit.id}')">
-
-        Vendre
-
-        </button>
-
-
-
-        </td>
-
-
-
-        `;
-
-
-
-
-
-        tableau.appendChild(
-
-            ligne
-
-        );
-
-
 
     });
-
-
 
 }
 // ===============================
