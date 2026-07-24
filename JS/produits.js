@@ -322,6 +322,7 @@ export async function chargerProduits(
 
 
 
+
     try{
 
 
@@ -402,56 +403,64 @@ export async function chargerProduits(
         // ===============================
 
 
-        produits.forEach((produit)=>{
+        for(const produit of produits){
 
 
-          if(
+            if(
 
-    nombreValide(produit.stockTotal) <= 5
+                nombreValide(produit.stockTotal) <= 5
 
-    &&
+                &&
 
-    produit.stockAlerteEnvoyee !== true
+                produit.stockAlerteEnvoyee !== true
 
-){
-
-
-    await creerNotification(
-
-        "Stock faible",
-
-        `${produit.nom} possède seulement ${produit.stockTotal} unités.`,
-
-        "warning"
-
-    );
+            ){
 
 
 
-    await updateDoc(
+                await creerNotification(
 
-        doc(
+                    "Stock faible",
 
-            db,
+                    `${produit.nom} possède seulement ${produit.stockTotal} unités.`,
 
-            "produits",
+                    "warning"
 
-            produit.id
+                );
 
-        ),
 
-        {
 
-            stockAlerteEnvoyee:true
+
+                await updateDoc(
+
+
+                    doc(
+
+                        db,
+
+                        "produits",
+
+                        produit.id
+
+                    ),
+
+
+                    {
+
+
+                        stockAlerteEnvoyee:true
+
+
+                    }
+
+
+                );
+
+
+            }
+
 
         }
-
-    );
-
-
-}
-
-        });
 
 
 
@@ -460,6 +469,7 @@ export async function chargerProduits(
 
 
         afficherProduits();
+
 
 
 
