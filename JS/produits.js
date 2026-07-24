@@ -942,19 +942,14 @@ export function afficherProduits(){
 
 export async function supprimerProduit(
 
-
     utilisateurConnecte,
 
-
     id
-
 
 ){
 
 
-
     if(
-
 
         !utilisateurValide(
 
@@ -992,7 +987,6 @@ export async function supprimerProduit(
 
 
 
-
         const resultat =
 
         await getDoc(
@@ -1005,9 +999,7 @@ export async function supprimerProduit(
 
 
 
-
         if(
-
 
             !resultat.exists()
 
@@ -1025,32 +1017,90 @@ export async function supprimerProduit(
 
 
 
-const nomProduit = resultat.data().nom || "Produit";
 
 
+        const produit =
+
+        resultat.data();
+
+
+
+
+        const nomProduit =
+
+        produit.nom || "Produit";
+
+
+
+
+        // ===============================
+        // ENVOI DANS LA CORBEILLE
+        // ===============================
+
+        await envoyerCorbeille(
+
+            "produit",
+
+            {
+
+                id,
+
+                ...produit
+
+            }
+
+        );
+
+
+
+
+
+        // ===============================
+        // SUPPRESSION FIRESTORE
+        // ===============================
 
         await deleteDoc(
 
             reference
 
         );
-        
-await creerNotification(
 
-    "Produit supprimé",
 
-    `Le produit ${produit.nom} a été supprimé.`,
 
-    "warning"
 
-);
-        
 
-  await enregistrerHistorique(
-    true,
-    "Suppression produit",
-    nomProduit
-);
+        // ===============================
+        // NOTIFICATION
+        // ===============================
+
+        await creerNotification(
+
+            "Produit supprimé",
+
+            `Le produit ${nomProduit} a été déplacé dans la corbeille.`,
+
+            "warning"
+
+        );
+
+
+
+
+
+        // ===============================
+        // HISTORIQUE
+        // ===============================
+
+        await enregistrerHistorique(
+
+            true,
+
+            "Suppression produit",
+
+            nomProduit
+
+        );
+
 
 
 
@@ -1061,9 +1111,7 @@ await creerNotification(
 
             (produit)=>
 
-
             produit.id !== id
-
 
         );
 
@@ -1071,9 +1119,7 @@ await creerNotification(
 
 
 
-
         afficherProduits();
-
 
 
 
@@ -1101,14 +1147,10 @@ await creerNotification(
         return false;
 
 
-
     }
 
 
-
 }
-
-
 
 
 
