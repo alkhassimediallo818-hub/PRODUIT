@@ -1843,7 +1843,7 @@ chargerProduitsVente(produits);
 
 
 
-
+await chargerNotifications();
 
 
 
@@ -2382,6 +2382,32 @@ localStorage.getItem("modeSombre")
     );
 
 }
+
+window.ouvrirNotifications = function(){
+
+    const panneau =
+
+    document.getElementById(
+
+        "panneauNotifications"
+
+    );
+
+
+
+    if(!panneau)
+
+        return;
+
+
+
+    panneau.classList.toggle(
+
+        "ouvert"
+
+    );
+
+};
 
 // ===============================
 // VERIFICATION APPLICATION
