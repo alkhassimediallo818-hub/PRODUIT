@@ -40,7 +40,78 @@ import {
 let notifications = [];
 
 
+export async function marquerToutesNotificationsLues(){
 
+
+    if(!auth.currentUser)
+
+        return false;
+
+
+
+    try{
+
+
+        for(const notification of notifications){
+
+
+            if(notification.lu !== true){
+
+
+                await updateDoc(
+
+                    doc(
+
+                        db,
+
+                        "notifications",
+
+                        notification.id
+
+                    ),
+
+                    {
+
+                        lu:true
+
+                    }
+
+                );
+
+
+            }
+
+
+        }
+
+
+
+        return true;
+
+
+
+    }
+
+
+    catch(error){
+
+
+        console.error(
+
+            "Erreur marquage notifications :",
+
+            error
+
+        );
+
+
+        return false;
+
+
+    }
+
+
+}
 
 // ===============================
 // GET
