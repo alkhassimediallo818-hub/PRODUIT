@@ -573,13 +573,50 @@ export async function chargerNotifications(){
 
 
 
-        afficherListeNotifications(
+       afficherListeNotifications(
+
+    notifications
+
+);
 
 
-            notifications
+
+// ===============================
+// COMPTEUR NOTIFICATIONS NON LUES
+// ===============================
 
 
-        );
+const nonLues =
+
+notifications.filter(
+
+    (notification)=>{
+
+        return notification.lu !== true;
+
+    }
+
+).length;
+
+
+
+const compteur =
+
+document.getElementById(
+
+    "compteurNotifications"
+
+);
+
+
+
+if(compteur){
+
+
+    compteur.textContent = nonLues;
+
+
+}
 
 
 
