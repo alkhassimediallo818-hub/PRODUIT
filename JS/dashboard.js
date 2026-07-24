@@ -1131,21 +1131,7 @@ export function preparerGraphique(
     }
 
 
-let periodeGraphique = "tout";
 
-
-export function changerPeriodeGraphique(
-    periode
-){
-
-    periodeGraphique = periode;
-
-
-    preparerGraphique(
-        ventesGlobales
-    );
-
-}
 
     detruireGraphique();
 
