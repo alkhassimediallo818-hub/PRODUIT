@@ -5,6 +5,19 @@
 
 <link rel="icon" href="assets/favicon.ico">
 
+<button onclick="ouvrirNotifications()">
+
+🔔
+
+<span id="compteurNotifications">
+
+0
+
+</span>
+
+</button>
+     
+
 <meta charset="UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -1220,7 +1233,27 @@ console.log(
 </script>
 
 <script type="module" src="./main.js"></script>
+     
+<!-- ===============================
+     CENTRE DE NOTIFICATIONS
+================================ -->
 
+<div id="panneauNotifications" class="panneauNotifications">
+
+<h3>
+
+🔔 Notifications
+
+</h3>
+
+<div id="listeNotifications">
+
+Aucune notification
+
+</div>
+
+</div>
+     
 </body>
 
 </html>
