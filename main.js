@@ -1216,7 +1216,37 @@ onAuthStateChanged(
     }
 );
 
+window.toggleNotifications = function(){
 
+    const panneau =
+
+    document.getElementById(
+
+        "panneauNotifications"
+
+    );
+
+
+    if(!panneau)
+
+        return;
+
+
+    panneau.classList.toggle(
+
+        "ouvert"
+
+    );
+
+};
+
+window.marquerToutesCommeLues = async function(){
+
+    await marquerToutesNotificationsLues();
+
+    await chargerNotifications();
+
+};
 // ===============================
 // GESTION DES VENTES
 // ===============================
