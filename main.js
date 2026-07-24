@@ -114,6 +114,8 @@ import {
 
     mettreAJourResume,
 
+    calculerResumeVentes,
+
     calculerStockRestant,
 
     viderDashboard,
@@ -1813,11 +1815,25 @@ afficherVentes();
 
 
 
-       mettreAJourDashboard(
+     mettreAJourResume(
     produits,
     ventesGlobales
 );
 
+
+calculerResumeVentes(
+    ventesGlobales
+);
+
+
+calculerStockRestant(
+    produits
+);
+
+
+preparerGraphique(
+    ventesGlobales
+);
 
 
 
