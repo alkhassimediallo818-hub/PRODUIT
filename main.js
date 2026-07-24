@@ -11,7 +11,6 @@ if(!auth.currentUser){
 
 import {
 
-    afficherNotification,
     
      chargerNotifications,
 
@@ -19,8 +18,7 @@ import {
 
 } from "./JS/notifications.js";
 
-window.afficherNotification =
-afficherNotification;
+
 
 import {
 
