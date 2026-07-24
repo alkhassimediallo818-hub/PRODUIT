@@ -10,6 +10,13 @@ import {
 
 } from "../firebase.js";
 
+import {
+
+    doc,
+    updateDoc
+
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
 
 import {
 
@@ -48,6 +55,68 @@ export function getNotifications(){
 
 
 
+export async function marquerNotificationLue(
+
+    id
+
+){
+
+
+    if(!auth.currentUser)
+
+        return false;
+
+
+
+    try{
+
+
+        await updateDoc(
+
+            doc(
+
+                db,
+
+                "notifications",
+
+                id
+
+            ),
+
+            {
+
+                lu:true
+
+            }
+
+        );
+
+
+        return true;
+
+
+    }
+
+
+    catch(error){
+
+
+        console.error(
+
+            "Erreur lecture notification :",
+
+            error
+
+        );
+
+
+        return false;
+
+
+    }
+
+
+}
 
 
 // ===============================
