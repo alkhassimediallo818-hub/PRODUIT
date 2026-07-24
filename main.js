@@ -1313,7 +1313,43 @@ window.fermerVente = function(){
 
 
 
+window.changerPeriodeGraphique = function(
 
+    periode
+
+){
+
+    try{
+
+        changerPeriodeGraphique(
+
+            periode
+
+        );
+
+
+
+        preparerGraphique(
+
+            ventesGlobales
+
+        );
+
+    }
+
+    catch(error){
+
+        console.error(
+
+            "Erreur changement période :",
+
+            error
+
+        );
+
+    }
+
+};
 
 
 
