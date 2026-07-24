@@ -39,6 +39,77 @@ export function getNotifications(){
     return notifications;
 
 }
+
+// ===============================
+// AFFICHER LISTE
+// ===============================
+
+export function afficherListeNotifications(
+
+    notifications = []
+
+){
+
+    const liste =
+
+    document.getElementById(
+
+        "listeNotifications"
+
+    );
+
+
+
+    if(!liste)
+
+        return;
+
+
+
+    if(notifications.length === 0){
+
+        liste.innerHTML =
+
+        "Aucune notification";
+
+        return;
+
+    }
+
+
+
+    liste.innerHTML = "";
+
+
+
+    notifications.forEach(
+
+        (notification)=>{
+
+            liste.innerHTML += `
+
+            <div class="notificationItem">
+
+                <strong>
+
+                ${notification.titre}
+
+                </strong>
+
+                <br>
+
+                ${notification.message}
+
+            </div>
+
+            `;
+
+        }
+
+    );
+
+}
+
 // ===============================
 // CREER NOTIFICATION
 // ===============================
@@ -208,3 +279,17 @@ export async function chargerNotifications(){
     }
 
 }
+afficherListeNotifications(
+
+    notifications
+
+);
+
+
+document.getElementById(
+
+    "compteurNotifications"
+
+).textContent =
+
+notifications.length;
