@@ -413,6 +413,30 @@ if(top){
 }
 
 // ===============================
+// STOCK FAIBLE
+// ===============================
+
+const produitsFaibles =
+produits.filter(
+
+    (produit)=>{
+
+        return Number(
+            produit.stockTotal || 0
+        ) <= 5;
+
+    }
+
+);
+
+
+
+document.getElementById(
+    "stockFaible"
+).textContent =
+produitsFaibles.length;
+
+// ===============================
 // AFFICHAGE ETAT UTILISATEUR
 // ===============================
 
