@@ -215,6 +215,158 @@ if(liste){
 
 }
 
+// ===============================
+// DEPENSES TOTALES
+// ===============================
+
+const depenses =
+produits.reduce(
+
+    (total, produit)=>{
+
+        return total +
+        Number(
+            produit.prixGros || 0
+        );
+
+    },
+
+    0
+
+);
+
+document.getElementById(
+    "depensesTotales"
+).textContent =
+depenses + " FCFA";
+
+
+
+
+// ===============================
+// VALEUR DU STOCK
+// ===============================
+
+const valeurStock =
+produits.reduce(
+
+    (total, produit)=>{
+
+        return total +
+
+        (
+            Number(
+                produit.stockTotal || 0
+            )
+
+            *
+
+            Number(
+                produit.prixUnitaire || 0
+            )
+
+        );
+
+    },
+
+    0
+
+);
+
+document.getElementById(
+    "valeurStock"
+).textContent =
+valeurStock + " FCFA";
+
+
+
+
+// ===============================
+// TAUX DE VENTE
+// ===============================
+
+const totalStock =
+produits.reduce(
+
+    (total, produit)=>{
+
+        return total +
+
+        Number(
+            produit.stockTotal || 0
+        );
+
+    },
+
+    0
+
+);
+
+const taux =
+
+(totalStock + unitesVendues) === 0
+
+?
+
+0
+
+:
+
+Math.round(
+
+(
+    unitesVendues
+
+    /
+
+    (totalStock + unitesVendues)
+
+)
+
+*100
+
+);
+
+document.getElementById(
+    "tauxVente"
+).textContent =
+taux + " %";
+
+
+
+
+// ===============================
+// DERNIERE VENTE
+// ===============================
+
+let derniere = "Aucune";
+
+if(ventes.length){
+
+    const vente =
+
+    ventes[ventes.length - 1];
+
+    if(
+        vente.date &&
+        vente.date.toDate
+    ){
+
+        derniere =
+        vente.date
+        .toDate()
+        .toLocaleString();
+
+    }
+
+}
+
+document.getElementById(
+    "derniereVente"
+).textContent =
+derniere;
+    
+
     const transactions =
     ventes.length;
 
