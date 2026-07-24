@@ -13,7 +13,11 @@ import {
 
 } from "../firebase.js";
 
+import {
 
+    creerNotification
+
+} from "./notifications.js";
 
 import {
 
@@ -296,16 +300,12 @@ function creerProduit(data){
 
 export async function chargerProduits(
 
-
     utilisateurConnecte
-
 
 ){
 
 
-
     if(
-
 
         !utilisateurValide(
 
@@ -318,7 +318,6 @@ export async function chargerProduits(
     )
 
     return [];
-
 
 
 
@@ -341,24 +340,18 @@ export async function chargerProduits(
 
 
 
-
             where(
-
 
                 "userId",
 
-
                 "==",
 
-
                 auth.currentUser.uid
-
 
             )
 
 
         );
-
 
 
 
@@ -372,17 +365,13 @@ export async function chargerProduits(
 
 
 
-
         produits = [];
 
 
 
 
 
-
-
         resultat.forEach((docSnap)=>{
-
 
 
             produits.push({
@@ -408,6 +397,53 @@ export async function chargerProduits(
 
 
 
+        // ===============================
+        // VERIFICATION STOCK FAIBLE
+        // ===============================
+
+
+        produits.forEach((produit)=>{
+
+
+            if(
+
+                nombreValide(produit.stockTotal)
+
+                <=
+
+                5
+
+            ){
+
+
+                creerNotification(
+
+
+                    "Stock faible",
+
+
+
+                    `${produit.nom} possède seulement ${produit.stockTotal} unités.`,
+
+
+
+                    "warning"
+
+
+
+                );
+
+
+            }
+
+
+        });
+
+
+
+
+
+
 
         afficherProduits();
 
@@ -421,8 +457,8 @@ export async function chargerProduits(
 
 
 
-
     }
+
 
 
     catch(error){
@@ -610,6 +646,16 @@ export async function ajouterProduit(
 
             );
 
+            await creerNotification(
+
+    "Produit modifié",
+
+    `Le produit ${produit.nom} a été mis à jour.`,
+
+    "info"
+
+);
+            
         await enregistrerHistorique(
     true,
     "Modification produit",
@@ -677,6 +723,17 @@ export async function ajouterProduit(
 
 
         }
+
+        await creerNotification(
+
+    "Nouveau produit",
+
+    `Le produit ${produit.nom} a été ajouté.`,
+
+    "success"
+
+);
+        
 await enregistrerHistorique(
     true,
     "Ajout produit",
@@ -734,18 +791,24 @@ export function afficherProduits(){
         "tableauProduits"
     );
 
+
     if(!tableau)
         return;
+
 
     tableau.innerHTML = "";
 
 
+
     produits.forEach((produit)=>{
+
 
         const ligne = document.createElement("tr");
 
 
+
         ligne.innerHTML = `
+
 
         <td>
         ${produit.nom || "Produit"}
@@ -798,34 +861,47 @@ export function afficherProduits(){
 
         <td>
 
+
         <button onclick="modifierProduit('${produit.id}')">
         Modifier
         </button>
+
 
         <button onclick="supprimerProduit('${produit.id}')">
         Supprimer
         </button>
 
+
         <button onclick="vendreProduit('${produit.id}')">
         Vendre
         </button>
 
+
         </td>
 
+
         `;
+
 
 
         if(
             nombreValide(produit.stockTotal) <= 10
         ){
-            ligne.classList.add("stock-faible");
+
+            ligne.classList.add(
+                "stock-faible"
+            );
+
         }
+
 
 
         tableau.appendChild(ligne);
 
 
+
     });
+
 
 }
 // ===============================
@@ -927,6 +1003,17 @@ const nomProduit = resultat.data().nom || "Produit";
             reference
 
         );
+        
+await creerNotification(
+
+    "Produit supprimé",
+
+    `Le produit ${produit.nom} a été supprimé.`,
+
+    "warning"
+
+);
+        
 
   await enregistrerHistorique(
     true,
