@@ -2,6 +2,77 @@
    PAGE ACCUEIL
 ================================ */
 
+.panneau-notifications{
+
+    position:absolute;
+
+    top:60px;
+
+    right:20px;
+
+    width:320px;
+
+    max-height:450px;
+
+    overflow-y:auto;
+
+    background:#fff;
+
+    border-radius:10px;
+
+    box-shadow:0 0 15px rgba(0,0,0,.2);
+
+    padding:15px;
+
+    display:none;
+
+    z-index:999;
+
+}
+
+.panneau-notifications.ouvert{
+
+    display:block;
+
+}
+
+.notificationItem{
+
+    padding:10px;
+
+    margin:8px 0;
+
+    border-bottom:1px solid #ddd;
+
+    cursor:pointer;
+
+}
+
+.notificationItem.non-lue{
+
+    background:#eef6ff;
+
+    font-weight:bold;
+
+}
+
+#compteurNotifications{
+
+    background:red;
+
+    color:white;
+
+    border-radius:50%;
+
+    padding:2px 7px;
+
+    font-size:12px;
+
+    margin-left:5px;
+
+}
+
+
 .accueil-container{
 
     display:flex;
