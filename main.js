@@ -319,6 +319,98 @@ function mettreAJourDashboard(
 
 }
 
+// ===============================
+// TOP PRODUITS
+// ===============================
+
+const classement = {};
+
+ventes.forEach((vente)=>{
+
+    const nom = vente.produit || "Inconnu";
+
+    classement[nom] =
+    (classement[nom] || 0)
+    +
+    Number(vente.quantiteVendue || 0);
+
+});
+
+
+
+let meilleurProduit = "Aucun";
+let meilleureQuantite = 0;
+
+
+Object.entries(classement).forEach(
+
+    ([nom, quantite])=>{
+
+        if(quantite > meilleureQuantite){
+
+            meilleureQuantite = quantite;
+            meilleurProduit = nom;
+
+        }
+
+    }
+
+);
+
+
+
+document.getElementById(
+    "produitVedette"
+).textContent =
+meilleurProduit;
+
+
+
+const top = document.getElementById(
+    "topProduits"
+);
+
+
+if(top){
+
+    top.innerHTML = "";
+
+
+    Object.entries(classement)
+
+    .sort(
+
+        (a,b)=>b[1]-a[1]
+
+    )
+
+    .slice(0,5)
+
+    .forEach(
+
+        ([nom, quantite])=>{
+
+            top.innerHTML += `
+
+            <div>
+
+            ${nom}
+
+            <strong>
+
+            (${quantite})
+
+            </strong>
+
+            </div>
+
+            `;
+
+        }
+
+    );
+
+}
 
 // ===============================
 // AFFICHAGE ETAT UTILISATEUR
