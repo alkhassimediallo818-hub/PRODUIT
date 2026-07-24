@@ -214,7 +214,72 @@ export function afficherListeNotifications(
 
 
 
+export async function changerEtatNotifications(
 
+    actif
+
+){
+
+
+    if(!auth.currentUser)
+
+        return false;
+
+
+
+    try{
+
+
+        await updateDoc(
+
+            doc(
+
+                db,
+
+                "users",
+
+                auth.currentUser.uid
+
+            ),
+
+            {
+
+
+                notificationsActives:
+
+                actif
+
+
+            }
+
+        );
+
+
+        return true;
+
+
+    }
+
+
+    catch(error){
+
+
+        console.error(
+
+            "Erreur réglage notifications :",
+
+            error
+
+        );
+
+
+        return false;
+
+
+    }
+
+
+}
 
 
 // ===============================
