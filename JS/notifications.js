@@ -2,6 +2,7 @@
 // NOTIFICATIONS
 // ===============================
 
+
 import {
 
     db,
@@ -23,16 +24,21 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 
+
 // ===============================
 // VARIABLES
 // ===============================
 
+
 let notifications = [];
+
+
 
 
 // ===============================
 // GET
 // ===============================
+
 
 export function getNotifications(){
 
@@ -40,15 +46,21 @@ export function getNotifications(){
 
 }
 
+
+
+
+
 // ===============================
-// AFFICHER LISTE
+// AFFICHER LISTE NOTIFICATIONS
 // ===============================
+
 
 export function afficherListeNotifications(
 
-    notifications = []
+    listeNotifications = []
 
 ){
+
 
     const liste =
 
@@ -66,15 +78,21 @@ export function afficherListeNotifications(
 
 
 
-    if(notifications.length === 0){
+
+    if(listeNotifications.length === 0){
+
 
         liste.innerHTML =
 
         "Aucune notification";
 
+
         return;
 
+
     }
+
+
 
 
 
@@ -82,80 +100,131 @@ export function afficherListeNotifications(
 
 
 
-    notifications.forEach(
+
+
+    listeNotifications.forEach(
 
         (notification)=>{
 
+
             liste.innerHTML += `
 
-            <div class="notificationItem">
+
+            <div class="notificationItem ${notification.type || "info"}">
+
 
                 <strong>
 
-                ${notification.titre}
+                ${notification.titre || "Notification"}
 
                 </strong>
 
+
                 <br>
 
-                ${notification.message}
+
+                ${notification.message || ""}
+
+
 
             </div>
 
+
             `;
+
+
 
         }
 
     );
 
+
+
 }
+
+
+
+
+
+
+
+// ===============================
+// AFFICHAGE COMPTEUR
+// ===============================
+
+
+function mettreAJourCompteurNotifications(){
+
+
+    const compteur =
+
+    document.getElementById(
+
+        "compteurNotifications"
+
+    );
+
+
+
+    if(!compteur)
+
+        return;
+
+
+
+
+    compteur.textContent =
+
+    notifications.length;
+
+
+
+}
+
+
+
+
+
+
+
 
 // ===============================
 // CREER NOTIFICATION
 // ===============================
 
+
 export async function creerNotification(
+
 
     titre,
 
+
     message,
+
 
     type = "info"
 
+
 ){
 
-    if(!auth.currentUser){
+
+
+    if(!auth.currentUser)
 
         return false;
 
-    }
+
+
 
 
     try{
 
-        const notification = {
-
-            userId:
-
-            auth.currentUser.uid,
-
-            titre,
-
-            message,
-
-            type,
-
-            lu:false,
-
-            date:
-
-            serverTimestamp()
-
-        };
 
 
         await addDoc(
 
+
+
             collection(
 
                 db,
@@ -164,46 +233,116 @@ export async function creerNotification(
 
             ),
 
-            notification
+
+
+            {
+
+
+                userId:
+
+                auth.currentUser.uid,
+
+
+
+                titre,
+
+
+
+                message,
+
+
+
+                type,
+
+
+
+                lu:false,
+
+
+
+                date:
+
+                serverTimestamp()
+
+
+
+            }
+
+
 
         );
+
+
+
 
 
         return true;
 
+
+
     }
+
+
 
     catch(error){
 
+
+
         console.error(
 
-            "Erreur notification :",
+
+            "Erreur création notification :",
+
 
             error
 
+
         );
+
+
 
         return false;
 
+
+
     }
 
+
+
 }
+
+
+
+
+
+
+
+
+
 // ===============================
 // CHARGER NOTIFICATIONS
 // ===============================
 
+
 export async function chargerNotifications(){
 
-    if(!auth.currentUser){
+
+
+    if(!auth.currentUser)
 
         return [];
 
-    }
+
+
 
 
     try{
 
+
+
         const q = query(
+
+
 
             collection(
 
@@ -213,25 +352,43 @@ export async function chargerNotifications(){
 
             ),
 
+
+
             where(
+
 
                 "userId",
 
+
                 "==",
+
 
                 auth.currentUser.uid
 
+
             ),
+
+
 
             orderBy(
 
+
                 "date",
+
 
                 "desc"
 
+
             )
 
+
+
         );
+
+
+
+
+
 
 
         const resultat =
@@ -239,57 +396,113 @@ export async function chargerNotifications(){
         await getDocs(q);
 
 
+
+
+
         notifications = [];
+
+
+
 
 
         resultat.forEach(
 
-            (doc)=>{
+            (docSnap)=>{
+
+
 
                 notifications.push({
 
-                    id:doc.id,
 
-                    ...doc.data()
+                    id:
+
+                    docSnap.id,
+
+
+
+                    ...docSnap.data()
+
+
 
                 });
 
+
+
             }
+
 
         );
 
 
-        afficherNotifications();
+
+
+
+
+
+        afficherListeNotifications(
+
+
+            notifications
+
+
+        );
+
+
+
+
+
+        mettreAJourCompteurNotifications();
+
+
+
+
+
 
 
         return notifications;
 
+
+
+
     }
+
+
 
     catch(error){
 
+
+
         console.error(
+
+
+            "Erreur chargement notifications :",
+
 
             error
 
+
         );
+
+
 
         return [];
 
+
+
     }
 
-}
-afficherListeNotifications(
 
-    notifications
+
+}
+
+
+
+
+
+
+
+console.log(
+
+"Module notifications chargé"
 
 );
-
-
-document.getElementById(
-
-    "compteurNotifications"
-
-).textContent =
-
-notifications.length;
