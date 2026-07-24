@@ -1,78 +1,210 @@
 // ===============================
-// SYSTEME NOTIFICATIONS
+// NOTIFICATIONS
 // ===============================
 
+import {
 
-export function afficherNotification(
+    db,
+    auth
+
+} from "../firebase.js";
+
+
+import {
+
+    collection,
+    addDoc,
+    getDocs,
+    query,
+    where,
+    orderBy,
+    serverTimestamp
+
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+
+// ===============================
+// VARIABLES
+// ===============================
+
+let notifications = [];
+
+
+// ===============================
+// GET
+// ===============================
+
+export function getNotifications(){
+
+    return notifications;
+
+}
+// ===============================
+// CREER NOTIFICATION
+// ===============================
+
+export async function creerNotification(
+
+    titre,
+
     message,
+
     type = "info"
+
 ){
 
-    const container =
-    document.getElementById(
-        "notificationContainer"
-    );
+    if(!auth.currentUser){
 
-
-    if(!container){
-
-        console.warn(
-            "Container notification introuvable"
-        );
-
-        return;
+        return false;
 
     }
 
 
+    try{
 
-    const notification =
-    document.createElement(
-        "div"
-    );
+        const notification = {
 
+            userId:
 
-    notification.className =
-    "notification " + type;
+            auth.currentUser.uid,
 
+            titre,
 
+            message,
 
-    notification.textContent =
-    message;
+            type,
 
+            lu:false,
 
+            date:
 
-    container.appendChild(
-        notification
-    );
+            serverTimestamp()
 
-
-
-    setTimeout(()=>{
+        };
 
 
-        notification.classList.add(
-            "disparaitre"
+        await addDoc(
+
+            collection(
+
+                db,
+
+                "notifications"
+
+            ),
+
+            notification
+
         );
 
 
-        setTimeout(()=>{
+        return true;
 
+    }
 
-            notification.remove();
+    catch(error){
 
+        console.error(
 
-        },500);
+            "Erreur notification :",
 
+            error
 
+        );
 
-    },3000);
+        return false;
 
+    }
 
 }
+// ===============================
+// CHARGER NOTIFICATIONS
+// ===============================
+
+export async function chargerNotifications(){
+
+    if(!auth.currentUser){
+
+        return [];
+
+    }
 
 
+    try{
 
-console.log(
-"Module notifications chargé"
-);
+        const q = query(
+
+            collection(
+
+                db,
+
+                "notifications"
+
+            ),
+
+            where(
+
+                "userId",
+
+                "==",
+
+                auth.currentUser.uid
+
+            ),
+
+            orderBy(
+
+                "date",
+
+                "desc"
+
+            )
+
+        );
+
+
+        const resultat =
+
+        await getDocs(q);
+
+
+        notifications = [];
+
+
+        resultat.forEach(
+
+            (doc)=>{
+
+                notifications.push({
+
+                    id:doc.id,
+
+                    ...doc.data()
+
+                });
+
+            }
+
+        );
+
+
+        afficherNotifications();
+
+
+        return notifications;
+
+    }
+
+    catch(error){
+
+        console.error(
+
+            error
+
+        );
+
+        return [];
+
+    }
+
+}
