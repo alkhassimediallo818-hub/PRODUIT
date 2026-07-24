@@ -19,6 +19,19 @@ import {
 } from "./JS/notifications.js";
 
 
+import {
+
+    marquerNotificationLue
+
+} from "./JS/notifications.js";
+
+window.lireNotification = async function(id){
+
+    await marquerNotificationLue(id);
+
+    await chargerNotifications();
+
+};
 
 import {
 
