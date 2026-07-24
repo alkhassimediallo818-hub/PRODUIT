@@ -11,9 +11,14 @@ if(!auth.currentUser){
 
 import {
 
-    afficherNotification
+    afficherNotification,
+    
+     chargerNotifications,
+
+    afficherListeNotifications
 
 } from "./JS/notifications.js";
+
 window.afficherNotification =
 afficherNotification;
 
@@ -544,7 +549,8 @@ function mettreAJourDashboard(
 
     animerCompteur(
         "nbTransactions",
-        transactions
+        transactions chargerNotifications,
+
     );
 
     animerCompteur(
