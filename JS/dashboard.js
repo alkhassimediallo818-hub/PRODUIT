@@ -1103,7 +1103,6 @@ export function preparerGraphique(
 
 ){
 
-
     ventesGlobales =
     tableauValide(ventesGlobales);
 
@@ -1138,7 +1137,7 @@ export function preparerGraphique(
 
 
 
-    const donnees = {};
+    const statistiques = {};
 
 
 
@@ -1155,14 +1154,19 @@ export function preparerGraphique(
             if(
 
                 vente.date
+
                 &&
+
                 typeof vente.date.toDate === "function"
 
             ){
 
                 date =
+
                 vente.date
+
                 .toDate()
+
                 .toLocaleDateString(
                     "fr-FR"
                 );
@@ -1171,51 +1175,103 @@ export function preparerGraphique(
 
 
 
-            donnees[date] =
+            if(!statistiques[date]){
 
-            (
-                donnees[date]
-                ||
-                0
-            )
 
-            +
+                statistiques[date] = {
+
+                    chiffreAffaires:0,
+
+                    benefice:0
+
+                };
+
+
+            }
+
+
+
+
+            statistiques[date].chiffreAffaires +=
 
             nombreValide(
+
                 vente.montantTotal
+
             );
+
+
+
+            statistiques[date].benefice +=
+
+            nombreValide(
+
+                vente.benefice
+
+            );
+
 
 
         }
 
     );
+
 
 
 
 
 
     const labels =
-    Object.keys(donnees)
+
+    Object.keys(statistiques)
+
     .sort(
+
         (a,b)=>{
 
             return new Date(a)
+
             -
+
             new Date(b);
 
         }
+
     );
 
 
 
 
-    const valeurs =
+
+
+    const chiffreAffaires =
+
     labels.map(
 
         (date)=>
-        donnees[date]
+
+        statistiques[date]
+        .chiffreAffaires
 
     );
+
+
+
+
+
+
+    const benefices =
+
+    labels.map(
+
+        (date)=>
+
+        statistiques[date]
+        .benefice
+
+    );
+
+
 
 
 
@@ -1240,92 +1296,76 @@ export function preparerGraphique(
                 labels:labels,
 
 
-datasets:[{
 
-    label:
-    "Evolution des ventes",
-
-    data:
-    valeurs,
+                datasets:[
 
 
-    tension:
-    0.4,
+
+                {
+
+                    label:
+
+                    "Chiffre d'affaires",
 
 
-    fill:
-    true,
+
+                    data:
+
+                    chiffreAffaires,
 
 
-    pointRadius:
-    5,
+
+                    tension:
+
+                    0.4,
 
 
-    segment:{
 
-        borderColor:
-        (ctx)=>{
-
-            const index =
-            ctx.p0DataIndex;
+                    fill:true,
 
 
-            if(index === 0){
 
-                return "gray";
-
-            }
+                    pointRadius:5
 
 
-            return valeurs[index]
-            >=
-            valeurs[index - 1]
-
-            ?
-
-            "green"
-
-            :
-
-            "red";
-
-        }
-
-    },
+                },
 
 
-    pointBackgroundColor:
-    (ctx)=>{
 
 
-        const index =
-        ctx.dataIndex;
+                {
 
 
-        if(index === 0){
+                    label:
 
-            return "gray";
-
-        }
+                    "Bénéfices",
 
 
-        return valeurs[index]
-        >=
-        valeurs[index - 1]
 
-        ?
+                    data:
 
-        "green"
-
-        :
-
-        "red";
+                    benefices,
 
 
-    }
+
+                    tension:
+
+                    0.4,
 
 
-}]
+
+                    fill:true,
+
+
+
+                    pointRadius:5
+
+
+                }
+
+
+
+                ]
 
 
 
@@ -1333,13 +1373,18 @@ datasets:[{
 
 
 
+
+
             options:{
+
 
 
                 responsive:true,
 
 
+
                 maintainAspectRatio:false,
+
 
 
                 plugins:{
@@ -1361,13 +1406,16 @@ datasets:[{
                 scales:{
 
 
+
                     y:{
 
 
                         beginAtZero:true
 
 
+
                     }
+
 
 
                 }
@@ -1382,7 +1430,6 @@ datasets:[{
 
 
     );
-
 
 
 }
