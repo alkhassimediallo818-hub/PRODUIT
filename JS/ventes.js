@@ -12,6 +12,12 @@ import {
 } from "../firebase.js";
 
 
+import {
+
+    creerNotification
+
+} from "./notifications.js";
+
 
 import {
 
@@ -1003,15 +1009,6 @@ export async function confirmerVente(
 
         );
 
-await enregistrerHistorique(
-
-    true,
-
-    "Vente produit",
-
-    produit.nom
-
-);
 
 
 
@@ -1028,6 +1025,43 @@ await enregistrerHistorique(
 
 
         }
+
+
+
+
+
+
+        await enregistrerHistorique(
+
+            true,
+
+            "Vente produit",
+
+            produit.nom
+
+        );
+
+
+
+
+
+
+        // ===============================
+        // NOTIFICATION VENTE
+        // ===============================
+
+
+        await creerNotification(
+
+            "Nouvelle vente",
+
+            `Vente de ${produit.nom} effectuée (${quantite} unité(s)).`,
+
+            "success"
+
+        );
+
+
 
 
 
@@ -1065,19 +1099,70 @@ await enregistrerHistorique(
 
         );
 
-if(nouveauStock <= 0){
 
-    await enregistrerHistorique(
 
-        true,
 
-        "Stock épuisé",
 
-        produit.nom
 
-    );
 
-}
+        // ===============================
+        // VERIFICATION STOCK APRES VENTE
+        // ===============================
+
+
+
+        if(nouveauStock <= 0){
+
+
+
+            await enregistrerHistorique(
+
+                true,
+
+                "Stock épuisé",
+
+                produit.nom
+
+            );
+
+
+
+
+
+            await creerNotification(
+
+                "Stock épuisé",
+
+                `${produit.nom} n'est plus disponible.`,
+
+                "error"
+
+            );
+
+
+
+        }
+
+
+
+        else if(nouveauStock <= 5){
+
+
+
+            await creerNotification(
+
+                "Stock faible",
+
+                `${produit.nom} possède seulement ${nouveauStock} unité(s).`,
+
+                "warning"
+
+            );
+
+
+        }
+
+
 
 
 
