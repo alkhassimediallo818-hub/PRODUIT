@@ -72,13 +72,17 @@ confirmerVente,
 fermerVente as fermerFenetreVente,
 chargerProduitsVente,
 selectionnerProduitVente,
-calculerVente
+calculerVente,
+changerPeriodeGraphique
 
 } from "./JS/ventes.js";
 
 window.selectionnerProduitVente = selectionnerProduitVente;
 
 window.calculerVente = calculerVente;
+
+window.changerPeriodeGraphique =
+changerPeriodeGraphique;
 
 // ===============================
 // IMPORT HISTORIQUE
