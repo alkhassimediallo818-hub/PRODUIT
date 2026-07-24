@@ -21,6 +21,40 @@ import {
 
 import {
 
+    marquerToutesNotificationsLues
+
+} from "./JS/notifications.js";
+
+const boutonToutLu =
+
+document.getElementById(
+
+    "marquerToutLu"
+
+);
+
+
+if(boutonToutLu){
+
+
+    boutonToutLu.onclick = async ()=>{
+
+
+        await marquerToutesNotificationsLues();
+
+
+
+        await chargerNotifications();
+
+
+    };
+
+
+}
+
+
+import {
+
     marquerNotificationLue
 
 } from "./JS/notifications.js";
