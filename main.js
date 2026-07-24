@@ -158,296 +158,196 @@ let ventesGlobales = [];
 // ===============================
 
 function mettreAJourDashboard(
-    produits,
-    ventes
+    produits = [],
+    ventes = []
 ){
 
+    // Sécurisation
+    if(!Array.isArray(produits)){
+        produits = [];
+    }
+
+    if(!Array.isArray(ventes)){
+        ventes = [];
+    }
+
+
+    // ===============================
+    // PRODUITS
+    // ===============================
 
     const nombreProduits =
     produits.length;
 
 
-
     const stock =
     produits.reduce(
+
         (total, produit)=>{
 
             return total +
-            Number(produit.stockTotal || 0);
-
-        },
-        0
-    );
-
-const liste =
-document.getElementById(
-    "listeStockFaible"
-);
-
-if(liste){
-
-    if(produitsFaibles.length === 0){
-
-        liste.textContent =
-        "Aucun produit";
-
-    }
-
-    else{
-
-        liste.innerHTML =
-
-        produitsFaibles
-
-        .map(
-
-            (produit)=>`
-
-            <div>
-
-            ${produit.nom}
-            (${produit.stockTotal})
-
-            </div>
-
-            `
-
-        )
-
-        .join("");
-
-    }
-
-}
-
-// ===============================
-// DEPENSES TOTALES
-// ===============================
-
-const depenses =
-produits.reduce(
-
-    (total, produit)=>{
-
-        return total +
-        Number(
-            produit.prixGros || 0
-        );
-
-    },
-
-    0
-
-);
-
-document.getElementById(
-    "depensesTotales"
-).textContent =
-depenses + " FCFA";
-
-
-
-
-// ===============================
-// VALEUR DU STOCK
-// ===============================
-
-const valeurStock =
-produits.reduce(
-
-    (total, produit)=>{
-
-        return total +
-
-        (
             Number(
                 produit.stockTotal || 0
-            )
+            );
 
-            *
+        },
 
+        0
+
+    );
+
+
+    const depenses =
+    produits.reduce(
+
+        (total, produit)=>{
+
+            return total +
             Number(
-                produit.prixUnitaire || 0
-            )
+                produit.prixGros || 0
+            );
 
-        );
+        },
 
-    },
+        0
 
-    0
-
-);
-
-document.getElementById(
-    "valeurStock"
-).textContent =
-valeurStock + " FCFA";
+    );
 
 
+    const valeurStock =
+    produits.reduce(
+
+        (total, produit)=>{
+
+            return total +
+
+            (
+
+                Number(
+                    produit.stockTotal || 0
+                )
+
+                *
+
+                Number(
+                    produit.prixUnitaire || 0
+                )
+
+            );
+
+        },
+
+        0
+
+    );
 
 
-// ===============================
-// TAUX DE VENTE
-// ===============================
+    const produitsFaibles =
+    produits.filter(
 
-const totalStock =
-produits.reduce(
+        (produit)=>{
 
-    (total, produit)=>{
+            return Number(
+                produit.stockTotal || 0
+            ) <= 5;
 
-        return total +
+        }
 
-        Number(
-            produit.stockTotal || 0
-        );
-
-    },
-
-    0
-
-);
-
-const taux =
-
-(totalStock + unitesVendues) === 0
-
-?
-
-0
-
-:
-
-Math.round(
-
-(
-    unitesVendues
-
-    /
-
-    (totalStock + unitesVendues)
-
-)
-
-*100
-
-);
-
-document.getElementById(
-    "tauxVente"
-).textContent =
-taux + " %";
+    );
 
 
-
-
-// ===============================
-// DERNIERE VENTE
-// ===============================
-
-let derniere = "Aucune";
-
-if(ventes.length){
-
-    const vente =
-
-    ventes[ventes.length - 1];
-
-    if(
-        vente.date &&
-        vente.date.toDate
-    ){
-
-        derniere =
-        vente.date
-        .toDate()
-        .toLocaleString();
-
-    }
-
-}
-
-document.getElementById(
-    "derniereVente"
-).textContent =
-derniere;
-    
+    // ===============================
+    // VENTES
+    // ===============================
 
     const transactions =
     ventes.length;
 
 
-
     const chiffreAffaires =
     ventes.reduce(
+
         (total, vente)=>{
 
             return total +
+
             Number(
                 vente.montantTotal || 0
             );
 
         },
-        0
-    );
 
+        0
+
+    );
 
 
     const benefice =
     ventes.reduce(
+
         (total, vente)=>{
 
             return total +
+
             Number(
                 vente.benefice || 0
             );
 
         },
-        0
-    );
 
+        0
+
+    );
 
 
     const unitesVendues =
     ventes.reduce(
+
         (total, vente)=>{
 
             return total +
+
             Number(
                 vente.quantiteVendue || 0
             );
 
         },
+
         0
+
     );
 
 
-
-
     const aujourdHui =
-    new Date()
-    .toDateString();
-
+    new Date().toDateString();
 
 
     const ventesJour =
     ventes.reduce(
+
         (total, vente)=>{
 
-
             if(
+
                 vente.date &&
-                vente.date.toDate
+                typeof vente.date.toDate === "function"
+
             ){
 
-                const date =
-                vente.date
-                .toDate()
-                .toDateString();
+                if(
 
+                    vente.date
+                    .toDate()
+                    .toDateString()
 
-                if(date === aujourdHui){
+                    ===
+
+                    aujourdHui
+
+                ){
 
                     return total +
+
                     Number(
                         vente.montantTotal || 0
                     );
@@ -456,181 +356,312 @@ derniere;
 
             }
 
-
             return total;
 
-
         },
+
         0
+
+    );
+
+
+    const totalStock =
+    stock;
+
+
+    const taux =
+    (totalStock + unitesVendues) === 0
+
+    ?
+
+    0
+
+    :
+
+    Math.round(
+
+        (
+
+            unitesVendues
+
+            /
+
+            (totalStock + unitesVendues)
+
+        )
+
+        * 100
+
+    );
+
+
+    let derniere =
+    "Aucune";
+
+
+    if(ventes.length){
+
+        const vente =
+        ventes[ventes.length - 1];
+
+        if(
+
+            vente.date &&
+            typeof vente.date.toDate === "function"
+
+        ){
+
+            derniere =
+            vente.date
+            .toDate()
+            .toLocaleString();
+
+        }
+
+    }
+        // ===============================
+    // TOP PRODUITS
+    // ===============================
+
+    const classement = {};
+
+    ventes.forEach((vente)=>{
+
+        const nom =
+        vente.produit || "Inconnu";
+
+        classement[nom] =
+
+        (
+
+            classement[nom]
+
+            ||
+
+            0
+
+        )
+
+        +
+
+        Number(
+            vente.quantiteVendue || 0
+        );
+
+    });
+
+
+
+    let meilleurProduit = "Aucun";
+    let meilleureQuantite = 0;
+
+
+    Object.entries(classement).forEach(
+
+        ([nom, quantite])=>{
+
+            if(quantite > meilleureQuantite){
+
+                meilleureQuantite =
+                quantite;
+
+                meilleurProduit =
+                nom;
+
+            }
+
+        }
+
     );
 
 
 
+    // ===============================
+    // LISTE STOCK FAIBLE
+    // ===============================
+
+    const liste =
+    document.getElementById(
+        "listeStockFaible"
+    );
+
+    if(liste){
+
+        if(produitsFaibles.length === 0){
+
+            liste.textContent =
+            "Aucun produit";
+
+        }
+
+        else{
+
+            liste.innerHTML =
+
+            produitsFaibles
+
+            .map(
+
+                (produit)=>`
+
+                <div>
+
+                ${produit.nom}
+
+                (${produit.stockTotal})
+
+                </div>
+
+                `
+
+            )
+
+            .join("");
+
+        }
+
+    }
+
+
+
+    // ===============================
+    // MISE A JOUR DASHBOARD
+    // ===============================
 
     animerCompteur(
         "nbProduits",
         nombreProduits
     );
 
-
     animerCompteur(
         "stockRestant",
         stock
     );
-
 
     animerCompteur(
         "nbTransactions",
         transactions
     );
 
-
-
-    document.getElementById(
-        "chiffreAffaires"
-    ).textContent =
-    chiffreAffaires + " FCFA";
-
-
-
-    document.getElementById(
-        "beneficeVentes"
-    ).textContent =
-    benefice + " FCFA";
-
-
-
-    document.getElementById(
-        "unitesVendues"
-    ).textContent =
-    unitesVendues;
-
-
-
-    document.getElementById(
-        "ventesJour"
-    ).textContent =
-    ventesJour + " FCFA";
-
-
-}
-
-// ===============================
-// TOP PRODUITS
-// ===============================
-
-const classement = {};
-
-ventes.forEach((vente)=>{
-
-    const nom = vente.produit || "Inconnu";
-
-    classement[nom] =
-    (classement[nom] || 0)
-    +
-    Number(vente.quantiteVendue || 0);
-
-});
-
-
-
-let meilleurProduit = "Aucun";
-let meilleureQuantite = 0;
-
-
-Object.entries(classement).forEach(
-
-    ([nom, quantite])=>{
-
-        if(quantite > meilleureQuantite){
-
-            meilleureQuantite = quantite;
-            meilleurProduit = nom;
-
-        }
-
-    }
-
-);
-
-
-
-document.getElementById(
-    "produitVedette"
-).textContent =
-meilleurProduit;
-
-
-
-const top = document.getElementById(
-    "topProduits"
-);
-
-
-if(top){
-
-    top.innerHTML = "";
-
-
-    Object.entries(classement)
-
-    .sort(
-
-        (a,b)=>b[1]-a[1]
-
-    )
-
-    .slice(0,5)
-
-    .forEach(
-
-        ([nom, quantite])=>{
-
-            top.innerHTML += `
-
-            <div>
-
-            ${nom}
-
-            <strong>
-
-            (${quantite})
-
-            </strong>
-
-            </div>
-
-            `;
-
-        }
-
+    animerCompteur(
+        "stockFaible",
+        produitsFaibles.length
     );
 
-}
+    animerCompteur(
+        "unitesVendues",
+        unitesVendues
+    );
 
-// ===============================
-// STOCK FAIBLE
-// ===============================
 
-const produitsFaibles =
-produits.filter(
 
-    (produit)=>{
+    const majTexte = (id, valeur)=>{
 
-        return Number(
-            produit.stockTotal || 0
-        ) <= 5;
+        const element =
+        document.getElementById(id);
+
+        if(element){
+
+            element.textContent =
+            valeur;
+
+        }
+
+    };
+
+
+
+    majTexte(
+        "beneficeTotal",
+        benefice + " FCFA"
+    );
+
+    majTexte(
+        "beneficeVentes",
+        benefice + " FCFA"
+    );
+
+    majTexte(
+        "chiffreAffaires",
+        chiffreAffaires + " FCFA"
+    );
+
+    majTexte(
+        "ventesJour",
+        ventesJour + " FCFA"
+    );
+
+    majTexte(
+        "depensesTotales",
+        depenses + " FCFA"
+    );
+
+    majTexte(
+        "valeurStock",
+        valeurStock + " FCFA"
+    );
+
+    majTexte(
+        "tauxVente",
+        taux + " %"
+    );
+
+    majTexte(
+        "derniereVente",
+        derniere
+    );
+
+    majTexte(
+        "produitVedette",
+        meilleurProduit
+    );
+
+
+
+    const top =
+    document.getElementById(
+        "topProduits"
+    );
+
+    if(top){
+
+        top.innerHTML = "";
+
+        Object.entries(classement)
+
+        .sort(
+            (a,b)=>b[1]-a[1]
+        )
+
+        .slice(0,5)
+
+        .forEach(
+
+            ([nom, quantite])=>{
+
+                top.innerHTML += `
+
+                <div>
+
+                ${nom}
+
+                <strong>
+
+                (${quantite})
+
+                </strong>
+
+                </div>
+
+                `;
+
+            }
+
+        );
 
     }
 
-);
-
-
-
-document.getElementById(
-    "stockFaible"
-).textContent =
-produitsFaibles.length;
+}
 
 // ===============================
 // AFFICHAGE ETAT UTILISATEUR
