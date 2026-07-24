@@ -11,6 +11,14 @@ if(!auth.currentUser){
 
 import {
 
+    afficherNotification
+
+} from "./JS/notifications.js";
+window.afficherNotification =
+afficherNotification;
+
+import {
+
     db,
 
     auth,
