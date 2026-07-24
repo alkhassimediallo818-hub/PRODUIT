@@ -122,6 +122,98 @@
 
 }
 
+#notificationContainer{
+
+    position:fixed;
+
+    top:20px;
+
+    right:20px;
+
+    z-index:9999;
+
+}
+
+
+.notification{
+
+    padding:15px 20px;
+
+    margin-bottom:10px;
+
+    border-radius:8px;
+
+    color:white;
+
+    font-weight:bold;
+
+    animation:apparition .3s ease;
+
+}
+
+
+.notification.success{
+
+    background:#2ecc71;
+
+}
+
+
+.notification.error{
+
+    background:#e74c3c;
+
+}
+
+
+.notification.warning{
+
+    background:#f39c12;
+
+}
+
+
+.notification.info{
+
+    background:#3498db;
+
+}
+
+
+
+.notification.disparaitre{
+
+    opacity:0;
+
+    transform:translateX(100px);
+
+    transition:.5s;
+
+}
+
+
+
+@keyframes apparition{
+
+    from{
+
+        opacity:0;
+
+        transform:translateY(-20px);
+
+    }
+
+
+    to{
+
+        opacity:1;
+
+        transform:translateY(0);
+
+    }
+
+}
+
 #userInfo{
 
     font-weight:bold;
