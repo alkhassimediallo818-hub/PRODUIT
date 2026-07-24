@@ -174,7 +174,46 @@ function mettreAJourDashboard(
         0
     );
 
+const liste =
+document.getElementById(
+    "listeStockFaible"
+);
 
+if(liste){
+
+    if(produitsFaibles.length === 0){
+
+        liste.textContent =
+        "Aucun produit";
+
+    }
+
+    else{
+
+        liste.innerHTML =
+
+        produitsFaibles
+
+        .map(
+
+            (produit)=>`
+
+            <div>
+
+            ${produit.nom}
+            (${produit.stockTotal})
+
+            </div>
+
+            `
+
+        )
+
+        .join("");
+
+    }
+
+}
 
     const transactions =
     ventes.length;
