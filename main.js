@@ -549,7 +549,7 @@ function mettreAJourDashboard(
 
     animerCompteur(
         "nbTransactions",
-        transactions chargerNotifications,
+        transactions 
 
     );
 
