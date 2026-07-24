@@ -48,6 +48,11 @@ import {
 } from "./firebase.js";
 
 
+import {
+
+    changerEtatNotifications
+
+} from "./JS/notifications.js";
 
 import {
 
@@ -275,7 +280,56 @@ function mettreAJourDashboard(
 
     );
 
+const boutonNotifications =
 
+document.getElementById(
+
+    "btnNotifications"
+
+);
+
+
+if(boutonNotifications){
+
+
+    let actif = true;
+
+
+
+    boutonNotifications.onclick = async ()=>{
+
+
+        actif = !actif;
+
+
+
+        await changerEtatNotifications(
+
+            actif
+
+        );
+
+
+
+        boutonNotifications.textContent =
+
+        actif
+
+        ?
+
+        "Désactiver"
+
+        :
+
+        "Activer";
+
+
+    };
+
+
+}
+
+    
     // ===============================
     // VENTES
     // ===============================
