@@ -20,6 +20,7 @@ import {
 
 let graphiqueActuel = null;
 
+let periodeGraphique = "tout";
 
 
 
@@ -1088,7 +1089,13 @@ function detruireGraphique(){
 }
 
 
+export function changerPeriodeGraphique(
+    periode
+){
 
+    periodeGraphique = periode;
+
+}
 
 
 
@@ -1106,7 +1113,110 @@ export function preparerGraphique(
     ventesGlobales =
     tableauValide(ventesGlobales);
 
+const maintenant = new Date();
 
+
+if(periodeGraphique !== "tout"){
+
+
+    ventesGlobales =
+
+    ventesGlobales.filter(
+
+        (vente)=>{
+
+
+            if(
+                !vente.date
+                ||
+                typeof vente.date.toDate !== "function"
+            ){
+
+                return false;
+
+            }
+
+
+            const dateVente =
+            vente.date.toDate();
+
+
+
+            if(periodeGraphique === "jour"){
+
+
+                return (
+
+                    dateVente.toDateString()
+
+                    ===
+
+                    maintenant.toDateString()
+
+                );
+
+
+            }
+
+
+
+
+            if(periodeGraphique === "7jours"){
+
+
+                const limite =
+                new Date();
+
+
+                limite.setDate(
+                    maintenant.getDate() - 7
+                );
+
+
+                return dateVente >= limite;
+
+
+            }
+
+
+
+
+
+            if(periodeGraphique === "mois"){
+
+
+                return (
+
+                    dateVente.getMonth()
+
+                    ===
+
+                    maintenant.getMonth()
+
+                    &&
+
+                    dateVente.getFullYear()
+
+                    ===
+
+                    maintenant.getFullYear()
+
+                );
+
+
+            }
+
+
+
+            return true;
+
+
+        }
+
+    );
+
+
+}
 
     const canvas =
     document.getElementById(
