@@ -120,7 +120,9 @@ import {
 
     viderDashboard,
 
-    preparerGraphique
+    preparerGraphique,
+
+    changerPeriodeGraphique
 
 } from "./JS/dashboard.js";
 
