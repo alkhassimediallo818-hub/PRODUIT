@@ -80,8 +80,7 @@ confirmerVente,
 fermerVente as fermerFenetreVente,
 chargerProduitsVente,
 selectionnerProduitVente,
-calculerVente,
-changerPeriodeGraphique
+calculerVente
 
 } from "./JS/ventes.js";
 
@@ -89,8 +88,6 @@ window.selectionnerProduitVente = selectionnerProduitVente;
 
 window.calculerVente = calculerVente;
 
-window.changerPeriodeGraphique =
-changerPeriodeGraphique;
 
 // ===============================
 // IMPORT HISTORIQUE
