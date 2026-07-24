@@ -405,37 +405,51 @@ export async function chargerProduits(
         produits.forEach((produit)=>{
 
 
-            if(
+          if(
 
-                nombreValide(produit.stockTotal)
+    nombreValide(produit.stockTotal) <= 5
 
-                <=
+    &&
 
-                5
+    produit.stockAlerteEnvoyee !== true
 
-            ){
-
-
-                creerNotification(
+){
 
 
-                    "Stock faible",
+    await creerNotification(
 
+        "Stock faible",
 
+        `${produit.nom} possède seulement ${produit.stockTotal} unités.`,
 
-                    `${produit.nom} possède seulement ${produit.stockTotal} unités.`,
+        "warning"
 
-
-
-                    "warning"
+    );
 
 
 
-                );
+    await updateDoc(
+
+        doc(
+
+            db,
+
+            "produits",
+
+            produit.id
+
+        ),
+
+        {
+
+            stockAlerteEnvoyee:true
+
+        }
+
+    );
 
 
-            }
-
+}
 
         });
 
