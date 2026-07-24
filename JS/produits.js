@@ -13,6 +13,13 @@ import {
 
 } from "../firebase.js";
 
+
+import {
+
+    envoyerCorbeille
+
+} from "./corbeille.js";
+
 import {
 
     creerNotification
