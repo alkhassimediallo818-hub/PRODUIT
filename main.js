@@ -1949,10 +1949,11 @@ async function actualiserDonnees(){
 
 
 
-        produits =
-await chargerProduits(true)
-|| [];
+      produits =
 
+await chargerProduits()
+
+|| [];
 
 chargerProduitsVente(produits);
 
