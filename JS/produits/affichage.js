@@ -155,39 +155,30 @@ export function creerLigneProduit(
 
         </td>
 
-        <td>
+   <td>
 
-            <button
+    <button
 
-            onclick="modifierProduit('${produit.id}')"
+    onclick="modifierProduit('${produit.id}')"
 
-            >
+    >
 
-            Modifier
+    Modifier
 
-            </button>
+    </button>
 
-            <button
 
-            onclick="supprimerProduit('${produit.id}')"
+    <button
 
-            >
+    onclick="supprimerProduit('${produit.id}')"
 
-            Supprimer
+    >
 
-            </button>
+    Supprimer
 
-            <button
+    </button>
 
-            onclick="vendreProduit('${produit.id}')"
-
-            >
-
-            Vendre
-
-            </button>
-
-        </td>
+</td>
 
     `;
 
