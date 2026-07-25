@@ -112,12 +112,13 @@ import {
 
     modifierProduit,
 
-    viderChamps,
+    afficherProduits,
 
-    annulerModification as resetModification
+    getProduits
 
-} from "./JS/produits.js";
+}
 
+from "./JS/produits/index.js";
 
 
 
