@@ -1559,132 +1559,26 @@ window.changerPeriodeGraphique = function(
 
 window.ajouterProduit = async function(){
 
+
     if(!utilisateurConnecte){
+
 
         alert(
             "Connectez-vous d'abord"
         );
 
+
         return false;
+
 
     }
 
+
+
     try{
+
 
         const donnees = {
-
-            nom:
-            document.getElementById("nom")?.value.trim(),
-
-            prixGros:
-            Number(document.getElementById("prixGros")?.value),
-
-            nombreCartons:
-            Number(document.getElementById("nombreCartons")?.value),
-
-            produitsParCarton:
-            Number(document.getElementById("produitsParCarton")?.value),
-
-            prixRevente:
-            Number(document.getElementById("prixRevente")?.value)
-
-        };
-
-        let resultat = false;
-
-        if(produitEnModification){
-
-            resultat = await modifierProduit(
-
-                produitEnModification,
-
-                donnees
-
-            );
-
-        }else{
-
-            resultat = await ajouterProduit(
-
-                donnees
-
-            );
-
-        }
-
-        if(!resultat){
-
-            return false;
-
-        }
-
-        produitEnModification = null;
-
-        document.getElementById("btnAjouterProduit").textContent =
-
-        "Ajouter";
-
-        await actualiserDonnees();
-
-        viderChamps();
-
-        return true;
-
-    }
-
-    catch(error){
-
-        console.error(
-
-            "Erreur ajout/modification :",
-
-            error
-
-        );
-
-        alert(error.message);
-
-        return false;
-
-    }
-
-};
-
-
-
-
-
-
-// ===============================
-// MODIFIER PRODUIT
-// ===============================
-
-
-
-window.modifierProduit = async function(id){
-
-
-    if(!utilisateurConnecte){
-
-
-        alert(
-
-            "Connectez-vous d'abord"
-
-        );
-
-
-        return false;
-
-
-    }
-
-
-
-    try{
-
-
-        const nouvellesDonnees = {
 
 
             nom:
@@ -1758,30 +1652,44 @@ window.modifierProduit = async function(id){
 
 
 
+        let resultat = false;
 
 
-        const resultat =
 
-        await modifierProduitFirestore(
+        if(produitModification){
 
-            id,
 
-            nouvellesDonnees
+            resultat =
 
-        );
+            await modifierProduitFirestore(
 
+                produitModification,
+
+                donnees
+
+            );
+
+
+        }
+
+        else{
+
+
+            resultat =
+
+            await ajouterProduit(
+
+                donnees
+
+            );
+
+
+        }
 
 
 
 
         if(!resultat){
-
-
-            alert(
-
-                "Impossible de modifier le produit"
-
-            );
 
 
             return false;
@@ -1792,20 +1700,39 @@ window.modifierProduit = async function(id){
 
 
 
+        produitModification = null;
+
+
+
+
+        const bouton =
+
+        document.getElementById(
+
+            "btnAjouterProduit"
+
+        );
+
+
+
+        if(bouton){
+
+
+            bouton.textContent =
+
+            "Ajouter le produit";
+
+
+        }
+
+
+
 
         await actualiserDonnees();
 
 
 
         viderChamps();
-
-
-
-        alert(
-
-            "Produit modifié avec succès"
-
-        );
 
 
 
@@ -1819,10 +1746,9 @@ window.modifierProduit = async function(id){
     catch(error){
 
 
-
         console.error(
 
-            "Erreur modification :",
+            "Erreur ajout/modification :",
 
             error
 
@@ -1832,7 +1758,7 @@ window.modifierProduit = async function(id){
 
         alert(
 
-            "Erreur pendant la modification"
+            error.message
 
         );
 
@@ -1841,6 +1767,99 @@ window.modifierProduit = async function(id){
         return false;
 
 
+
+    }
+
+
+};
+
+
+
+
+
+
+// ===============================
+// MODIFIER PRODUIT
+// ===============================
+
+
+
+window.modifierProduit = function(id){
+
+
+    const produit =
+
+    getProduits()
+
+    .find(
+
+        p => p.id === id
+
+    );
+
+
+
+    if(!produit){
+
+        console.error(
+            "Produit introuvable"
+        );
+
+        return;
+
+    }
+
+
+
+    produitModification = id;
+
+
+
+    document.getElementById("nom").value =
+
+    produit.nom || "";
+
+
+
+    document.getElementById("prixGros").value =
+
+    produit.prixGros || "";
+
+
+
+    document.getElementById("nombreCartons").value =
+
+    produit.nombreCartons || "";
+
+
+
+    document.getElementById("produitsParCarton").value =
+
+    produit.produitsParCarton || "";
+
+
+
+    document.getElementById("prixRevente").value =
+
+    produit.prixRevente || "";
+
+
+
+    const bouton =
+
+    document.getElementById(
+
+        "btnAjouterProduit"
+
+    );
+
+
+
+    if(bouton){
+
+        bouton.textContent =
+
+        "Enregistrer modification";
 
     }
 
@@ -2136,39 +2155,32 @@ async function actualiserDonnees(){
 window.annulerModification = function(){
 
 
-    try{
+    produitModification = null;
 
 
-        viderChamps();
+    viderChamps();
 
 
-        console.log(
 
-            "Modification annulée"
+    const bouton =
 
-        );
+    document.getElementById(
 
+        "btnAjouterProduit"
 
-    }
-
-
-    catch(error){
+    );
 
 
-        console.error(
+    if(bouton){
 
-            "Erreur annulation modification :",
+        bouton.textContent =
 
-            error
-
-        );
-
+        "Ajouter le produit";
 
     }
 
 
 };
-
 
 
 
