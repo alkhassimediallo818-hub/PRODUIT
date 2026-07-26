@@ -1499,9 +1499,7 @@ window.changerPeriodeGraphique = function(
 window.ajouterProduit = async function(){
 
 
-
     if(!utilisateurConnecte){
-
 
 
         alert(
@@ -1511,21 +1509,17 @@ window.ajouterProduit = async function(){
         );
 
 
-        return;
+        return false;
 
 
     }
 
 
 
-
-
     try{
 
 
-
         const donnees = {
-
 
 
             nom:
@@ -1538,9 +1532,7 @@ window.ajouterProduit = async function(){
 
             )
 
-            ?.value,
-
-
+            ?.value.trim(),
 
 
 
@@ -1562,8 +1554,6 @@ window.ajouterProduit = async function(){
 
 
 
-
-
             nombreCartons:
 
             Number(
@@ -1579,8 +1569,6 @@ window.ajouterProduit = async function(){
                 ?.value
 
             ),
-
-
 
 
 
@@ -1602,8 +1590,6 @@ window.ajouterProduit = async function(){
 
 
 
-
-
             prixRevente:
 
             Number(
@@ -1621,35 +1607,47 @@ window.ajouterProduit = async function(){
             )
 
 
-
         };
 
 
 
+
+        console.log(
+
+            "Données produit :",
+
+            donnees
+
+        );
 
 
 
 
         const resultat =
 
-await ajouterProduit(
+        await ajouterProduit(
 
-    donnees
+            donnees
 
-);
-
-
+        );
 
 
 
 
-
-        if(!resultat)
-
-            return;
+        if(!resultat){
 
 
+            console.error(
 
+                "Ajout produit refusé"
+
+            );
+
+
+            return false;
+
+
+        }
 
 
 
@@ -1659,15 +1657,23 @@ await ajouterProduit(
 
 
 
-
-
-
         viderChamps();
-
 
 
         resetModification();
 
+
+
+
+        alert(
+
+            "Produit ajouté avec succès"
+
+        );
+
+
+
+        return true;
 
 
 
@@ -1680,7 +1686,9 @@ await ajouterProduit(
 
         console.error(
 
-            "Erreur ajout produit :",
+            "Erreur ajout produit complète :",
+
+            error.message,
 
             error
 
@@ -1690,9 +1698,13 @@ await ajouterProduit(
 
         alert(
 
-            "Impossible d'enregistrer le produit"
+            "Erreur : " + error.message
 
         );
+
+
+
+        return false;
 
 
 
@@ -1701,7 +1713,6 @@ await ajouterProduit(
 
 
 };
-
 
 
 
