@@ -1702,7 +1702,21 @@ window.ajouterProduit = async function(){
 
         produitModification = null;
 
+const btnAnnuler =
 
+document.getElementById(
+
+    "btnAnnulerModification"
+
+);
+
+if(btnAnnuler){
+
+    btnAnnuler.style.display =
+
+    "none";
+
+}
 
 
         const bouton =
@@ -1867,7 +1881,37 @@ window.modifierProduit = function(id){
 };
 
 
+const btnAjouter =
 
+document.getElementById(
+
+    "btnAjouterProduit"
+
+);
+
+if(btnAjouter){
+
+    btnAjouter.textContent =
+
+    "Enregistrer la modification";
+
+}
+
+const btnAnnuler =
+
+document.getElementById(
+
+    "btnAnnulerModification"
+
+);
+
+if(btnAnnuler){
+
+    btnAnnuler.style.display =
+
+    "inline-block";
+
+}
 
 
 
@@ -2159,15 +2203,11 @@ window.annulerModification = function(){
 
 
 
-    if(typeof viderChamps === "function"){
-
-        viderChamps();
-
-    }
+    viderChamps();
 
 
 
-    const bouton =
+    const btnAjouter =
 
     document.getElementById(
 
@@ -2177,21 +2217,36 @@ window.annulerModification = function(){
 
 
 
-    if(bouton){
+    if(btnAjouter){
 
-
-        bouton.textContent =
+        btnAjouter.textContent =
 
         "Ajouter le produit";
 
+    }
+
+
+
+    const btnAnnuler =
+
+    document.getElementById(
+
+        "btnAnnulerModification"
+
+    );
+
+
+
+    if(btnAnnuler){
+
+        btnAnnuler.style.display =
+
+        "none";
 
     }
 
 
 };
-
-
-
 
 
 
