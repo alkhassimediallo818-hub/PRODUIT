@@ -55,6 +55,10 @@ import {
 // IMPORT PRODUITS
 // ===============================
 
+// ===============================
+// IMPORT PRODUITS
+// ===============================
+
 import {
 
     chargerProduits,
@@ -65,14 +69,9 @@ import {
 
     modifierProduit,
 
-    afficherProduits,
-
-    getProduits,
-
-    viderChamps
+    getProduits
 
 } from "./JS/produits/index.js";
-
 
 
 // ===============================
@@ -215,7 +214,48 @@ let produits = [];
 let ventesGlobales = [];
 
 
+// ===============================
+// FORMULAIRE PRODUIT
+// ===============================
 
+function viderChamps(){
+
+
+    const champs = [
+
+        "nom",
+
+        "prixGros",
+
+        "nombreCartons",
+
+        "produitsParCarton",
+
+        "prixRevente"
+
+    ];
+
+
+    champs.forEach(id=>{
+
+
+        const element =
+
+        document.getElementById(id);
+
+
+
+        if(element){
+
+            element.value = "";
+
+        }
+
+
+    });
+
+
+}
 
 // ===============================
 // MISE A JOUR DASHBOARD
