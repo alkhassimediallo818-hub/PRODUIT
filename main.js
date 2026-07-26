@@ -2158,7 +2158,12 @@ window.annulerModification = function(){
     produitModification = null;
 
 
-    viderChamps();
+
+    if(typeof viderChamps === "function"){
+
+        viderChamps();
+
+    }
 
 
 
@@ -2171,11 +2176,14 @@ window.annulerModification = function(){
     );
 
 
+
     if(bouton){
+
 
         bouton.textContent =
 
         "Ajouter le produit";
+
 
     }
 
