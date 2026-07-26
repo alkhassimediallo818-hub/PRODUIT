@@ -78,6 +78,14 @@ export function getProduits(){
 
 }
 
+console.log("Produit envoyé :", {
+    ...produit,
+    stockTotal,
+    prixUnitaire,
+    benefice,
+    userId: auth.currentUser.uid
+});
+
 await addDoc(
     collection(db, "produits"),
     {
