@@ -1770,9 +1770,7 @@ window.modifierProduit = function(id){
 window.supprimerProduit = async function(id){
 
 
-
     if(!utilisateurConnecte){
-
 
 
         alert(
@@ -1782,7 +1780,7 @@ window.supprimerProduit = async function(id){
         );
 
 
-        return;
+        return false;
 
 
     }
@@ -1790,18 +1788,12 @@ window.supprimerProduit = async function(id){
 
 
 
-
-
-
     try{
-
 
 
         const resultat =
 
         await supprimerProduit(
-
-            true,
 
             id
 
@@ -1810,13 +1802,9 @@ window.supprimerProduit = async function(id){
 
 
 
-
-
         if(!resultat)
 
-            return;
-
-
+            return false;
 
 
 
@@ -1825,13 +1813,14 @@ window.supprimerProduit = async function(id){
 
 
 
+        return true;
+
 
 
     }
 
 
     catch(error){
-
 
 
         console.error(
@@ -1843,8 +1832,10 @@ window.supprimerProduit = async function(id){
         );
 
 
-    }
+        return false;
 
+
+    }
 
 
 };
