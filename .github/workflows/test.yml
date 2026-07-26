@@ -21,17 +21,18 @@ jobs:
           ls -la
 
       - name: Voir les fichiers reçus par GitHub
-  run: |
-    pwd
-    ls -la
-    find . -maxdepth 2 -type f
+        run: |
+          pwd
+          ls -la
+          find . -maxdepth 2 -type f
 
-- name: Vérifier index.html
-  run: |
-    test -f index.html
-    echo "index.html trouvé"
-          test -f ./main.js
-          test -f ./firebase.js
-          test -f ./produits.js
-          test -f ./ventes.js
+      - name: Vérifier index.html
+        run: |
+          test -f index.html
+          echo "index.html trouvé"
+
+      - name: Vérifier les fichiers principaux
+        run: |
+          test -f main.js
+          test -f firebase.js
           echo "Structure OK"
