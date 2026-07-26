@@ -51,13 +51,12 @@ import {
 
 
 
-// ===============================
-// IMPORT PRODUITS
-// ===============================
 
 // ===============================
 // IMPORT PRODUITS
 // ===============================
+
+
 import {
 
     chargerProduits,
@@ -68,7 +67,11 @@ import {
 
     modifierProduit as modifierProduitFirestore,
 
-    getProduits
+    afficherProduits,
+
+    getProduits,
+
+    viderChamps
 
 } from "./JS/produits/index.js";
 
@@ -219,7 +222,7 @@ console.log("MAIN JS CHARGE");
 
 let utilisateurConnecte = false;
 
-let produitEnModification = null;
+let produitModification = null;
 
 
 let utilisateurActuel = null;
@@ -1800,23 +1803,12 @@ if(btnAnnuler){
 
 window.modifierProduit = function(id){
 
+    if(!utilisateurConnecte){
 
-    const produit =
+        alert(
 
-    getProduits()
+            "Connectez-vous d'abord"
 
-    .find(
-
-        p => p.id === id
-
-    );
-
-
-
-    if(!produit){
-
-        console.error(
-            "Produit introuvable"
         );
 
         return;
@@ -1824,42 +1816,80 @@ window.modifierProduit = function(id){
     }
 
 
+    const produit =
 
+    getProduits().find(
+
+        p => p.id === id
+
+    );
+
+
+    if(!produit){
+
+        alert(
+
+            "Produit introuvable"
+
+        );
+
+        return;
+
+    }
+
+
+    // On mémorise le produit à modifier
     produitModification = id;
 
 
+    // Remplissage du formulaire
+    document.getElementById(
 
-    document.getElementById("nom").value =
+        "nom"
+
+    ).value =
 
     produit.nom || "";
 
 
+    document.getElementById(
 
-    document.getElementById("prixGros").value =
+        "prixGros"
 
-    produit.prixGros || "";
+    ).value =
 
-
-
-    document.getElementById("nombreCartons").value =
-
-    produit.nombreCartons || "";
+    produit.prixGros || 0;
 
 
+    document.getElementById(
 
-    document.getElementById("produitsParCarton").value =
+        "nombreCartons"
 
-    produit.produitsParCarton || "";
+    ).value =
 
-
-
-    document.getElementById("prixRevente").value =
-
-    produit.prixRevente || "";
+    produit.nombreCartons || 0;
 
 
+    document.getElementById(
 
-    const bouton =
+        "produitsParCarton"
+
+    ).value =
+
+    produit.produitsParCarton || 0;
+
+
+    document.getElementById(
+
+        "prixRevente"
+
+    ).value =
+
+    produit.prixRevente || 0;
+
+
+    // Changement du texte du bouton
+    const btnAjouter =
 
     document.getElementById(
 
@@ -1868,50 +1898,51 @@ window.modifierProduit = function(id){
     );
 
 
+    if(btnAjouter){
 
-    if(bouton){
+        btnAjouter.textContent =
 
-        bouton.textContent =
-
-        "Enregistrer modification";
+        "Enregistrer la modification";
 
     }
 
 
+    // Affichage du bouton Annuler
+    const btnAnnuler =
+
+    document.getElementById(
+
+        "btnAnnulerModification"
+
+    );
+
+
+    if(btnAnnuler){
+
+        btnAnnuler.style.display =
+
+        "inline-block";
+
+    }
+
+
+    // Place le curseur sur le premier champ
+    document.getElementById(
+
+        "nom"
+
+    ).focus();
+
+
+    console.log(
+
+        "Produit prêt à être modifié :",
+
+        produit
+
+    );
+
 };
-
-
-const btnAjouter =
-
-document.getElementById(
-
-    "btnAjouterProduit"
-
-);
-
-if(btnAjouter){
-
-    btnAjouter.textContent =
-
-    "Enregistrer la modification";
-
-}
-
-const btnAnnuler =
-
-document.getElementById(
-
-    "btnAnnulerModification"
-
-);
-
-if(btnAnnuler){
-
-    btnAnnuler.style.display =
-
-    "inline-block";
-
-}
 
 
 
