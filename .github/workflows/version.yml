@@ -1,0 +1,30 @@
+name: Version Automatique Gestion Produits
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  version:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Récupérer le projet
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Créer une version
+        id: version
+        run: |
+          VERSION=$(date +"v%Y.%m.%d-%H%M")
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+
+      - name: Créer un tag Git
+        run: |
+          git tag $VERSION
+          git push origin $VERSION
