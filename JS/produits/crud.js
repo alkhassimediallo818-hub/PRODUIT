@@ -466,6 +466,10 @@ export async function modifierProduit(
 // SUPPRIMER PRODUIT
 // ===============================
 
+// ===============================
+// SUPPRIMER PRODUIT
+// ===============================
+
 export async function supprimerProduit(
 
     id
@@ -476,6 +480,23 @@ export async function supprimerProduit(
     if(!auth.currentUser)
 
         return false;
+
+
+
+    // Vérification ID
+    if(typeof id !== "string"){
+
+        console.error(
+
+            "ID produit invalide reçu :",
+
+            id
+
+        );
+
+        return false;
+
+    }
 
 
 
@@ -498,7 +519,11 @@ export async function supprimerProduit(
 
         const resultat =
 
-        await getDoc(reference);
+        await getDoc(
+
+            reference
+
+        );
 
 
 
@@ -506,13 +531,47 @@ export async function supprimerProduit(
 
             !resultat.exists()
 
-            ||
+        ){
 
-            resultat.data().userId !== auth.currentUser.uid
+            console.error(
 
-        )
+                "Produit introuvable"
 
-        return false;
+            );
+
+            return false;
+
+        }
+
+
+
+        const donneesProduit =
+
+        resultat.data();
+
+
+
+        // Sécurité utilisateur
+
+        if(
+
+            donneesProduit.userId
+
+            !==
+
+            auth.currentUser.uid
+
+        ){
+
+            console.error(
+
+                "Accès interdit"
+
+            );
+
+            return false;
+
+        }
 
 
 
@@ -521,11 +580,13 @@ export async function supprimerProduit(
 
             id,
 
-            ...resultat.data()
+            ...donneesProduit
 
         };
 
 
+
+        // Sauvegarde dans la corbeille
 
         await envoyerCorbeille(
 
@@ -537,6 +598,8 @@ export async function supprimerProduit(
 
 
 
+        // Suppression Firestore
+
         await deleteDoc(
 
             reference
@@ -545,11 +608,14 @@ export async function supprimerProduit(
 
 
 
+        // Actualisation affichage
+
         await chargerProduits();
 
 
 
         return true;
+
 
 
     }
@@ -560,7 +626,7 @@ export async function supprimerProduit(
 
         console.error(
 
-            "Erreur suppression:",
+            "Erreur suppression produit :",
 
             error
 
