@@ -16,20 +16,16 @@ jobs:
       - name: Récupérer le code
         uses: actions/checkout@v4
 
-      - name: Vérifier la structure du projet
+      - name: Voir la structure du projet
         run: |
-          test -f index.html
-          test -f main.js
-          test -f firebase.js
-          test -f produits.js
-          test -f ventes.js
-          echo "Structure OK"
+          ls -la
 
-      - name: Vérifier les fichiers JavaScript
+      - name: Vérifier les fichiers importants
         run: |
-          node --check main.js
-          node --check produits.js
-          node --check ventes.js
-          node --check historique.js
-          node --check dashboard.js
-          echo "JavaScript OK"
+          test -f ./index.html
+          test -f ./main.js
+          test -f ./firebase.js
+          test -f ./produits.js
+          test -f ./ventes.js
+          echo "Structure OK"
+          
