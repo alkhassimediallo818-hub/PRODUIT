@@ -78,7 +78,17 @@ export function getProduits(){
 
 }
 
-
+await addDoc(
+    collection(db, "produits"),
+    {
+        ...produit,
+        stockTotal,
+        prixUnitaire,
+        benefice,
+        userId: auth.currentUser.uid,
+        dateAjout: serverTimestamp()
+    }
+);
 
 // ===============================
 // CHARGER PRODUITS
