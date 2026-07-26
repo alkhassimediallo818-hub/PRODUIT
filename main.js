@@ -58,7 +58,6 @@ import {
 // ===============================
 // IMPORT PRODUITS
 // ===============================
-
 import {
 
     chargerProduits,
@@ -67,7 +66,7 @@ import {
 
     supprimerProduit,
 
-    modifierProduit,
+    modifierProduit as modifierProduitFirestore,
 
     getProduits
 
@@ -1667,15 +1666,19 @@ window.modifierProduit = async function(id){
 
     if(!utilisateurConnecte){
 
+
         alert(
 
             "Connectez-vous d'abord"
 
         );
 
+
         return false;
 
+
     }
+
 
 
     try{
@@ -1683,33 +1686,83 @@ window.modifierProduit = async function(id){
 
         const nouvellesDonnees = {
 
+
             nom:
-            document.getElementById("nom")?.value.trim(),
+
+            document
+
+            .getElementById("nom")
+
+            ?.value
+
+            .trim(),
+
+
 
             prixGros:
+
             Number(
-                document.getElementById("prixGros")?.value
+
+                document
+
+                .getElementById("prixGros")
+
+                ?.value
+
             ),
+
+
 
             nombreCartons:
+
             Number(
-                document.getElementById("nombreCartons")?.value
+
+                document
+
+                .getElementById("nombreCartons")
+
+                ?.value
+
             ),
+
+
 
             produitsParCarton:
+
             Number(
-                document.getElementById("produitsParCarton")?.value
+
+                document
+
+                .getElementById("produitsParCarton")
+
+                ?.value
+
             ),
 
+
+
             prixRevente:
+
             Number(
-                document.getElementById("prixRevente")?.value
+
+                document
+
+                .getElementById("prixRevente")
+
+                ?.value
+
             )
+
 
         };
 
 
-        const resultat = await modifierProduit(
+
+
+
+        const resultat =
+
+        await modifierProduitFirestore(
 
             id,
 
@@ -1718,7 +1771,11 @@ window.modifierProduit = async function(id){
         );
 
 
+
+
+
         if(!resultat){
+
 
             alert(
 
@@ -1726,14 +1783,23 @@ window.modifierProduit = async function(id){
 
             );
 
+
             return false;
+
 
         }
 
 
+
+
+
         await actualiserDonnees();
 
+
+
         viderChamps();
+
+
 
         alert(
 
@@ -1741,12 +1807,18 @@ window.modifierProduit = async function(id){
 
         );
 
+
+
         return true;
+
 
 
     }
 
+
     catch(error){
+
+
 
         console.error(
 
@@ -1756,12 +1828,24 @@ window.modifierProduit = async function(id){
 
         );
 
+
+
+        alert(
+
+            "Erreur pendant la modification"
+
+        );
+
+
+
         return false;
+
+
 
     }
 
-};
 
+};
 
 
 
