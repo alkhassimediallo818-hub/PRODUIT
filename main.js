@@ -1632,13 +1632,11 @@ window.ajouterProduit = async function(){
 
         const resultat =
 
-        await ajouterProduit(
+await ajouterProduit(
 
-            true,
+    donnees
 
-            donnees
-
-        );
+);
 
 
 
