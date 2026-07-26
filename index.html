@@ -3,29 +3,20 @@
 
 <head>
 
-<link rel="icon" href="assets/favicon.ico">
-
-<button onclick="ouvrirNotifications()">
-
-🔔
-
-<span id="compteurNotifications">
-
-0
-
-</span>
-
-</button>
-     
-
 <meta charset="UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+
 <title>Gestion Pro</title>
 
 
-<!-- CSS -->
+<link rel="icon" href="assets/favicon.ico">
+
+
+<!-- ===============================
+     CSS
+================================ -->
 
 <link rel="stylesheet" href="assets/css/variables.css">
 <link rel="stylesheet" href="assets/css/base.css">
@@ -44,60 +35,28 @@
 </head>
 
 
+
 <body>
+
 
 
 <div class="app-layout">
 
 
- <button onclick="ouvrirPage('corbeille')">
 
-🗑️ Corbeille
-
-</button>    
-
-<!-- ===============================
-     CORBEILLE
-================================ -->
-
-<section
-
-id="corbeille"
-
-class="page"
-
->
-
-<h2>
-
-🗑️ Corbeille
-
-</h2>
-
-
-<div
-
-id="listeCorbeille"
-
->
-
-Aucun élément supprimé.
-
-</div>
-
-
-</section>
-     
 <!-- ===============================
      SIDEBAR
 ================================ -->
 
-
 <aside class="sidebar">
 
+
 <h2>
+
 📦 Gestion Pro
+
 </h2>
+
 
 
 <nav>
@@ -135,6 +94,14 @@ Aucun élément supprimé.
 
 
 
+<button onclick="afficherSection('corbeille')">
+
+🗑️ Corbeille
+
+</button>
+
+
+
 <button onclick="afficherSection('profil')">
 
 👤 Profil
@@ -150,17 +117,13 @@ Aucun élément supprimé.
 </button>
 
 
+
 </nav>
 
 
 </aside>
 
 
-<button id="marquerToutLu">
-
-    Tout marquer comme lu
-
-</button>
 
 
 
@@ -173,7 +136,13 @@ Aucun élément supprimé.
 
 
 
+<!-- ===============================
+     TOPBAR
+================================ -->
+
+
 <header class="topbar">
+
 
 
 <div class="profil-zone">
@@ -185,12 +154,12 @@ id="photoProfil"
 
 src=""
 
-alt="Photo"
+alt="Photo profil"
 
 class="photo-profil"
 
-
 >
+
 
 
 <div>
@@ -218,6 +187,38 @@ Administrateur
 
 
 
+
+<div class="notifications">
+
+
+<button
+
+id="btnNotifications"
+
+onclick="toggleNotifications()"
+
+>
+
+
+🔔
+
+
+<span id="compteurNotifications">
+
+0
+
+</span>
+
+
+</button>
+
+
+</div>
+
+
+
+
+
 <button
 
 id="btnDeconnexion"
@@ -231,48 +232,30 @@ Déconnexion
 </button>
 
 
+
 </header>
 
 
-<div class="notifications">
-
-    <button
-        id="btnNotifications"
-        onclick="toggleNotifications()"
-    >
-
-        🔔
-
-        <span id="compteurNotifications">
-
-            0
-
-        </span>
-
-    </button>
-
-</div>
 
 
 
 <div class="container">
-
-
-
-
-
-<!-- ===============================
+   <!-- ===============================
      DASHBOARD
 ================================ -->
 
-
-<div
-
-class="dashboard"
+<section
 
 id="dashboard"
 
+class="page-section"
+
 >
+
+
+<div class="dashboard">
+
+
 
 <div class="card">
 
@@ -281,15 +264,13 @@ id="dashboard"
 </h3>
 
 <span id="depensesTotales">
-
 0 FCFA
-
 </span>
 
 </div>
 
-     
-     
+
+
 <div class="card">
 
 <h3>
@@ -303,6 +284,8 @@ id="dashboard"
 </div>
 
 
+
+
 <div class="card">
 
 <h3>
@@ -310,14 +293,12 @@ id="dashboard"
 </h3>
 
 <span id="valeurStock">
-
 0 FCFA
-
 </span>
 
-</div>     
+</div>
 
-     
+
 
 
 <div class="card">
@@ -333,21 +314,7 @@ id="dashboard"
 </div>
 
 
-<div class="card">
 
-<h3>
-📈 Taux de Vente
-</h3>
-
-<span id="tauxVente">
-
-0 %
-
-</span>
-
-</div>
-
-     
 
 <div class="card">
 
@@ -377,20 +344,6 @@ id="dashboard"
 </div>
 
 
-<div class="card">
-
-<h3>
-⏰ Dernière Vente
-</h3>
-
-<span id="derniereVente">
-
-Aucune
-
-</span>
-
-</div>
-     
 
 
 <div class="card">
@@ -405,123 +358,6 @@ Aucune
 
 </div>
 
-
-
-
-<div class="card">
-
-<h3>
-📅 Ventes Aujourd'hui
-</h3>
-
-<span id="ventesJour">
-0 FCFA
-</span>
-
-</div>
-
-
-
-
-<div class="card">
-
-<h3>
-📆 Ventes du Mois
-</h3>
-
-<span id="ventesMois">
-0 FCFA
-</span>
-
-</div>
-
-
-
-<div class="card">
-
-<h3>
-🏆 Top Produits
-</h3>
-
-<div id="topProduits">
-
-Aucun produit
-
-</div>
-
-<hr>
-
-<p>
-
-🥇 Produit vedette
-
-</p>
-
-<strong id="produitVedette">
-
-Aucun
-
-</strong>
-
-</div>
-
-
-
-
-<div class="card">
-
-<h3>
-📦 Unités Vendues
-</h3>
-
-<span id="unitesVendues">
-
-0
-
-</span>
-
-
-</div>
-
-
-
-
-<div class="card">
-
-<h3>
-🧾 Transactions
-</h3>
-
-<span id="nbTransactions">
-
-0
-
-</span>
-
-
-</div>
-
-
-
-<div class="card">
-
-<h3>
-🚨 Stock Faible
-</h3>
-
-<span id="stockFaible">
-
-0
-
-</span>
-
-<div id="listeStockFaible">
-
-Aucun produit
-
-</div>
-
-</div>
 
 
 
@@ -545,28 +381,46 @@ Aucun produit
 </div>
 
 
+
 <div class="filtresGraphique">
 
+
 <button onclick="changerPeriodeGraphique('tout')">
+
 Tout
+
 </button>
 
 
 <button onclick="changerPeriodeGraphique('jour')">
+
 Aujourd'hui
+
 </button>
 
 
 <button onclick="changerPeriodeGraphique('7jours')">
+
 7 jours
+
 </button>
 
 
 <button onclick="changerPeriodeGraphique('mois')">
+
 Ce mois
+
 </button>
 
+
 </div>
+
+
+
+</section>
+
+
+
 
 
 <!-- ===============================
@@ -574,10 +428,27 @@ Ce mois
 ================================ -->
 
 
-<div id="produits">
+<section
+
+id="produits"
+
+class="page-section"
+
+>
+
+
+
+<h2>
+
+📦 Gestion des produits
+
+</h2>
+
+
 
 
 <div class="formulaire">
+
 
 
 <input
@@ -591,15 +462,19 @@ placeholder="Nom du produit"
 >
 
 
+
+
 <input
 
 type="number"
 
 id="prixGros"
 
-placeholder="Prix en gros"
+placeholder="Prix achat"
 
 >
+
+
 
 
 <input
@@ -613,6 +488,8 @@ placeholder="Nombre de cartons"
 >
 
 
+
+
 <input
 
 type="number"
@@ -624,27 +501,44 @@ placeholder="Produits par carton"
 >
 
 
+
+
 <input
 
 type="number"
 
 id="prixRevente"
 
-placeholder="Prix de revente unitaire"
+placeholder="Prix de revente"
 
 >
 
 
-<button onclick="ajouterProduit()">
+
+
+<button
+
+id="btnAjouterProduit"
+
+onclick="ajouterProduit()"
+
+>
 
 Ajouter le produit
 
 </button>
 
 
+
 </div>
 
-     <div class="produits-tools">
+
+
+
+
+<div class="produits-tools">
+
+
 
 <input
 
@@ -656,82 +550,121 @@ placeholder="🔎 Rechercher un produit..."
 
 >
 
-<button id="btnActualiserProduits">
+
+
+
+<button
+
+id="btnActualiserProduits"
+
+>
 
 🔄 Actualiser
 
 </button>
 
+
+
 </div>
 
 
-<!-- TABLE PRODUITS -->
+
+
+
 
 <table class="table-produit">
 
+
 <thead>
 
+
 <tr>
+
 
 <th>
 Produit
 </th>
 
+
 <th>
 Prix Achat
 </th>
+
 
 <th>
 Statut
 </th>
 
+
 <th>
 Cartons
 </th>
+
 
 <th>
 Produits / Carton
 </th>
 
+
 <th>
 Stock Total
 </th>
+
 
 <th>
 Prix Unitaire
 </th>
 
+
 <th>
 Prix Vente
 </th>
+
 
 <th>
 Bénéfice
 </th>
 
+
 <th>
 Actions
 </th>
 
+
 </tr>
+
 
 </thead>
 
-<tbody id="tableauProduits">
+
+
+
+<tbody
+
+id="tableauProduits"
+
+>
 
 </tbody>
 
+
+
 </table>
 
-</div>
 
 
-
-<!-- ===============================
+</section>
+ <!-- ===============================
      VENTES
 ================================ -->
 
-<section id="ventes" class="page-section">
+<section
+
+id="ventes"
+
+class="page-section"
+
+>
 
 
 <h2>
@@ -742,10 +675,19 @@ Actions
 
 
 
+
 <div class="formulaire">
 
 
-<select id="produitVenteSelect" onchange="selectionnerProduitVente()">
+
+<select
+
+id="produitVenteSelect"
+
+onchange="selectionnerProduitVente()"
+
+>
+
 
 <option value="">
 
@@ -753,29 +695,26 @@ Choisir un produit
 
 </option>
 
+
 </select>
 
 
 
+
 <input
+
 type="number"
+
 id="quantiteVente"
+
 placeholder="Quantité vendue"
+
 min="1"
+
 oninput="calculerVente()"
->
-
-
-
-<input
-
-type="number"
-
-id="prixVente"
-
-placeholder="Prix de vente"
 
 >
+
 
 
 
@@ -809,6 +748,7 @@ Bénéfice :
 </p>
 
 
+
 </div>
 
 
@@ -828,7 +768,6 @@ Bénéfice :
 
 
 
-
 <h2>
 
 📋 Ventes récentes
@@ -842,6 +781,153 @@ Bénéfice :
 
 
 <thead>
+
+
+<tr>
+
+<th>
+Produit
+</th>
+
+<th>
+Quantité
+</th>
+
+<th>
+Montant
+</th>
+
+<th>
+Bénéfice
+</th>
+
+<th>
+Date
+</th>
+
+
+</tr>
+
+
+</thead>
+
+
+
+<tbody id="tableauVentesDirectes">
+
+
+</tbody>
+
+
+
+</table>
+
+
+
+</section>
+
+
+
+
+
+
+
+<!-- ===============================
+     HISTORIQUE
+================================ -->
+
+
+<section
+
+id="historique"
+
+class="page-section"
+
+>
+
+
+<div class="historique">
+
+
+<h2>
+
+📜 Historique des actions
+
+</h2>
+
+
+
+
+<button onclick="viderHistorique()">
+
+🧹 Vider l'historique
+
+</button>
+
+
+
+<table>
+
+
+<thead>
+
+
+<tr>
+
+<th>
+Action
+</th>
+
+<th>
+Produit
+</th>
+
+<th>
+Date
+</th>
+
+
+</tr>
+
+
+</thead>
+
+
+
+<tbody id="tableauHistorique">
+
+
+</tbody>
+
+
+
+</table>
+
+
+
+</div>
+
+
+
+
+
+
+<div class="historique">
+
+
+<h2>
+
+💰 Historique des ventes
+
+</h2>
+
+
+
+<table>
+
+
+<thead>
+
 
 <tr>
 
@@ -873,11 +959,12 @@ Date
 
 </tr>
 
+
 </thead>
 
 
 
-<tbody id="tableauVentesDirectes">
+<tbody id="tableauVentes">
 
 
 </tbody>
@@ -885,277 +972,59 @@ Date
 
 
 </table>
+
+
+</div>
+
 
 
 </section>
 
 
 
+
+
+
+
 <!-- ===============================
-     FENETRE VENTE
+     CORBEILLE
 ================================ -->
+
+
+<section
+
+id="corbeille"
+
+class="page-section"
+
+>
+
+
+<h2>
+
+🗑️ Corbeille
+
+</h2>
+
 
 
 <div
 
-id="modalVente"
-
-class="modal"
-
-style="display:none;"
+id="listeCorbeille"
 
 >
 
-<div class="modal-content">
-
-<h2>
-
-💰 Effectuer une vente
-
-</h2>
-
-<p id="nomProduitVente">
-
-Produit sélectionné
-
-</p>
-
-<input
-
-type="number"
-
-id="quantiteVente"
-
-placeholder="Quantité vendue"
-
-min="1"
-
->
-
-<div class="modal-actions">
-
-<button onclick="confirmerVente()">
-
-✅ Confirmer la vente
-
-</button>
-
-<button onclick="fermerVente()">
-
-❌ Annuler
-
-</button>
-
-</div>
-
-</div>
-
-</div>
-
-     <!-- ===============================
-     HISTORIQUE
-================================ -->
-
-<div id="historique">
-
-
-<div class="historique">
-
-<h2>
-
-📜 Historique des actions
-
-</h2>
-
-
-<button onclick="viderHistorique()">
-
-🧹 Vider tout l'historique
-
-</button>
-
-
-<table>
-
-<thead>
-
-<tr>
-
-<th>
-Action
-</th>
-
-<th>
-Produit
-</th>
-
-<th>
-Date
-</th>
-
-</tr>
-
-</thead>
-
-<tbody id="tableauHistorique">
-
-</tbody>
-
-</table>
+Aucun élément supprimé.
 
 </div>
 
 
 
-<div class="historique">
-
-<h2>
-
-💰 Historique des ventes
-
-</h2>
-
-
-<table>
-
-<thead>
-
-<tr>
-
-<th>
-Produit
-</th>
-
-<th>
-Quantité vendue
-</th>
-
-<th>
-Montant
-</th>
-
-<th>
-Bénéfice
-</th>
-
-<th>
-Statut
-</th>
-
-<th>
-Date
-</th>
-
-</tr>
-
-</thead>
-
-<tbody id="tableauVentes">
-
-</tbody>
-
-</table>
-
-</div>
+</section>
 
 
 
-<div class="historique">
 
-<h2>
-
-📊 Résumé Rapide
-
-</h2>
-
-
-<table>
-
-<thead>
-
-<tr>
-
-<th>
-Indicateur
-</th>
-
-<th>
-Valeur
-</th>
-
-</tr>
-
-</thead>
-
-<tbody>
-
-<tr>
-
-<td>
-Produits enregistrés
-</td>
-
-<td id="resumeProduits">
-0
-</td>
-
-</tr>
-
-<tr>
-
-<td>
-Stock restant
-</td>
-
-<td id="resumeStock">
-0
-</td>
-
-</tr>
-
-<tr>
-
-<td>
-Unités vendues
-</td>
-
-<td id="resumeVentes">
-0
-</td>
-
-</tr>
-
-<tr>
-
-<td>
-Chiffre d'affaires
-</td>
-
-<td id="resumeCA">
-0 FCFA
-</td>
-
-</tr>
-
-<tr>
-
-<td>
-Bénéfice réel
-</td>
-
-<td id="resumeBenefice">
-0 FCFA
-</td>
-
-</tr>
-
-</tbody>
-
-</table>
-
-</div>
-
-</div>
 
 
 
@@ -1164,9 +1033,18 @@ Bénéfice réel
 ================================ -->
 
 
-<section id="profil" class="page-section">
+<section
+
+id="profil"
+
+class="page-section"
+
+>
+
 
 <div class="profil-card">
+
+
 
 <img
 
@@ -1178,7 +1056,10 @@ alt="Photo profil"
 
 >
 
+
+
 <div class="profil-info">
+
 
 <h2 id="pseudoProfil">
 
@@ -1186,11 +1067,15 @@ Utilisateur
 
 </h2>
 
+
+
 <p id="emailProfil">
 
 Email
 
 </p>
+
+
 
 <p>
 
@@ -1202,13 +1087,24 @@ Utilisateur
 
 </span>
 
+
 </p>
 
-</div>
+
 
 </div>
+
+
+</div>
+
+
 
 </section>
+
+
+
+
+
 
 
 
@@ -1217,9 +1113,18 @@ Utilisateur
 ================================ -->
 
 
-<section id="parametres" class="page-section">
+<section
+
+id="parametres"
+
+class="page-section"
+
+>
+
 
 <div class="settings-card">
+
+
 
 <h2>
 
@@ -1227,7 +1132,11 @@ Utilisateur
 
 </h2>
 
+
+
+
 <div class="setting-item">
+
 
 <span>
 
@@ -1235,15 +1144,24 @@ Utilisateur
 
 </span>
 
+
+
 <button id="btnModeSombre">
 
 Activer
 
 </button>
 
+
+
 </div>
 
+
+
+
+
 <div class="setting-item">
+
 
 <span>
 
@@ -1252,81 +1170,140 @@ Activer
 </span>
 
 
-<button id="btnNotifications">
+
+<button id="btnNotificationsParametres">
 
 Activer
 
 </button>
 
 
-</div>
 
 </div>
+
+
+
+
+</div>
+
+
 
 </section>
 
-     </div>
 
-</main>
+
+
+
+
+
+
+<!-- ===============================
+     PANNEAU NOTIFICATIONS
+================================ -->
+
+
+<div
+
+id="panneauNotifications"
+
+class="panneau-notifications"
+
+>
+
+
+<h3>
+
+Notifications
+
+</h3>
+
+
+
+<button
+
+id="marquerToutLu"
+
+>
+
+Tout marquer comme lu
+
+</button>
+
+
+
+
+<div
+
+id="listeNotifications"
+
+>
+
+Aucune notification
 
 </div>
 
+
+
+</div>
+
+
+
+
+
+
+
 <!-- ===============================
-     NOTIFICATIONS
+     CONTAINER NOTIFICATIONS
 ================================ -->
 
-<div id="notificationContainer"></div>
 
-     
+<div
+
+id="notificationContainer"
+
+></div>
+
+
+
+
+
+
+
+
 <!-- ===============================
      SCRIPTS
 ================================ -->
 
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
 
 <script>
 
 console.log(
+
 "HTML chargé"
+
 );
 
 </script>
 
-<script type="module" src="./main.js"></script>
-     
-<!-- ===============================
-     CENTRE DE NOTIFICATIONS
-================================ -->
 
-<div
-    id="panneauNotifications"
-    class="panneau-notifications"
->
 
-    <h3>
 
-        Notifications
+<script
 
-    </h3>
+type="module"
 
-    <button
-        onclick="marquerToutesCommeLues()"
-    >
+src="./main.js"
 
-        Tout marquer comme lu
+></script>
 
-    </button>
 
-    <div
-        id="listeNotifications"
-    >
 
-        Aucune notification
 
-    </div>
-
-</div>
-     
 </body>
 
-</html>
+
+</html>    
