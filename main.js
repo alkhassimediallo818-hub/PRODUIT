@@ -1934,83 +1934,66 @@ window.viderHistorique = async function(){
 async function actualiserDonnees(){
 
 
-
-    if(!utilisateurConnecte)
+    if(!auth.currentUser)
 
         return;
-
-
 
 
 
     try{
 
 
+        produits =
 
-      produits =
-
-await chargerProduits()
-
-|| [];
-
-chargerProduitsVente(produits);
-
-
-
-
-
-
-        ventesGlobales =
-
-        await chargerVentes(
-
-            true
-
-        )
+        await chargerProduits()
 
         || [];
 
 
 
-await chargerNotifications();
+        chargerProduitsVente(
 
-
-
-        await chargerHistorique(
-
-            true
+            produits
 
         );
 
 
 
-afficherVentes();
+        ventesGlobales =
+
+        await chargerVentes()
+
+        || [];
 
 
 
-     mettreAJourResume(
-    produits,
-    ventesGlobales
-);
-
-
-calculerResumeVentes(
-    ventesGlobales
-);
-
-
-calculerStockRestant(
-    produits
-);
-
-
-preparerGraphique(
-    ventesGlobales
-);
+        await chargerHistorique();
 
 
 
+        await chargerNotifications();
 
+
+
+        afficherVentes();
+
+
+
+        mettreAJourResume(
+
+            produits,
+
+            ventesGlobales
+
+        );
+
+
+
+        calculerResumeVentes(
+
+            ventesGlobales
+
+        );
 
 
 
@@ -2022,10 +2005,6 @@ preparerGraphique(
 
 
 
-
-
-
-
         preparerGraphique(
 
             ventesGlobales
@@ -2034,11 +2013,17 @@ preparerGraphique(
 
 
 
+        console.log(
+
+            "Données actualisées"
+
+        );
+
+
     }
 
 
     catch(error){
-
 
 
         console.error(
@@ -2050,14 +2035,10 @@ preparerGraphique(
         );
 
 
-
     }
 
 
-
 }
-
-
 
 
 
