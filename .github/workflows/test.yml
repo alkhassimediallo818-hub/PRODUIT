@@ -20,9 +20,16 @@ jobs:
         run: |
           ls -la
 
-      - name: Vérifier les fichiers importants
-        run: |
-          test -f ./index.html
+      - name: Voir les fichiers reçus par GitHub
+  run: |
+    pwd
+    ls -la
+    find . -maxdepth 2 -type f
+
+- name: Vérifier index.html
+  run: |
+    test -f index.html
+    echo "index.html trouvé"
           test -f ./main.js
           test -f ./firebase.js
           test -f ./produits.js
