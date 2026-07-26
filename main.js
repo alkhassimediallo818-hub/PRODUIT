@@ -1,81 +1,11 @@
 import {
+
     doc,
     getDoc
+
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-if(!auth.currentUser){
 
-   
-
-}
-
-import {
-
-    
-     chargerNotifications,
-
-    afficherListeNotifications
-
-} from "./JS/notifications.js";
-
-
-import {
-
-    ajouterProduit,
-    supprimerProduit,
-    chargerProduits,
-    viderChamps
-
-} from "./assets/js/produits/crud.js";
-
-
-import {
-
-    marquerToutesNotificationsLues
-
-} from "./JS/notifications.js";
-
-const boutonToutLu =
-
-document.getElementById(
-
-    "marquerToutLu"
-
-);
-
-
-if(boutonToutLu){
-
-
-    boutonToutLu.onclick = async ()=>{
-
-
-        await marquerToutesNotificationsLues();
-
-
-
-        await chargerNotifications();
-
-
-    };
-
-
-}
-
-
-import {
-
-    marquerNotificationLue
-
-} from "./JS/notifications.js";
-
-window.lireNotification = async function(id){
-
-    await marquerNotificationLue(id);
-
-    await chargerNotifications();
-
-};
 
 import {
 
@@ -92,11 +22,6 @@ import {
 } from "./firebase.js";
 
 
-import {
-
-    changerEtatNotifications
-
-} from "./JS/notifications.js";
 
 import {
 
@@ -106,11 +31,29 @@ import {
 
 
 
+// ===============================
+// IMPORT NOTIFICATIONS
+// ===============================
+
+import {
+
+    chargerNotifications,
+
+    afficherListeNotifications,
+
+    marquerToutesNotificationsLues,
+
+    marquerNotificationLue,
+
+    changerEtatNotifications
+
+} from "./JS/notifications.js";
+
+
 
 // ===============================
 // IMPORT PRODUITS
 // ===============================
-
 
 import {
 
@@ -124,11 +67,57 @@ import {
 
     afficherProduits,
 
-    getProduits
+    getProduits,
+
+    viderChamps
+
+} from "./JS/produits/index.js";
+
+
+
+// ===============================
+// BOUTON NOTIFICATIONS
+// ===============================
+
+const boutonToutLu =
+
+document.getElementById(
+
+    "marquerToutLu"
+
+);
+
+
+
+if(boutonToutLu){
+
+
+    boutonToutLu.onclick = async ()=>{
+
+
+        await marquerToutesNotificationsLues();
+
+
+        await chargerNotifications();
+
+
+    };
+
 
 }
 
-from "./JS/produits/index.js";
+
+
+window.lireNotification = async function(id){
+
+
+    await marquerNotificationLue(id);
+
+
+    await chargerNotifications();
+
+
+};
 
 
 
@@ -136,29 +125,37 @@ from "./JS/produits/index.js";
 // IMPORT VENTES
 // ===============================
 
-
 import {
 
-chargerVentes,
-afficherVentes,
-vendreProduit,
-confirmerVente,
-fermerVente as fermerFenetreVente,
-chargerProduitsVente,
-selectionnerProduitVente,
-calculerVente
+    chargerVentes,
+
+    afficherVentes,
+
+    vendreProduit,
+
+    confirmerVente,
+
+    fermerVente as fermerFenetreVente,
+
+    chargerProduitsVente,
+
+    selectionnerProduitVente,
+
+    calculerVente
 
 } from "./JS/ventes.js";
+
+
 
 window.selectionnerProduitVente = selectionnerProduitVente;
 
 window.calculerVente = calculerVente;
 
 
+
 // ===============================
 // IMPORT HISTORIQUE
 // ===============================
-
 
 import {
 
@@ -170,11 +167,9 @@ import {
 
 
 
-
 // ===============================
 // IMPORT DASHBOARD
 // ===============================
-
 
 import {
 
@@ -191,9 +186,6 @@ import {
     changerPeriodeGraphique
 
 } from "./JS/dashboard.js";
-
-
-
 
 
 
