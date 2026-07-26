@@ -1659,7 +1659,7 @@ window.ajouterProduit = async function(){
 
 
 
-        reinitialiserFormulaire();
+        viderChamps()
 
 
         resetModification();
@@ -2085,7 +2085,7 @@ window.annulerModification = function(){
 
 
 
-       reinitialiserFormulaire();
+      viderChamps()
 
 
 
