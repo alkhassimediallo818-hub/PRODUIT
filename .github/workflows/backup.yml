@@ -1,0 +1,25 @@
+name: Backup Gestion Produits
+
+on:
+  schedule:
+    - cron: "0 0 * * *"
+  workflow_dispatch:
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Récupérer le projet
+        uses: actions/checkout@v4
+
+      - name: Créer une archive
+        run: |
+          zip -r gestion-produits-backup.zip . \
+          -x ".git/*"
+
+      - name: Sauvegarder l'archive
+        uses: actions/upload-artifact@v4
+        with:
+          name: backup-gestion-produits
+          path: gestion-produits-backup.zip
