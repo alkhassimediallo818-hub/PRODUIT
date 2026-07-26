@@ -1502,220 +1502,96 @@ window.changerPeriodeGraphique = function(
 
 window.ajouterProduit = async function(){
 
-
     if(!utilisateurConnecte){
 
-
         alert(
-
             "Connectez-vous d'abord"
-
         );
-
 
         return false;
 
-
     }
-
-
 
     try{
 
-
         const donnees = {
 
-
             nom:
-
-            document
-
-            .getElementById(
-
-                "nom"
-
-            )
-
-            ?.value.trim(),
-
-
+            document.getElementById("nom")?.value.trim(),
 
             prixGros:
-
-            Number(
-
-                document
-
-                .getElementById(
-
-                    "prixGros"
-
-                )
-
-                ?.value
-
-            ),
-
-
+            Number(document.getElementById("prixGros")?.value),
 
             nombreCartons:
-
-            Number(
-
-                document
-
-                .getElementById(
-
-                    "nombreCartons"
-
-                )
-
-                ?.value
-
-            ),
-
-
+            Number(document.getElementById("nombreCartons")?.value),
 
             produitsParCarton:
-
-            Number(
-
-                document
-
-                .getElementById(
-
-                    "produitsParCarton"
-
-                )
-
-                ?.value
-
-            ),
-
-
+            Number(document.getElementById("produitsParCarton")?.value),
 
             prixRevente:
-
-            Number(
-
-                document
-
-                .getElementById(
-
-                    "prixRevente"
-
-                )
-
-                ?.value
-
-            )
-
+            Number(document.getElementById("prixRevente")?.value)
 
         };
 
+        let resultat = false;
 
+        if(produitEnModification){
 
+            resultat = await modifierProduit(
 
-        console.log(
+                produitEnModification,
 
-            "Données produit :",
-
-            donnees
-
-        );
-
-
-
-
-        const resultat =
-
-        await ajouterProduit(
-
-            donnees
-
-        );
-
-
-
-
-        if(!resultat){
-
-
-            console.error(
-
-                "Ajout produit refusé"
+                donnees
 
             );
 
+        }else{
 
-            return false;
+            resultat = await ajouterProduit(
 
+                donnees
+
+            );
 
         }
 
+        if(!resultat){
 
+            return false;
 
+        }
+
+        produitEnModification = null;
+
+        document.getElementById("btnAjouterProduit").textContent =
+
+        "Ajouter";
 
         await actualiserDonnees();
 
-
-viderChamps();
-
-
-return true;
-
-
-
-
-        alert(
-
-            "Produit ajouté avec succès"
-
-        );
-
-
+        viderChamps();
 
         return true;
 
-
-
     }
-
 
     catch(error){
 
-
-
         console.error(
 
-            "Erreur ajout produit complète :",
-
-            error.message,
+            "Erreur ajout/modification :",
 
             error
 
         );
 
-
-
-        alert(
-
-            "Erreur : " + error.message
-
-        );
-
-
+        alert(error.message);
 
         return false;
 
-
-
     }
 
-
-
 };
-
 
 
 
