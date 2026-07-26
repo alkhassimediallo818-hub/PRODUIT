@@ -78,13 +78,7 @@ export function getProduits(){
 
 }
 
-console.log("Produit envoyé :", {
-    ...produit,
-    stockTotal,
-    prixUnitaire,
-    benefice,
-    userId: auth.currentUser.uid
-});
+
 
 await addDoc(
     collection(db, "produits"),
@@ -293,6 +287,29 @@ export async function ajouterProduit(
     try{
 
 
+        console.log(
+
+            "Produit envoyé :",
+
+            {
+
+                ...produit,
+
+                stockTotal,
+
+                prixUnitaire,
+
+                benefice,
+
+                userId:
+
+                auth.currentUser.uid
+
+            }
+
+        );
+
+
         await addDoc(
 
             collection(
@@ -326,9 +343,7 @@ export async function ajouterProduit(
         );
 
 
-
         await chargerProduits();
-
 
 
         return true;
@@ -356,7 +371,6 @@ export async function ajouterProduit(
 
 
 }
-
 
 
 // ===============================
