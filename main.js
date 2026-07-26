@@ -1657,12 +1657,10 @@ window.ajouterProduit = async function(){
         await actualiserDonnees();
 
 
+viderChamps();
 
 
-        viderChamps()
-
-
-        resetModification();
+return true;
 
 
 
@@ -2072,21 +2070,20 @@ preparerGraphique(
 // ANNULER MODIFICATION
 // ===============================
 
-
 window.annulerModification = function(){
-
 
 
     try{
 
 
-
-        resetModification();
-
+        viderChamps();
 
 
-      viderChamps()
+        console.log(
 
+            "Modification annulée"
+
+        );
 
 
     }
@@ -2095,19 +2092,16 @@ window.annulerModification = function(){
     catch(error){
 
 
-
         console.error(
 
-            "Erreur annulation modification:",
+            "Erreur annulation modification :",
 
             error
 
         );
 
 
-
     }
-
 
 
 };
