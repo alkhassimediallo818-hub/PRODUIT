@@ -460,6 +460,38 @@ export async function modifierProduit(
 }
 
 
+export function viderChamps(){
+
+
+    const champs = [
+
+        "nom",
+        "prixGros",
+        "nombreCartons",
+        "produitsParCarton",
+        "prixRevente"
+
+    ];
+
+
+
+    champs.forEach((id)=>{
+
+
+        const champ = document.getElementById(id);
+
+
+        if(champ){
+
+            champ.value = "";
+
+        }
+
+
+    });
+
+
+}
 
 
 // ===============================
