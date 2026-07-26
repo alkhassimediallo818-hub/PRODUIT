@@ -18,6 +18,11 @@ import {
 
 } from "./JS/notifications.js";
 
+import {
+    viderChamps
+} from "./chemin/vers/le/fichier.js";
+
+
 
 import {
 
