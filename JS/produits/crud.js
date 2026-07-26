@@ -43,13 +43,11 @@ import {
 } from "./calculs.js";
 
 
-
 import {
 
     afficherProduits
 
 } from "./affichage.js";
-
 
 
 import {
@@ -79,18 +77,6 @@ export function getProduits(){
 }
 
 
-
-await addDoc(
-    collection(db, "produits"),
-    {
-        ...produit,
-        stockTotal,
-        prixUnitaire,
-        benefice,
-        userId: auth.currentUser.uid,
-        dateAjout: serverTimestamp()
-    }
-);
 
 // ===============================
 // CHARGER PRODUITS
@@ -149,9 +135,7 @@ export async function chargerProduits(){
 
                 produits.push({
 
-                    id:
-
-                    docSnap.id,
+                    id: docSnap.id,
 
                     ...docSnap.data()
 
@@ -200,6 +184,7 @@ export async function chargerProduits(){
 
 
 
+
 // ===============================
 // AJOUT PRODUIT
 // ===============================
@@ -244,7 +229,6 @@ export async function ajouterProduit(
 
 
 
-
     const stockTotal =
 
     calculerStockTotal(
@@ -283,31 +267,40 @@ export async function ajouterProduit(
 
 
 
-
     try{
+
+
+        const nouveauProduit = {
+
+
+            ...produit,
+
+            stockTotal,
+
+            prixUnitaire,
+
+            benefice,
+
+            userId:
+
+            auth.currentUser.uid,
+
+            dateAjout:
+
+            serverTimestamp()
+
+        };
+
 
 
         console.log(
 
             "Produit envoyé :",
 
-            {
-
-                ...produit,
-
-                stockTotal,
-
-                prixUnitaire,
-
-                benefice,
-
-                userId:
-
-                auth.currentUser.uid
-
-            }
+            nouveauProduit
 
         );
+
 
 
         await addDoc(
@@ -320,30 +313,14 @@ export async function ajouterProduit(
 
             ),
 
-            {
-
-                ...produit,
-
-                stockTotal,
-
-                prixUnitaire,
-
-                benefice,
-
-                userId:
-
-                auth.currentUser.uid,
-
-                dateAjout:
-
-                serverTimestamp()
-
-            }
+            nouveauProduit
 
         );
 
 
+
         await chargerProduits();
+
 
 
         return true;
@@ -373,6 +350,8 @@ export async function ajouterProduit(
 }
 
 
+
+
 // ===============================
 // MODIFIER PRODUIT
 // ===============================
@@ -384,6 +363,12 @@ export async function modifierProduit(
     nouvellesDonnees
 
 ){
+
+
+    if(!auth.currentUser)
+
+        return false;
+
 
 
     try{
@@ -403,17 +388,40 @@ export async function modifierProduit(
 
 
 
+        const resultat =
+
+        await getDoc(reference);
+
+
+
+        if(
+
+            !resultat.exists()
+
+            ||
+
+            resultat.data().userId !== auth.currentUser.uid
+
+        )
+
+        return false;
+
+
+
         await updateDoc(
 
             reference,
 
             {
 
+
                 ...nouvellesDonnees,
+
 
                 dateModification:
 
                 serverTimestamp()
+
 
             }
 
@@ -453,6 +461,7 @@ export async function modifierProduit(
 
 
 
+
 // ===============================
 // SUPPRIMER PRODUIT
 // ===============================
@@ -462,6 +471,12 @@ export async function supprimerProduit(
     id
 
 ){
+
+
+    if(!auth.currentUser)
+
+        return false;
+
 
 
     try{
@@ -483,23 +498,26 @@ export async function supprimerProduit(
 
         const resultat =
 
-        await getDoc(
-
-            reference
-
-        );
+        await getDoc(reference);
 
 
 
-        if(!resultat.exists())
+        if(
 
-            return false;
+            !resultat.exists()
+
+            ||
+
+            resultat.data().userId !== auth.currentUser.uid
+
+        )
+
+        return false;
 
 
 
-        const produit =
+        const produit = {
 
-        {
 
             id,
 
