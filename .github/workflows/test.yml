@@ -28,4 +28,3 @@ jobs:
           test -f ./produits.js
           test -f ./ventes.js
           echo "Structure OK"
-          
