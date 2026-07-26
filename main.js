@@ -124,6 +124,10 @@ window.lireNotification = async function(id){
 // IMPORT VENTES
 // ===============================
 
+// ===============================
+// IMPORT VENTES
+// ===============================
+
 import {
 
     chargerVentes,
@@ -146,7 +150,21 @@ import {
 
 
 
+// ===============================
+// FONCTIONS VENTES GLOBALES
+// ===============================
+
+window.vendreProduit = vendreProduit;
+
+
+window.confirmerVente = confirmerVente;
+
+
+window.fermerVente = fermerFenetreVente;
+
+
 window.selectionnerProduitVente = selectionnerProduitVente;
+
 
 window.calculerVente = calculerVente;
 
