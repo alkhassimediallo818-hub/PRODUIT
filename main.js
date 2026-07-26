@@ -203,6 +203,8 @@ console.log("MAIN JS CHARGE");
 
 let utilisateurConnecte = false;
 
+let produitEnModification = null;
+
 
 let utilisateurActuel = null;
 
