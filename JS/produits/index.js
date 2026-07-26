@@ -6,7 +6,6 @@
 // ===============================
 // CRUD
 // ===============================
-
 export {
 
     chargerProduits,
@@ -17,12 +16,13 @@ export {
 
     supprimerProduit,
 
-    getProduits
+    getProduits,
+
+    viderChamps
 
 }
 
 from "./crud.js";
-
 
 
 
