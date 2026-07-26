@@ -18,21 +18,26 @@ jobs:
 
       - name: Voir la structure du projet
         run: |
-          ls -la
-
-      - name: Voir les fichiers reçus par GitHub
-        run: |
           pwd
           ls -la
           find . -maxdepth 2 -type f
 
-      - name: Vérifier index.html
-        run: |
-          test -f index.html
-          echo "index.html trouvé"
-
       - name: Vérifier les fichiers principaux
         run: |
+          test -f index.html
           test -f main.js
           test -f firebase.js
-          echo "Structure OK"
+          test -f style.css
+          echo "Structure principale OK"
+
+      - name: Vérifier les fichiers JavaScript
+        run: |
+          node --check main.js
+          node --check firebase.js
+          node --check JS/produits.js
+          node --check JS/ventes.js
+          node --check JS/historique.js
+          node --check JS/dashboard.js
+          node --check JS/profil.js
+          node --check JS/utils.js
+          echo "JavaScript OK"
