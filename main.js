@@ -1726,28 +1726,91 @@ return true;
 
 
 
-window.modifierProduit = function(id){
+window.modifierProduit = async function(id){
 
+
+    if(!utilisateurConnecte){
+
+        alert(
+
+            "Connectez-vous d'abord"
+
+        );
+
+        return false;
+
+    }
 
 
     try{
 
 
+        const nouvellesDonnees = {
 
-        modifierProduit(
+            nom:
+            document.getElementById("nom")?.value.trim(),
 
-            id
+            prixGros:
+            Number(
+                document.getElementById("prixGros")?.value
+            ),
+
+            nombreCartons:
+            Number(
+                document.getElementById("nombreCartons")?.value
+            ),
+
+            produitsParCarton:
+            Number(
+                document.getElementById("produitsParCarton")?.value
+            ),
+
+            prixRevente:
+            Number(
+                document.getElementById("prixRevente")?.value
+            )
+
+        };
+
+
+        const resultat = await modifierProduit(
+
+            id,
+
+            nouvellesDonnees
 
         );
 
 
+        if(!resultat){
+
+            alert(
+
+                "Impossible de modifier le produit"
+
+            );
+
+            return false;
+
+        }
+
+
+        await actualiserDonnees();
+
+        viderChamps();
+
+        alert(
+
+            "Produit modifié avec succès"
+
+        );
+
+        return true;
+
 
     }
 
-
     catch(error){
-
-
 
         console.error(
 
@@ -1757,10 +1820,9 @@ window.modifierProduit = function(id){
 
         );
 
+        return false;
 
     }
-
-
 
 };
 
