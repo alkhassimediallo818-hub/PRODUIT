@@ -1323,12 +1323,10 @@ window.afficherSection = function(section){
 
 window.toggleNotifications = function(){
 
-
     const panneau =
     document.getElementById(
-        "notificationPanel"
+        "panneauNotifications"
     );
-
 
 
     if(!panneau){
@@ -1342,11 +1340,18 @@ window.toggleNotifications = function(){
     }
 
 
+    if(
+        panneau.style.display === "block"
+    ){
 
-    panneau.classList.toggle(
-        "active"
-    );
+        panneau.style.display = "none";
 
+    }
+    else{
+
+        panneau.style.display = "block";
+
+    }
 
 };
 
