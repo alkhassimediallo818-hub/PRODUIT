@@ -1280,7 +1280,7 @@ window.afficherSection = function(section){
 
 
     document
-    .querySelectorAll(".section")
+    .querySelectorAll(".page-section")
     .forEach((element)=>{
 
 
@@ -1298,7 +1298,19 @@ window.afficherSection = function(section){
 
     if(cible){
 
+
         cible.style.display = "block";
+
+
+    }
+    else{
+
+
+        console.warn(
+            "Section introuvable :",
+            section
+        );
+
 
     }
 
