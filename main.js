@@ -1271,7 +1271,72 @@ setInterval(
 
 
 
+// ==================================================
+// INTERFACE NAVIGATION
+// ==================================================
 
+
+window.afficherSection = function(section){
+
+
+    document
+    .querySelectorAll(".section")
+    .forEach((element)=>{
+
+
+        element.style.display = "none";
+
+
+    });
+
+
+
+    const cible =
+    document.getElementById(section);
+
+
+
+    if(cible){
+
+        cible.style.display = "block";
+
+    }
+
+
+};
+
+
+
+
+
+window.toggleNotifications = function(){
+
+
+    const panneau =
+    document.getElementById(
+        "notificationPanel"
+    );
+
+
+
+    if(!panneau){
+
+        console.warn(
+            "Panneau notifications introuvable"
+        );
+
+        return;
+
+    }
+
+
+
+    panneau.classList.toggle(
+        "active"
+    );
+
+
+};
 
 
 // ===============================
