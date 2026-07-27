@@ -379,8 +379,9 @@ function mettreAJourCompteurNotifications(){
 
 
     compteur.textContent =
-
-    notifications.length;
+notifications.filter(
+(n)=> n.lu !== true
+).length;
 
 
 
