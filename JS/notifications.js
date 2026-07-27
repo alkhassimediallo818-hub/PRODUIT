@@ -693,8 +693,6 @@ if(compteur){
 
 
 
-        mettreAJourCompteurNotifications();
-
 
 
 
