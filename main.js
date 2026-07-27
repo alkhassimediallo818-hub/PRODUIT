@@ -1326,39 +1326,7 @@ window.afficherSection = function(section){
 
 
 
-window.toggleNotifications = function(){
 
-    const panneau =
-    document.getElementById(
-        "panneauNotifications"
-    );
-
-
-    if(!panneau){
-
-        console.warn(
-            "Panneau notifications introuvable"
-        );
-
-        return;
-
-    }
-
-
-    if(
-        panneau.style.display === "block"
-    ){
-
-        panneau.style.display = "none";
-
-    }
-    else{
-
-        panneau.style.display = "block";
-
-    }
-
-};
 
 // ==================================================
 // NAVIGATION ENTRE LES SECTIONS
@@ -1388,26 +1356,31 @@ window.afficherSection = function(sectionId){
 // PANNEAU NOTIFICATIONS
 // ==================================================
 
-window.toggleNotifications=function(){
+window.toggleNotifications = function(){
 
-    const panneau=document.getElementById("panneauNotifications");
+    const panneau =
+    document.getElementById(
+        "panneauNotifications"
+    );
 
-    if(!panneau) return;
 
-    if(
-        panneau.style.display==="block"
-    ){
+    if(!panneau){
 
-        panneau.style.display="none";
+        console.warn(
+            "Panneau notifications introuvable"
+        );
 
-    }else{
-
-        panneau.style.display="block";
+        return;
 
     }
 
-};
 
+    panneau.classList.toggle(
+        "ouvert"
+    );
+
+
+};
 
 
 // ==================================================
