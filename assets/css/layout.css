@@ -1,112 +1,35 @@
-/* =====================================
-   GESTION PRO V3
-   LAYOUT
-===================================== */
-
-
-/* Structure générale */
+/* ===============================
+   LAYOUT APPLICATION
+================================ */
 
 .app-layout{
-
     display:flex;
-
     min-height:100vh;
-
 }
 
 
-
-/* ===============================
-   SIDEBAR
-================================ */
-
+/* SIDEBAR */
 
 .sidebar{
 
     width:260px;
-
-    background:var(--secondary);
-
-    color:var(--text-white);
-
-    min-height:100vh;
-
-    padding:var(--space-lg);
+    height:100vh;
 
     position:fixed;
-
     left:0;
-
     top:0;
 
-    transition:var(--transition);
+    background:#111827;
+    color:white;
+
+    padding:25px;
 
     z-index:1000;
 
 }
 
 
-
-.sidebar h2{
-
-    font-size:22px;
-
-    font-weight:700;
-
-    margin-bottom:35px;
-
-}
-
-
-
-
-
-/* Navigation */
-
-.sidebar nav{
-
-    display:flex;
-
-    flex-direction:column;
-
-    gap:12px;
-
-}
-
-
-
-.sidebar button{
-
-    background:transparent;
-
-    color:white;
-
-    text-align:left;
-
-    padding:14px 16px;
-
-    border-radius:var(--radius-md);
-
-    font-size:15px;
-
-}
-
-
-
-.sidebar button:hover{
-
-    background:rgba(255,255,255,.12);
-
-}
-
-
-
-
-
-/* ===============================
-   CONTENU PRINCIPAL
-================================ */
-
+/* CONTENU */
 
 .main-content{
 
@@ -116,114 +39,93 @@
 
     min-height:100vh;
 
+    padding:30px;
+
 }
 
 
-
-
-
-/* ===============================
-   TOPBAR
-================================ */
-
+/* TOPBAR */
 
 .topbar{
 
-    height:75px;
+    width:100%;
 
-    background:var(--surface);
+    background:white;
 
-    border-bottom:1px solid var(--border);
+    padding:20px;
+
+    border-radius:15px;
 
     display:flex;
 
-    align-items:center;
-
     justify-content:space-between;
 
-    padding:0 var(--space-lg);
-
-    position:sticky;
-
-    top:0;
-
-    z-index:900;
+    align-items:center;
 
 }
 
 
 
-
-
-/* Zone principale */
+/* CONTAINER */
 
 .container{
 
-    padding:var(--space-lg);
+    width:100%;
+
+    padding-top:30px;
 
 }
 
 
 
+/* SECTIONS */
+
+.page-section{
+
+    width:100%;
+
+}
 
 
-/* ===============================
-   RESPONSIVE
-================================ */
 
+/* MOBILE */
 
 @media(max-width:900px){
 
+.sidebar{
 
-    .sidebar{
-
-        width:80px;
-
-        padding:15px;
-
-    }
-
-
-
-    .sidebar h2{
-
-        font-size:0;
-
-    }
-
-
-
-    .main-content{
-
-        margin-left:80px;
-
-        width:calc(100% - 80px);
-
-    }
-
+    width:80px;
 
 }
 
+
+.main-content{
+
+    margin-left:80px;
+
+    width:calc(100% - 80px);
+
+}
+
+
+}
 
 
 @media(max-width:600px){
 
+.sidebar{
 
-    .sidebar{
+    display:none;
 
-        display:none;
-
-    }
-
+}
 
 
-    .main-content{
+.main-content{
 
-        margin-left:0;
+    margin-left:0;
 
-        width:100%;
+    width:100%;
 
-    }
-
+}
 
 }
