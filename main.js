@@ -658,6 +658,9 @@ onAuthStateChanged(
 // EXPOSITION DES FONCTIONS HTML
 // ==================================================
 
+import { getNotifications } from "./JS/notifications.js";
+
+
 window.getNotifications = getNotifications;
 
 // ===============================
