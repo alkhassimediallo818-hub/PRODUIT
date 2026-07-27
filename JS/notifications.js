@@ -739,7 +739,37 @@ if(compteur){
 
 
 
+// ===============================
+// OUVRIR / FERMER PANNEAU NOTIFICATIONS
+// ===============================
 
+window.toggleNotifications = function(){
+
+
+    const panneau = document.getElementById(
+        "panneauNotifications"
+    );
+
+
+    if(!panneau){
+
+        console.error(
+            "Panneau notifications introuvable"
+        );
+
+        return;
+
+    }
+
+
+
+    panneau.classList.toggle(
+        "ouvert"
+    );
+
+
+
+};
 
 
 
