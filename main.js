@@ -98,8 +98,12 @@ import {
 import {
 
     chargerNotifications,
+
     marquerToutesNotificationsLues,
-    marquerNotificationLue
+
+    marquerNotificationLue,
+
+    getNotifications
 
 } from "./JS/notifications.js";
 
@@ -654,6 +658,7 @@ onAuthStateChanged(
 // EXPOSITION DES FONCTIONS HTML
 // ==================================================
 
+window.getNotifications = getNotifications;
 
 // ===============================
 // AUTHENTIFICATION
