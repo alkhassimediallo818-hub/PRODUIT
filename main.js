@@ -1350,6 +1350,80 @@ window.toggleNotifications = function(){
 
 };
 
+// ==================================================
+// NAVIGATION ENTRE LES SECTIONS
+// ==================================================
+
+window.afficherSection = function(sectionId){
+
+    document.querySelectorAll(".page-section").forEach(section=>{
+
+        section.style.display="none";
+
+    });
+
+    const section=document.getElementById(sectionId);
+
+    if(section){
+
+        section.style.display="block";
+
+    }
+
+};
+
+
+
+// ==================================================
+// PANNEAU NOTIFICATIONS
+// ==================================================
+
+window.toggleNotifications=function(){
+
+    const panneau=document.getElementById("panneauNotifications");
+
+    if(!panneau) return;
+
+    if(
+        panneau.style.display==="block"
+    ){
+
+        panneau.style.display="none";
+
+    }else{
+
+        panneau.style.display="block";
+
+    }
+
+};
+
+
+
+// ==================================================
+// ANNULATION MODIFICATION
+// ==================================================
+
+window.annulerModification=function(){
+
+    produitModification=null;
+
+    viderChamps();
+
+};
+
+
+
+// ==================================================
+// INITIALISATION INTERFACE
+// ==================================================
+
+document.addEventListener("DOMContentLoaded",()=>{
+
+    afficherSection("dashboard");
+
+});
+
 
 // ===============================
 // FIN APPLICATION
