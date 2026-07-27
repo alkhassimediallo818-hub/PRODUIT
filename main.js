@@ -1,8 +1,7 @@
 // ==================================================
 // MAIN JS - GPE
-// Sprint 0 v1 - Orchestrateur Application
+// Sprint 0 v2 - Orchestrateur Application Refactorisé
 // ==================================================
-
 
 console.log("MAIN JS CHARGE");
 
@@ -14,13 +13,10 @@ console.log("MAIN JS CHARGE");
 import {
 
     auth,
-
     db,
 
     connexionGoogle as lancerConnexionGoogle,
-
     deconnexionGoogle as lancerDeconnexionGoogle,
-
     creerProfilUtilisateur
 
 } from "./firebase.js";
@@ -33,11 +29,9 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 
-
 import {
 
     doc,
-
     getDoc
 
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
@@ -52,15 +46,10 @@ import {
 import {
 
     chargerProduits,
-
     ajouterProduit,
-
     supprimerProduit,
-
     modifierProduit,
-
     getProduits,
-
     viderChamps
 
 } from "./JS/produits/index.js";
@@ -75,19 +64,12 @@ import {
 import {
 
     chargerVentes,
-
     afficherVentes,
-
     vendreProduit,
-
     confirmerVente,
-
     fermerVente,
-
     chargerProduitsVente,
-
     selectionnerProduitVente,
-
     calculerVente
 
 } from "./JS/ventes.js";
@@ -102,7 +84,6 @@ import {
 import {
 
     chargerHistorique,
-
     viderHistorique
 
 } from "./JS/historique.js";
@@ -117,9 +98,7 @@ import {
 import {
 
     chargerNotifications,
-
     marquerToutesNotificationsLues,
-
     marquerNotificationLue
 
 } from "./JS/notifications.js";
@@ -134,13 +113,9 @@ import {
 import {
 
     mettreAJourResume,
-
     calculerResumeVentes,
-
     calculerStockRestant,
-
     preparerGraphique,
-
     changerPeriodeGraphique
 
 } from "./JS/dashboard.js";
@@ -148,56 +123,122 @@ import {
 
 
 
-// ==================================================
-// ETAT APPLICATION
-// ==================================================
-
-let utilisateurConnecte = false;
-
-let utilisateurActuel = null;
-
-let produits = [];
-
-let ventesGlobales = [];
-
-let produitModification = null;
-
-
-
 
 // ==================================================
-// SYNCHRONISATION DONNEES
+// ETAT GLOBAL APPLICATION
+// ==================================================
+
+const EtatApplication = {
+
+
+    utilisateurConnecte:false,
+
+
+    utilisateurActuel:null,
+
+
+    produits:[],
+
+
+    ventes:[],
+
+
+    chargement:false
+
+
+};
+
+
+
+
+// ==================================================
+// VERIFICATION UTILISATEUR
+// ==================================================
+
+function utilisateurValide(){
+
+
+    return (
+
+        EtatApplication.utilisateurConnecte
+        &&
+        auth.currentUser
+
+    );
+
+
+}
+
+
+
+
+
+
+// ==================================================
+// SYNCHRONISATION DES DONNEES
 // ==================================================
 
 async function actualiserDonnees(){
 
 
-    if(!auth.currentUser)
+
+    if(!utilisateurValide()){
+
+        console.warn(
+            "Synchronisation impossible : utilisateur absent"
+        );
 
         return;
+
+    }
+
+
+
+    if(EtatApplication.chargement){
+
+        console.log(
+            "Synchronisation déjà en cours"
+        );
+
+        return;
+
+    }
+
+
+
+    EtatApplication.chargement = true;
 
 
 
     try{
 
 
-        produits = await chargerProduits() || [];
+        EtatApplication.produits =
+        await chargerProduits() || [];
+
 
 
         chargerProduitsVente(
-            produits
+
+            EtatApplication.produits
+
         );
 
 
 
-        ventesGlobales = await chargerVentes() || [];
+
+        EtatApplication.ventes =
+        await chargerVentes() || [];
+
 
 
 
         await chargerHistorique();
 
 
+
         await chargerNotifications();
+
 
 
 
@@ -205,43 +246,49 @@ async function actualiserDonnees(){
 
 
 
+
         mettreAJourResume(
 
-            produits,
+            EtatApplication.produits,
 
-            ventesGlobales
+            EtatApplication.ventes
 
         );
+
 
 
 
         calculerResumeVentes(
 
-            ventesGlobales
+            EtatApplication.ventes
 
         );
+
 
 
 
         calculerStockRestant(
 
-            produits
+            EtatApplication.produits
 
         );
+
 
 
 
         preparerGraphique(
 
-            ventesGlobales
+            EtatApplication.ventes
 
         );
+
 
 
 
         console.log(
             "Données actualisées"
         );
+
 
 
     }
@@ -251,20 +298,28 @@ async function actualiserDonnees(){
 
 
         console.error(
+
             "Erreur actualisation données :",
+
             error
+
         );
 
 
     }
 
 
+    finally{
+
+
+        EtatApplication.chargement = false;
+
+
+    }
+
+
+
 }
-
-
-
-
-
 // ==================================================
 // PROFIL UTILISATEUR
 // ==================================================
@@ -286,9 +341,13 @@ async function chargerProfilUtilisateur(user){
         );
 
 
+
         const resultat = await getDoc(
+
             reference
+
         );
+
 
 
 
@@ -296,6 +355,7 @@ async function chargerProfilUtilisateur(user){
         document.getElementById(
             "pseudoProfil"
         );
+
 
 
         const role =
@@ -319,33 +379,56 @@ async function chargerProfilUtilisateur(user){
 
 
 
-        if(email)
-            email.textContent = user.email;
+
+
+        if(email){
+
+            email.textContent =
+            user.email || "";
+
+        }
 
 
 
-        if(photo && user.photoURL)
-            photo.src = user.photoURL;
+
+        if(photo && user.photoURL){
+
+            photo.src =
+            user.photoURL;
+
+        }
+
+
 
 
 
         if(resultat.exists()){
 
 
-            const data =
+            const donnees =
             resultat.data();
 
 
 
-            if(pseudo)
+
+            if(pseudo){
+
                 pseudo.textContent =
-                data.nomUtilisateur;
+                donnees.nomUtilisateur || "Utilisateur";
+
+            }
 
 
 
-            if(role)
+
+
+            if(role){
+
                 role.textContent =
-                data.role;
+                donnees.role || "Utilisateur";
+
+            }
+
 
 
         }
@@ -357,15 +440,23 @@ async function chargerProfilUtilisateur(user){
 
     catch(error){
 
+
         console.error(
-            "Erreur profil :",
+
+            "Erreur chargement profil :",
+
             error
+
         );
+
 
     }
 
 
 }
+
+
+
 
 
 
@@ -373,50 +464,105 @@ async function chargerProfilUtilisateur(user){
 async function mettreEtatUtilisateur(user){
 
 
+
     if(user){
 
 
-        utilisateurActuel = user;
 
-        utilisateurConnecte = true;
+        EtatApplication.utilisateurActuel =
+        user;
+
+
+
+        EtatApplication.utilisateurConnecte =
+        true;
+
+
 
 
 
         await creerProfilUtilisateur(
+
             user
+
         );
+
+
 
 
 
         await chargerProfilUtilisateur(
+
             user
+
         );
+
+
 
 
 
         const zone =
         document.getElementById(
+
             "userInfo"
+
         );
 
 
-        if(zone)
+
+
+
+        if(zone){
+
+
             zone.textContent =
+
             "Bienvenue";
+
+
+        }
+
+
+
+
+
+        console.log(
+
+            "Utilisateur prêt :",
+
+            user.uid
+
+        );
 
 
 
     }
+
 
     else{
 
 
-        utilisateurActuel = null;
 
-        utilisateurConnecte = false;
+        EtatApplication.utilisateurActuel =
+        null;
+
+
+
+        EtatApplication.utilisateurConnecte =
+        false;
+
+
+
+        console.log(
+
+            "Utilisateur déconnecté"
+
+        );
+
 
 
     }
+
 
 
 }
@@ -428,45 +574,69 @@ async function mettreEtatUtilisateur(user){
 
 
 // ==================================================
-// AUTHENTIFICATION
+// AUTHENTIFICATION FIREBASE
 // ==================================================
 
 onAuthStateChanged(
 
     auth,
 
+
     async(user)=>{
 
 
         console.log(
+
             "AUTH USER =",
+
             user
+
         );
+
 
 
 
         if(!user){
 
+
+            mettreEtatUtilisateur(null);
+
+
             console.log(
+
                 "Aucun utilisateur connecté"
+
             );
 
+
             return;
+
 
         }
 
 
 
+
+
         console.log(
+
             "UID CONNECTE =",
+
             user.uid
+
         );
+
+
 
 
 
         await mettreEtatUtilisateur(
+
             user
+
         );
+
+
 
 
 
@@ -476,21 +646,45 @@ onAuthStateChanged(
 
     }
 
+
 );
 
 
-
-
-
-
 // ==================================================
-// EXPOSITION HTML
+// EXPOSITION DES FONCTIONS HTML
 // ==================================================
+
+
+// ===============================
+// AUTHENTIFICATION
+// ===============================
 
 window.connexionGoogle = async function(){
 
 
-    await lancerConnexionGoogle();
+    try{
+
+
+        await lancerConnexionGoogle();
+
+
+
+    }
+
+
+    catch(error){
+
+
+        console.error(
+
+            "Erreur connexion Google :",
+
+            error
+
+        );
+
+
+    }
 
 
 };
@@ -502,11 +696,36 @@ window.connexionGoogle = async function(){
 window.deconnexionGoogle = async function(){
 
 
-    await lancerDeconnexionGoogle();
+
+    try{
 
 
-    window.location.href =
-    "accueil.html";
+        await lancerDeconnexionGoogle();
+
+
+
+        window.location.href =
+
+        "accueil.html";
+
+
+
+    }
+
+
+    catch(error){
+
+
+        console.error(
+
+            "Erreur déconnexion :",
+
+            error
+
+        );
+
+
+    }
 
 
 };
@@ -515,41 +734,79 @@ window.deconnexionGoogle = async function(){
 
 
 
-window.vendreProduit = vendreProduit;
 
 
-window.confirmerVente = confirmerVente;
-
-
-window.fermerVente = fermerVente;
-
-
-window.selectionnerProduitVente =
-selectionnerProduitVente;
-
-
-window.calculerVente =
-calculerVente;
-
-
+// ===============================
+// PRODUITS
+// ===============================
 
 
 window.ajouterProduit = async function(donnees){
 
 
-    const resultat =
-    await ajouterProduit(
-        donnees
-    );
+
+    if(!utilisateurValide()){
 
 
-    await actualiserDonnees();
+        alert(
+
+            "Connectez-vous d'abord"
+
+        );
 
 
-    return resultat;
+        return null;
+
+
+    }
+
+
+
+
+    try{
+
+
+        const resultat =
+
+        await ajouterProduit(
+
+            donnees
+
+        );
+
+
+
+
+        await actualiserDonnees();
+
+
+
+
+        return resultat;
+
+
+
+    }
+
+
+    catch(error){
+
+
+        console.error(
+
+            "Erreur ajout produit :",
+
+            error
+
+        );
+
+
+    }
 
 
 };
+
+
 
 
 
@@ -558,13 +815,139 @@ window.ajouterProduit = async function(donnees){
 window.supprimerProduit = async function(id){
 
 
+
+    if(!utilisateurValide()){
+
+
+        return;
+
+
+    }
+
+
+
+
+    try{
+
+
+        const resultat =
+
+        await supprimerProduit(
+
+            id
+
+        );
+
+
+
+
+        await actualiserDonnees();
+
+
+
+
+        return resultat;
+
+
+
+    }
+
+
+    catch(error){
+
+
+        console.error(
+
+            "Erreur suppression produit :",
+
+            error
+
+        );
+
+
+    }
+
+
+
+};
+
+
+
+
+
+
+window.modifierProduit = function(id){
+
+
+    if(!utilisateurValide()){
+
+
+        return;
+
+
+    }
+
+
+
+    return modifierProduit(id);
+
+
+};
+
+
+
+
+
+
+
+window.viderChamps = function(){
+
+
+    viderChamps();
+
+
+};
+
+
+
+
+
+
+
+
+// ===============================
+// VENTES
+// ===============================
+
+
+window.vendreProduit = function(id){
+
+
+
+    return vendreProduit(id);
+
+
+};
+
+
+
+
+
+
+window.confirmerVente = async function(){
+
+
+
     const resultat =
-    await supprimerProduit(
-        id
-    );
+
+    await confirmerVente();
+
+
 
 
     await actualiserDonnees();
+
+
 
 
     return resultat;
@@ -576,35 +959,140 @@ window.supprimerProduit = async function(id){
 
 
 
-window.modifierProduit = modifierProduit;
 
+window.fermerVente = function(){
+
+
+    fermerVente();
+
+
+};
+
+
+
+
+
+
+window.selectionnerProduitVente = function(id){
+
+
+
+    selectionnerProduitVente(id);
+
+
+};
+
+
+
+
+
+
+window.calculerVente = function(){
+
+
+    calculerVente();
+
+
+};
+
+// ===============================
+// HISTORIQUE
+// ===============================
 
 
 window.viderHistorique = async function(){
 
 
-    await viderHistorique();
+    if(!utilisateurValide()){
+
+        return;
+
+    }
 
 
-    await chargerHistorique();
+
+    try{
+
+
+        await viderHistorique();
+
+
+
+        await chargerHistorique();
+
+
+
+    }
+
+
+    catch(error){
+
+
+        console.error(
+
+            "Erreur suppression historique :",
+
+            error
+
+        );
+
+
+    }
 
 
 };
 
 
 
+
+
+
+
+// ===============================
+// NOTIFICATIONS
+// ===============================
 
 
 window.lireNotification = async function(id){
 
 
-    await marquerNotificationLue(id);
+
+    try{
 
 
-    await chargerNotifications();
+        await marquerNotificationLue(
+
+            id
+
+        );
+
+
+
+        await chargerNotifications();
+
+
+
+    }
+
+
+    catch(error){
+
+
+        console.error(
+
+            "Erreur notification :",
+
+            error
+
+        );
+
+
+    }
 
 
 };
+
+
 
 
 
@@ -613,29 +1101,68 @@ window.lireNotification = async function(id){
 window.marquerToutesCommeLues = async function(){
 
 
-    await marquerToutesNotificationsLues();
+
+    try{
 
 
-    await chargerNotifications();
+        await marquerToutesNotificationsLues();
+
+
+
+        await chargerNotifications();
+
+
+
+    }
+
+
+    catch(error){
+
+
+        console.error(
+
+            "Erreur lecture notifications :",
+
+            error
+
+        );
+
+
+    }
 
 
 };
 
 
 
+
+
+
+
+// ===============================
+// DASHBOARD
+// ===============================
 
 
 window.changerPeriodeGraphique = function(periode){
 
 
+
     changerPeriodeGraphique(
+
         periode
+
     );
+
+
 
 
     preparerGraphique(
-        ventesGlobales
+
+        EtatApplication.ventes
+
     );
+
 
 
 };
@@ -645,9 +1172,11 @@ window.changerPeriodeGraphique = function(periode){
 
 
 
-// ==================================================
+
+// ===============================
 // ERREURS GLOBALES
-// ==================================================
+// ===============================
+
 
 window.addEventListener(
 
@@ -657,14 +1186,21 @@ window.addEventListener(
 
 
         console.error(
+
             "Erreur application :",
+
             event.error
+
         );
 
 
     }
 
+
 );
+
+
+
 
 
 
@@ -676,41 +1212,59 @@ window.addEventListener(
 
 
         console.error(
+
             "Erreur Promise :",
+
             event.reason
+
         );
 
 
     }
 
+
 );
 
 
 
 
 
-// ==================================================
+
+
+
+// ===============================
 // SYNCHRONISATION AUTOMATIQUE
-// ==================================================
+// ===============================
+
 
 setInterval(
+
+
 
     ()=>{
 
 
         if(
-            auth.currentUser &&
-            utilisateurConnecte
+
+            utilisateurValide()
+
         ){
 
+
             actualiserDonnees();
+
 
         }
 
 
+
     },
 
+
+
     300000
+
+
 
 );
 
@@ -718,6 +1272,15 @@ setInterval(
 
 
 
+
+
+// ===============================
+// FIN APPLICATION
+// ===============================
+
+
 console.log(
+
     "Application prête avec authentification Firebase"
+
 );
