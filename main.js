@@ -1397,7 +1397,25 @@ window.annulerModification=function(){
 
 };
 
+const boutonToutLu = document.getElementById(
+    "marquerToutLu"
+);
 
+
+if(boutonToutLu){
+
+    boutonToutLu.addEventListener(
+        "click",
+        async()=>{
+
+            await marquerToutesNotificationsLues();
+
+            await chargerNotifications();
+
+        }
+    );
+
+}
 
 // ==================================================
 // INITIALISATION INTERFACE
