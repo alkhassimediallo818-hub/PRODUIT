@@ -246,12 +246,12 @@ export function afficherListeNotifications(
 
         (notification)=>{
 
+liste.innerHTML += `
 
-            liste.innerHTML += `
-
-
-            <div class="notificationItem ${notification.type || "info"}">
-
+<div 
+class="notificationItem ${notification.type || "info"}"
+onclick="lireNotification('${notification.id}')"
+>
 
                 <strong>
 
