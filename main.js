@@ -748,71 +748,35 @@ window.deconnexionGoogle = async function(){
 // ===============================
 
 
-window.ajouterProduit = async function(donnees){
+window.ajouterProduit = async function(){
 
+    const produit = {
 
+        nom: document.getElementById("nom").value.trim(),
 
-    if(!utilisateurValide()){
+        prixGros: Number(document.getElementById("prixGros").value),
 
+        nombreCartons: Number(document.getElementById("nombreCartons").value),
 
-        alert(
+        produitsParCarton: Number(document.getElementById("produitsParCarton").value),
 
-            "Connectez-vous d'abord"
+        prixRevente: Number(document.getElementById("prixRevente").value)
 
-        );
+    };
 
+    const resultat = await ajouterProduit(produit);
 
-        return null;
+    if(resultat){
 
-
-    }
-
-
-
-
-    try{
-
-
-        const resultat =
-
-        await ajouterProduit(
-
-            donnees
-
-        );
-
-
-
+        viderChamps();
 
         await actualiserDonnees();
 
-
-
-
-        return resultat;
-
-
-
     }
 
-
-    catch(error){
-
-
-        console.error(
-
-            "Erreur ajout produit :",
-
-            error
-
-        );
-
-
-    }
-
+    return resultat;
 
 };
-
 
 
 
