@@ -922,10 +922,21 @@ window.confirmerVente = async function(){
     }
 
 
-    return await confirmerVente(user);
+    const resultat = await confirmerVente(user);
+
+
+    if(resultat){
+
+        console.log(
+            "Vente confirmée avec succès"
+        );
+
+    }
+
+
+    return resultat;
 
 };
-
 
 
 
