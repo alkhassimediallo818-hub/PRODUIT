@@ -144,21 +144,21 @@ export function quantiteValide(
 // FORMULAIRE PRODUIT
 // ===============================
 
-export function verifierProduit(
+export function verifierProduit(produit){
 
-    produit
+    if(!produit){
 
-){
+        return {
 
-    if(
+            valide:false,
 
-        !nomProduitValide(
+            message:"Produit introuvable"
 
-            produit.nom
+        };
 
-        )
+    }
 
-    ){
+    if(!nomProduitValide(produit.nom)){
 
         return {
 
@@ -170,17 +170,7 @@ export function verifierProduit(
 
     }
 
-
-
-    if(
-
-        !prixValide(
-
-            produit.prixGros
-
-        )
-
-    ){
+    if(!prixValide(produit.prixGros)){
 
         return {
 
@@ -192,17 +182,7 @@ export function verifierProduit(
 
     }
 
-
-
-    if(
-
-        !prixValide(
-
-            produit.prixRevente
-
-        )
-
-    ){
+    if(!prixValide(produit.prixRevente)){
 
         return {
 
@@ -214,17 +194,7 @@ export function verifierProduit(
 
     }
 
-
-
-    if(
-
-        !quantiteValide(
-
-            produit.nombreCartons
-
-        )
-
-    ){
+    if(!quantiteValide(produit.nombreCartons)){
 
         return {
 
@@ -236,17 +206,7 @@ export function verifierProduit(
 
     }
 
-
-
-    if(
-
-        !quantiteValide(
-
-            produit.produitsParCarton
-
-        )
-
-    ){
+    if(!quantiteValide(produit.produitsParCarton)){
 
         return {
 
@@ -257,8 +217,6 @@ export function verifierProduit(
         };
 
     }
-
-
 
     return {
 
