@@ -436,22 +436,15 @@ export async function enregistrerVente(
 
 
 
-    if(
+  if(!auth.currentUser){
 
-        !utilisateurValide(
+    console.warn(
+        "Utilisateur non connecté"
+    );
 
-            auth,
+    return false;
 
-            utilisateurConnecte
-
-        )
-
-    ){
-
-        return false;
-
-    }
-
+}
 
 
 
