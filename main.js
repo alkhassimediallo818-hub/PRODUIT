@@ -907,22 +907,21 @@ window.vendreProduit = function(id){
 
 window.confirmerVente = async function(){
 
+    const user = auth.currentUser;
 
 
-    const resultat =
+    if(!user){
 
-    await confirmerVente();
+        console.warn(
+            "Aucun utilisateur connecté"
+        );
+
+        return false;
+
+    }
 
 
-
-
-    await actualiserDonnees();
-
-
-
-
-    return resultat;
-
+    return await confirmerVente(user);
 
 };
 
