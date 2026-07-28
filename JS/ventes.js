@@ -435,8 +435,7 @@ export async function enregistrerVente(
 ){
 
 
-
-  if(!auth.currentUser){
+if(!auth.currentUser){
 
     console.warn(
         "Utilisateur non connecté"
@@ -445,7 +444,6 @@ export async function enregistrerVente(
     return false;
 
 }
-
 
 
 
