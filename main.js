@@ -21,6 +21,7 @@ import {
 
 } from "./firebase.js";
 
+window.authTest = auth;
 
 import {
 
