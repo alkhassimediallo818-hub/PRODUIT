@@ -810,30 +810,22 @@ export async function confirmerVente(
 
 
 
-    if(
-
-        !utilisateurValide(
-
-            auth,
-
-            utilisateurConnecte
-
-        )
-
-    ){
+ console.log(
+    "DEBUG VENTE USER :",
+    utilisateurConnecte,
+    auth.currentUser
+);
 
 
-        console.warn(
+if(!auth.currentUser){
 
-            "Utilisateur invalide"
+    console.warn(
+        "Utilisateur Firebase absent"
+    );
 
-        );
+    return false;
 
-
-        return false;
-
-    }
-
+}
 
 
 
